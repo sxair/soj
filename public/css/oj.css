@@ -1,0 +1,32 @@
+.bg{
+    background-color: #fff;
+    box-shadow: 0 0 10px #bbb;
+    border-radius: 5px;
+    padding-bottom: 10px;
+    padding-top: 3px;
+    margin-bottom: 3px;
+}
+.probox{
+    padding: 8px 10px;
+    margin: 0;
+    border: 1px #c9e2f3 dashed;
+    color: rgb(46,10,1);
+    background-color: #F0F8FF;
+    line-height: 22px;
+    font-family: Tahoma,Helvetica,Arial,sans-serif;
+    font-size: 14px;
+}
+
+.nav_bar > li{
+    background: #fff;
+}
+
+.table-center th, .table-center td{
+    text-align: center;
+}
+
+.a-block > a{
+    width: 100%;
+    margin-bottom: 7px;
+}
+body,button, input, select, textarea, nav, a{font-family: Microsoft YaHei,'宋体' , Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;}
