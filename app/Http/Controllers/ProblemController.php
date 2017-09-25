@@ -2,64 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Container\Container;
+use App\Http\Base\OjProblemsTrait;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
 
 class ProblemController extends Controller
 {
+    use OjProblemsTrait;
     public function problems(Request $request)
     {
         $type = $request->input('type');
         $search = $request->input('search');
-        if($type && $type >= 1 && $type <= 3 && $search) {
-            $typeValue = ['', 'title', 'source', 'author'];
-            if($type == 1) {
-                $problems = DB::table('oj_problems')->select(['id', 'title', 'accepted', 'submitted'])
-                    ->where($typeValue[$type], 'like', '%'.$search.'%')->paginate(100);
-            } else {
-                $problems = DB::table('oj_problems')
-                    ->select(['oj_problems.id', 'oj_problems.title', 'oj_problems.accepted', 'oj_problems.submitted',
-                        'problems.author', 'problems.source'])
-                    ->join('problems', 'problems.id', '=', 'oj_problems.problem_id')
-                    ->where('problems.'.$typeValue[$type], 'like', '%'.$search.'%')
-                    ->paginate(100);
-            }
-        } else {
-//            $problems = DB::table('oj_problems')->select(['id', 'title', 'accepted', 'submitted'])
-//                ->paginate(100);
-            //get by redis
-            $perPage = 100;
-            $page = Paginator::resolveCurrentPage('page');
-            $total = Redis::ZCARD('ojpros');
-            $tpage = ($page - 1) * $perPage;
-            $res = Redis::ZRANGE('ojpros', $tpage , $tpage + $perPage - 1);
-            foreach ($res as &$re) {
-                $re = json_decode($re);
-            }
-            $results = $total ? collect($res) : collect();
-            $options = [
-                'path' => Paginator::resolveCurrentPath(),
-                'pageName' => 'page',
-            ];
-            $problems = new LengthAwarePaginator($results, $total, $perPage, $page, $options);
-        }
+        $problems = $this->getOjProblems($type, $search);
         return view('problems', ['problems' => $problems, 'type' => $type, 'search' => $search]);
     }
 
-    public function problem($id)
+    public function problem($id = 1000)
     {
-        $ojpro = DB::table('oj_problems')->where('id', $id)->first();
-        if (is_null($ojpro)) {
-            return;
+        $problem = $this->ToProblems($id);
+        if(is_null($problem)) {
+            return view('errors.noFind');
         }
-        $pro = DB::table('problems')->where('id', $ojpro->problem_id)->first();
-        $pro = array_merge((array)$pro, (array)$ojpro);
-        return view('problem', ['pro' => (object)$pro]);
+        return view('problem', ['pro' => $problem]);
     }
 
     public function proinfo($id)

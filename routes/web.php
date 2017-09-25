@@ -40,7 +40,7 @@ Route::get('/userinfo/{username}', 'UserController@userinfo');
 
 // problem
 Route::get('/problems', 'ProblemController@problems');
-Route::get('/problem/{id}', 'ProblemController@problem');
+Route::get('/problem/{id?}', 'ProblemController@problem');
 Route::get('/proinfo/{id}', 'ProblemController@proinfo');
 Route::get('/submit/{id}/{time}/{memory}', 'ProblemController@submitPage');
 Route::post('/submit', 'ProblemController@submit');

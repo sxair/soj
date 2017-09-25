@@ -12,11 +12,10 @@
                     <h2 style="margin: auto">{{ $pro->id }}: {{ $pro->title }}</h2>
                 </div>
                 <div class="panel-body">
-                    time limit per test2 seconds
-                    memory limit per test256 megabytes
-                    inputstandard input
-                    outputstandard output
-                    <h4>Problem Description</h4>
+                    <div class="text-center">
+                        <p style="margin-top: -10px">time limit per test {{ $pro->time_limit }} ms<br/>
+                        memory limit per test {{ $pro->memory_limit }} KB</p>
+                    </div>
                     <div class="probox">{!! $pro->content !!}</div>
                     <h4>Input</h4>
                     <div class="probox">{!! $pro->input !!}</div>

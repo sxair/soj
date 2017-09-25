@@ -40,9 +40,10 @@ EOF;
 
 function lang_option() {
     echo <<<EOF
-<option value="1">c</option>
 <option value="2">c++</option>
+<option value="1">c</option>
 <option value="3">java</option>
+<option value="4">python3</option>
 EOF;
 }
 
@@ -52,6 +53,7 @@ function lang_html($num) {
         1 => 'c',
         2 => 'c++',
         3 => 'java',
+        4 => 'python3',
     ];
     return $lang[$num];
 }
