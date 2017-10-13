@@ -9,44 +9,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 
-class OjController extends Controller
+class ProblemsController extends Controller
 {
     public function problems(Request $request)
     {
         $type = $request->input('type');
         $search = $request->input('search');
-        if($type && $type >= 1 && $type <= 3 && $search) {
-            $typeValue = ['', 'title', 'source', 'author'];
-            if($type == 1) {
-                return DB::table('oj_problems')->select(['id', 'title', 'accepted', 'submitted'])
-                    ->where($typeValue[$type], 'like', '%'.$search.'%')->paginate(100);
-            } else {
-                return DB::table('oj_problems')
-                    ->select(['oj_problems.id', 'oj_problems.title', 'oj_problems.accepted', 'oj_problems.submitted',
-                        'problems.author', 'problems.source'])
-                    ->join('problems', 'problems.id', '=', 'oj_problems.problem_id')
-                    ->where('problems.'.$typeValue[$type], 'like', '%'.$search.'%')
-                    ->paginate(100);
-            }
-        } else {
-//            $problems = DB::table('oj_problems')->select(['id', 'title', 'accepted', 'submitted'])
-//                ->paginate(100);
-            $perPage = 100;
-            $page = Paginator::resolveCurrentPage('page');
-            $total = Redis::ZCARD('ojpros');
-            $tpage = ($page - 1) * $perPage;
-            $res = Redis::ZRANGE('ojpros', $tpage , $tpage + $perPage - 1);
-            foreach ($res as &$re) {
-                $re = json_decode($re);
-            }
-            $results = $total ? collect($res) : collect();
-            $options = [
-                'path' => Paginator::resolveCurrentPath(),
-                'pageName' => 'page',
-            ];
-            return new LengthAwarePaginator($results, $total, $perPage, $page, $options);
+        $perPage = 50;
+        if(!is_null($search) && is_int($type) && $type > 0 && $type < 3) {
+
         }
-        return view('problems', ['problems' => $problems, 'type' => $type, 'search' => $search]);
     }
 
     public function problem($id = 1000)

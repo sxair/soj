@@ -1,10 +1,19 @@
 webpackJsonp([0],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}],[\"es2015\",{\"modules\":false}]],\"plugins\":[[\"component\",[{\"libraryName\":\"element-ui\",\"styleLibraryName\":\"theme-chalk\"}]]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/Problems.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}],[\"es2015\",{\"modules\":false}]],\"plugins\":[[\"component\",[{\"libraryName\":\"element-ui\",\"styleLibraryName\":\"theme-chalk\"}]]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/problems.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -32,6 +41,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             default: function _default() {
                 return [];
             }
+        },
+        'cp': {
+            default: function _default() {
+                return 1;
+            }
+        }
+    },
+    methods: {
+        handleCurrentChange: function handleCurrentChange(cp) {
+            this.$emit("page-change", cp);
         }
     }
 });
@@ -9427,7 +9446,7 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-8955562c\",\"hasScoped\":false}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/Problems.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-9cebfe6c\",\"hasScoped\":false}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/problems.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -9435,16 +9454,31 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "el-table",
-    { staticStyle: { width: "100%" }, attrs: { data: _vm.problems } },
+    "div",
     [
-      _c("el-table-column", { attrs: { prop: "id", label: "id" } }),
+      _c("el-pagination", {
+        attrs: {
+          layout: "prev, pager, next",
+          total: 50,
+          "current-page": _vm.cp
+        },
+        on: { "current-change": _vm.handleCurrentChange }
+      }),
       _vm._v(" "),
-      _c("el-table-column", { attrs: { prop: "title", label: "title" } }),
-      _vm._v(" "),
-      _c("el-table-column", {
-        attrs: { prop: "ac-sub", label: "Accepted/Submitted" }
-      })
+      _c(
+        "el-table",
+        { staticStyle: { width: "100%" }, attrs: { data: _vm.problems } },
+        [
+          _c("el-table-column", { attrs: { prop: "id", label: "id" } }),
+          _vm._v(" "),
+          _c("el-table-column", { attrs: { prop: "title", label: "title" } }),
+          _vm._v(" "),
+          _c("el-table-column", {
+            attrs: { prop: "ac-sub", label: "Accepted/Submitted" }
+          })
+        ],
+        1
+      )
     ],
     1
   )
@@ -9455,7 +9489,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-8955562c", module.exports)
+     require("vue-hot-reload-api").rerender("data-v-9cebfe6c", module.exports)
   }
 }
 
@@ -9502,7 +9536,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_6_element_ui_lib_table___default.a);
 Vue.use(__WEBPACK_IMPORTED_MODULE_3_element_ui_lib_table_column___default.a);
 Vue.use(__WEBPACK_IMPORTED_MODULE_1_element_ui_lib_card___default.a);
 
-Vue.component('Problems', __webpack_require__("./resources/assets/js/components/Problems.vue"));
+Vue.component('problems', __webpack_require__("./resources/assets/js/components/problems.vue"));
 
 /***/ }),
 
@@ -9565,15 +9599,15 @@ if (token) {
 
 /***/ }),
 
-/***/ "./resources/assets/js/components/Problems.vue":
+/***/ "./resources/assets/js/components/problems.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}],[\"es2015\",{\"modules\":false}]],\"plugins\":[[\"component\",[{\"libraryName\":\"element-ui\",\"styleLibraryName\":\"theme-chalk\"}]]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/Problems.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}],[\"es2015\",{\"modules\":false}]],\"plugins\":[[\"component\",[{\"libraryName\":\"element-ui\",\"styleLibraryName\":\"theme-chalk\"}]]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/problems.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-8955562c\",\"hasScoped\":false}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/Problems.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-9cebfe6c\",\"hasScoped\":false}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/problems.vue")
 /* styles */
 var __vue_styles__ = null
 /* scopeId */
@@ -9587,9 +9621,9 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/Problems.vue"
+Component.options.__file = "resources/assets/js/components/problems.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] Problems.vue: functional components are not supported with templates, they should use render functions.")}
+if (Component.options.functional) {console.error("[vue-loader] problems.vue: functional components are not supported with templates, they should use render functions.")}
 
 /* hot reload */
 if (false) {(function () {
@@ -9598,9 +9632,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-8955562c", Component.options)
+    hotAPI.createRecord("data-v-9cebfe6c", Component.options)
   } else {
-    hotAPI.reload("data-v-8955562c", Component.options)
+    hotAPI.reload("data-v-9cebfe6c", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true

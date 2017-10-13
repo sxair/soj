@@ -17,8 +17,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('api')->group(function () {
-    Route::get('users', function () {
-        // 匹配包含 "/admin/users" 的 URL
-    });
-});
+Route::get('problems', 'ProblemsController@Problems');

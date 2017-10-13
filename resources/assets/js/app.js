@@ -19,4 +19,4 @@ Vue.use(Table);
 Vue.use(TableColumn);
 Vue.use(Card);
 
-Vue.component('Problems', require('./components/Problems.vue'));
+Vue.component('problems', require('./components/problems.vue'));
