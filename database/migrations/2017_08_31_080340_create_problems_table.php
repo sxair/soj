@@ -16,7 +16,7 @@ class CreateProblemsTable extends Migration
         Schema::create('problems', function (Blueprint $table) {
             $table->engine = 'MyISAM';
             $table->increments('id');
-            $table->string('title', 50);
+            $table->string('title', 30);
             $table->integer('time_limit');
             $table->integer('judge_cnt');
             $table->integer('memory_limit');

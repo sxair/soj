@@ -19,6 +19,8 @@ class ProblemsController extends Controller
         if(!is_null($search) && is_int($type) && $type > 0 && $type < 3) {
 
         }
+        $problems = [];
+        return response()->json($problems);
     }
 
     public function problem($id = 1000)

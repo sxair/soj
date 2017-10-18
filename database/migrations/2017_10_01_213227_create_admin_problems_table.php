@@ -16,9 +16,11 @@ class CreateAdminProblemsTable extends Migration
         Schema::create('admin_problems', function (Blueprint $table) {
             $table->engine = 'MyISAM';
             $table->unsignedInteger('problem_id');
-            $table->unsignedInteger('user_id');
+            $table->string('user_name',20)->index();
             $table->boolean('public');
+            $table->boolean('show');
 
+            $table->primary('problem_id');
         });
     }
 

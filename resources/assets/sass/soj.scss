@@ -1,15 +1,6 @@
 @import "variables";
 
-// boot 4
-//@import "~bootstrap/scss/functions";
-//@import "~bootstrap/scss/variables";
-//@import "~bootstrap/scss/mixins";
-//@import "~bootstrap/scss/reboot";
-//@import "~bootstrap/scss/type";
-//@import "~bootstrap/scss/grid";
-//@import "~bootstrap/scss/card";
-
-// Core variables and mixins
+//Core variables and mixins
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/mixins";
 
@@ -21,8 +12,18 @@
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/type";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/grid";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/tables";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/buttons";
 
 //soj componets
 @import "navbar";
 @import "subnav";
+
+body,button, input, select, textarea, nav, a{font-family: Microsoft YaHei,'宋体' , Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;}
+
+.table-center{
+  th {
+    text-align: center;
+  }
+  text-align: center;
+}

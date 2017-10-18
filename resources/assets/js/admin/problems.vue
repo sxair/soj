@@ -1,5 +1,28 @@
 <template>
     <div>
+
+        <table class="table table-hover table-center">
+            <tbody>
+                <tr>
+                    <th width="10%">id</th>
+                    <th width="50%">title</th>
+                    <th>author</th>
+                    <th>public</th>
+                    <th>operation</th>
+                </tr>
+                <tr v-for="problem in problems">
+                    <td>{{ problem.id }}</td>
+                    <td>{{ problem.title }}</td>
+                    <td>{{ problem.author }}</td>
+                    <td>{{ problem.public?'yes':'no' }}</td>
+                    <td>
+                        <a href="#">修改</a>
+                        <a v-if="problem.show" href="#">添加到oj</a>
+                        <a href="#" v-else>已添加</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         <el-pagination
                 layout="prev, pager, next"
                 :total="tl"
@@ -7,35 +30,11 @@
                 @current-change="handleCurrentChange"
         >
         </el-pagination>
-        <table class="table table-hover table-center">
-            <tbody>
-            <tr>
-                <th width="10%">id</th>
-                <th v-if="search">title</th>
-                <th width="70%" v-else>title</th>
-                <th v-if="search">author</th>
-                <th v-if="search">source</th>
-                <th>Accepted/Submitted</th>
-            </tr>
-            <tr v-for="problem in problems">
-                <td>{{ problem.id }}</td>
-                <td>{{ problem.title }}</td>
-                <td v-if="search">{{ problem.author }}</td>
-                <td v-if="search">{{ problem.source }}</td>
-                <td>{{ problem.acsub }}</td>
-            </tr>
-            </tbody>
-        </table>
     </div>
 </template>
 
 <script>
     export default {
-        data() {
-            return {
-                problems:null
-            }
-        },
         props: {
             'tl': {
                 type: Number,
@@ -48,6 +47,12 @@
                 default() {
                     return false
                 }
+            },
+            'problems': {
+                type: Object,
+                default() {
+                    return null;
+                }
             }
         },
         created() {
@@ -55,7 +60,6 @@
         },
         methods: {
             setProblems(cp) {
-                alert(cp);
                 axios.get('/api/problems')
                     .then((response) => {
                         this.problems = response.data;

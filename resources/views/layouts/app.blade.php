@@ -11,7 +11,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/soj.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/soj.css') }}" rel="stylesheet">
 </head>
 <body>
 <nav class="s-navbar" id="menu">
