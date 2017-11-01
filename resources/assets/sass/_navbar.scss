@@ -22,7 +22,7 @@ $slideout-width : 256px !default;
   line-height: 22px;
   height: 50px;
   margin-right: -15px;
-  margin-left: -15px;
+  margin-left: 0;
   @media (min-width: $slideout-media) {
     margin-right: 0;
     margin-left: -15px;

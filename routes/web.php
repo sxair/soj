@@ -16,5 +16,3 @@ Route::get('/', 'IndexController@index')->name('home');
 Auth::routes();
 
 Route::view('problems', 'problems');
-
-Route::view('admin', 'admin.index');

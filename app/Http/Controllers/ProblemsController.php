@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
@@ -15,12 +13,32 @@ class ProblemsController extends Controller
     {
         $type = $request->input('type');
         $search = $request->input('search');
-        $perPage = 50;
-        if(!is_null($search) && is_int($type) && $type > 0 && $type < 3) {
-
+        $page =  $request->input('page');
+        if(is_null($page)) $page = 1;
+        $perPage = 100;
+        if(!is_null($search)) {
+            if($type == 'author' || $type == 'source') {
+                $sql = DB::table('oj_problems')
+                    ->where('problems.'.$type, 'like', '%'.$search.'%');
+                $total = $sql->count();
+                $problems = $sql->select(['oj_problems.id', 'oj_problems.title', 'oj_problems.accepted', 'oj_problems.submitted',
+                        'problems.author', 'problems.source'])
+                    ->join('problems', 'problems.id', '=', 'oj_problems.problem_id')
+                    ->offset(($page - 1) * $perPage)->limit($perPage)->get();
+            } else {
+                $sql = DB::table('oj_problems')
+                    ->where('title', 'like', '%'.$search.'%');
+                $total = $sql->count();
+                $problems = $sql->select(['id', 'title', 'accepted', 'submitted'])
+                    ->offset(($page - 1) * $perPage)->limit($perPage)->get();
+            }
+        } else {
+            $total = DB::table('oj_problems')->count();
+            $problems = DB::table('oj_problems')
+                ->select(['id', 'title', 'accepted', 'submitted'])
+                ->offset(($page - 1) * $perPage)->limit($perPage)->get();
         }
-        $problems = [];
-        return response()->json($problems);
+        return response()->json(array_merge(['problems' => $problems], ['total' => $total]));
     }
 
     public function problem($id = 1000)

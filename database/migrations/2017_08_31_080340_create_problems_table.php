@@ -22,11 +22,11 @@ class CreateProblemsTable extends Migration
             $table->integer('memory_limit');
             $table->tinyInteger('spj');
             $table->text('content');
-            $table->text('input');
-            $table->text('output');
-            $table->text('sample_input');
-            $table->text('sample_output');
-            $table->text('hint')->nullable();
+//            $table->text('input');
+//            $table->text('output');
+//            $table->text('sample_input');
+//            $table->text('sample_output');
+//            $table->text('hint')->nullable();
             $table->string('author', 50)->nullable()->index();
             $table->string('source', 50)->nullable()->index();
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));

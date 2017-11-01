@@ -1,31 +1,10 @@
-webpackJsonp([2],{
+webpackJsonp([8],{
 
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}],[\"es2015\",{\"modules\":false}]],\"plugins\":[\"transform-object-rest-spread\",[\"component\",[{\"libraryName\":\"element-ui\",\"styleLibraryName\":\"theme-chalk\"}]]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0&bustCache!./resources/assets/js/admin/add-problem.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -68,85 +47,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 title: '',
                 time: '1000',
                 memory: '32768',
-                spj: 0,
-                judge: '',
-                content: '',
-                source: '',
-                author: ''
-            },
-            rules: {
-                title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
-                time: [{ required: true, message: '自己看着办把', trigger: 'blur' }],
-                memory: [{ required: true, message: '自己看着办把', trigger: 'blur' }]
-            },
-            content: '### Problem Description\n\n### Input\n\n### Output\n\n' + '### Sample Input\n\n### Sample Output\n\n### Hints\n',
-            useSpj: false
+                spj: '',
+                content: ''
+            }
         };
     },
-    mounted: function mounted() {
-        this.$notify({
-            title: '提示',
-            dangerouslyUseHTMLString: true,
-            message: '<a href="#" target="view_window">点击查看添加题目帮助</a>',
-            duration: 5600,
-            type: 'warning'
-        });
-    },
-
 
     methods: {
         onSubmit: function onSubmit() {
-            var _this = this;
-
-            this.$refs['form'].validate(function (valid) {
-                if (!valid) {
-                    _this.$message.error('表单填写错误，请检查');
-                    return false;
-                }
-                _this.form.content = _this.$refs.contentEditor.simplemde.value();
-                _this.form.content = _this.$refs.contentEditor.simplemde.markdown(_this.form.content);
-                if (!_this.form.content) {
-                    _this.$message.error('你想干嘛');
-                    return false;
-                }
-                var t = _this.form; //axios内部获取不到this
-                axios.post('/admin/addProblem', {
-                    data: t
-                }).then(function (response) {
-                    console.log(response.data);
-                    if (response.data === true) {
-                        _this.$message({
-                            message: '提交成功',
-                            duration: 1500,
-                            type: 'success'
-                        });
-                    } else {
-                        _this.$message({
-                            message: '我也不知为什么失败了。。',
-                            duration: 1500,
-                            type: 'success'
-                        });
-                    }
-                }).catch(function (error) {
-                    console.log(error.response.data);
-                    if (error.response.status === 422) {
-                        _this.$message.error('表单填写错误，请联系管理员');
-                        console.log(error.response.data.errors);
-                    } else {
-                        _this.$message({
-                            showClose: true,
-                            message: '提交失败' + error,
-                            type: 'error',
-                            duration: 0
-                        });
-                    }
-                });
-            });
-        },
-        onChange: function onChange(val) {
-            if (val === 3) {
-                this.useSpj = true;
-            } else this.useSpj = false;
+            console.log('submit!');
         }
     }
 });
@@ -164,7 +73,7 @@ var render = function() {
     "div",
     { staticStyle: { "padding-top": "10px" } },
     [
-      _c("el-card", [
+      _c("el-card", { staticClass: "box-card" }, [
         _c(
           "div",
           {
@@ -184,22 +93,16 @@ var render = function() {
         _c(
           "div",
           [
-            _c("div", { attrs: { id: "showError" } }),
-            _vm._v(" "),
             _c(
               "el-form",
               {
                 ref: "form",
-                attrs: {
-                  model: _vm.form,
-                  rules: _vm.rules,
-                  "label-width": "150px"
-                }
+                attrs: { model: _vm.form, "label-width": "150px" }
               },
               [
                 _c(
                   "el-form-item",
-                  { attrs: { label: "标题", prop: "title" } },
+                  { attrs: { label: "标题" } },
                   [
                     _c("el-input", {
                       staticStyle: { width: "60%" },
@@ -218,7 +121,7 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "el-form-item",
-                  { attrs: { label: "时间限制", prop: "time" } },
+                  { attrs: { label: "时间/内存限制" } },
                   [
                     _c(
                       "el-input",
@@ -241,15 +144,8 @@ var render = function() {
                         )
                       ],
                       2
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "el-form-item",
-                  { attrs: { label: "内存限制", prop: "memory" } },
-                  [
+                    ),
+                    _vm._v(" "),
                     _c(
                       "el-input",
                       {
@@ -264,6 +160,7 @@ var render = function() {
                         }
                       },
                       [
+                        _vm._v("\n                        <"),
                         _c(
                           "template",
                           { attrs: { slot: "append" }, slot: "append" },
@@ -271,9 +168,7 @@ var render = function() {
                         )
                       ],
                       2
-                    ),
-                    _vm._v(" "),
-                    _c("i", [_vm._v("推荐最大不超过524288KB（512MB）")])
+                    )
                   ],
                   1
                 ),
@@ -285,7 +180,6 @@ var render = function() {
                     _c(
                       "el-radio-group",
                       {
-                        on: { change: _vm.onChange },
                         model: {
                           value: _vm.form.spj,
                           callback: function($$v) {
@@ -297,96 +191,18 @@ var render = function() {
                       [
                         _c("el-radio", { attrs: { label: 0 } }, [_vm._v("关闭")]),
                         _vm._v(" "),
-                        _c("el-radio", { attrs: { label: 1 } }, [
-                          _vm._v("精度3位")
-                        ]),
-                        _vm._v(" "),
-                        _c("el-radio", { attrs: { label: 2 } }, [
-                          _vm._v("精度6位")
-                        ]),
-                        _vm._v(" "),
-                        _c("el-radio", { attrs: { label: 3 } }, [_vm._v("自定义")])
+                        _c("el-radio", { attrs: { label: 1 } }, [_vm._v("开启")])
                       ],
                       1
-                    ),
-                    _vm._v(" "),
-                    _vm.useSpj
-                      ? _c("el-input", {
-                          staticStyle: { width: "60%" },
-                          attrs: {
-                            type: "textarea",
-                            autosize: { minRows: 5, maxRows: 10 },
-                            placeholder: "请输入判断代码"
-                          },
-                          model: {
-                            value: _vm.form.judge,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form, "judge", $$v)
-                            },
-                            expression: "form.judge"
-                          }
-                        })
-                      : _vm._e()
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("editor", {
-                  ref: "contentEditor",
-                  staticStyle: { width: "80%", margin: "auto" },
-                  attrs: { value: _vm.content }
-                }),
-                _vm._v(" "),
-                _c(
-                  "el-form-item",
-                  { attrs: { label: "来源" } },
-                  [
-                    _c("el-input", {
-                      staticStyle: { width: "60%" },
-                      attrs: { maxlength: 50 },
-                      model: {
-                        value: _vm.form.source,
-                        callback: function($$v) {
-                          _vm.$set(_vm.form, "source", $$v)
-                        },
-                        expression: "form.source"
-                      }
-                    })
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "el-form-item",
-                  { attrs: { label: "作者" } },
-                  [
-                    _c("el-input", {
-                      staticStyle: { width: "60%" },
-                      attrs: { maxlength: 50 },
-                      model: {
-                        value: _vm.form.author,
-                        callback: function($$v) {
-                          _vm.$set(_vm.form, "author", $$v)
-                        },
-                        expression: "form.author"
-                      }
-                    })
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "el-form-item",
-                  [
-                    _c(
-                      "el-button",
-                      {
-                        attrs: { type: "primary" },
-                        on: { click: _vm.onSubmit }
-                      },
-                      [_vm._v("提交")]
                     )
                   ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "el-form-item",
+                  { attrs: { label: "题目描述" } },
+                  [_c("editor")],
                   1
                 )
               ],

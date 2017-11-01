@@ -6,11 +6,16 @@
 
 <script>
     import SimpleMDE from 'simplemde';
+    import hljs from 'highlight.js';
+
+    window.hljs = hljs;
+
     export default {
         props: {
             value: String,
         },
         mounted() {
+            hljs.initHighlightingOnLoad();
             this.initialize();
         },
         activated() {
@@ -24,9 +29,27 @@
                 const configs = {
                     element: this.$el.firstElementChild,
                     initialValue: this.value,
-                    renderingConfig: {},
+                    renderingConfig: {
+                        codeSyntaxHighlighting:true
+                    },
+                    autoDownloadFontAwesome: false,
+                    toolbar: ["bold", "italic", "heading", "|",
+                        "quote", "unordered-list", "ordered-list", "|",
+                        "link", "image", "code", "|",
+                        "preview", "side-by-side", "fullscreen", "guide"],
                 };
                 this.simplemde = new SimpleMDE(configs);
+
+                this.simplemde.codemirror.on('change', () => {
+                    this.$emit('input', this.simplemde.value());
+                });
+
+                // for github md css
+                const wrapper = this.simplemde.codemirror.getWrapperElement();
+                const preview = document.createElement('div');
+                wrapper.nextSibling.className += `markdown-body`;
+                preview.className = `editor-preview markdown-body`;
+                wrapper.appendChild(preview);
             },
         },
         destroyed() {
@@ -42,4 +65,7 @@
 </script>
 <style>
     @import '~simplemde/dist/simplemde.min.css';
+    @import '~github-markdown-css';
+    @import "~font-awesome/css/font-awesome.min.css";
+    @import '~highlight.js/styles/github-gist.css';
 </style>

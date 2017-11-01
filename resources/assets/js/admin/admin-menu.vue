@@ -1,7 +1,7 @@
 <template>
     <el-menu
             :router=true
-            :default-active="$route.path"
+            default-active="problems"
     >
         <el-submenu index="1">
             <template slot="title">
@@ -9,10 +9,10 @@
                 <span>题目库管理</span>
             </template>
             <el-menu-item-group>
-                <el-menu-item index="/problems">查看题目库</el-menu-item>
-                <el-menu-item index="/addproblem">新增题目</el-menu-item>
-                <el-menu-item index="/choices">查看选择题</el-menu-item>
-                <el-menu-item index="/addchoices">新增选择题</el-menu-item>
+                <el-menu-item index="problems">查看题目库</el-menu-item>
+                <el-menu-item index="addProblem">新增题目</el-menu-item>
+                <el-menu-item index="1-3">查看选择题</el-menu-item>
+                <el-menu-item index="1-4">新增选择题</el-menu-item>
             </el-menu-item-group>
         </el-submenu>
         <el-menu-item index="2">
@@ -46,8 +46,6 @@
 
 <script>
     export default {
-        methods:{
 
-        }
     }
 </script>

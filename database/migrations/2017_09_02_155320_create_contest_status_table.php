@@ -16,9 +16,9 @@ class CreateContestStatusTable extends Migration
         Schema::create('contest_status', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('contest_id');
-            $table->char('problem_id')->index();
+            $table->char('problem_id');
             $table->tinyInteger('lang')->index();
-            $table->string('user_name')->index();
+            $table->string('user_name', 20)->index();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('status')->default(0)->index();
             $table->integer('time')->default(0);
