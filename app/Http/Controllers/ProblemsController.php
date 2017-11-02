@@ -15,15 +15,15 @@ class ProblemsController extends Controller
         $search = $request->input('search');
         $page =  $request->input('page');
         if(is_null($page)) $page = 1;
-        $perPage = 100;
+        $perPage = 10;
         if(!is_null($search)) {
             if($type == 'author' || $type == 'source') {
                 $sql = DB::table('oj_problems')
+                    ->join('problems', 'problems.id', '=', 'oj_problems.problem_id')
                     ->where('problems.'.$type, 'like', '%'.$search.'%');
                 $total = $sql->count();
                 $problems = $sql->select(['oj_problems.id', 'oj_problems.title', 'oj_problems.accepted', 'oj_problems.submitted',
                         'problems.author', 'problems.source'])
-                    ->join('problems', 'problems.id', '=', 'oj_problems.problem_id')
                     ->offset(($page - 1) * $perPage)->limit($perPage)->get();
             } else {
                 $sql = DB::table('oj_problems')

@@ -6,9 +6,9 @@
                     <el-pagination
                             layout="prev, pager, next"
                             :total="total"
-                            :page-size="100"
+                            :page-size="10"
                             :current-page="parseInt($route.query.page)"
-                            @current-change="handleCurrentChange"
+                            @current-change="changePageRoute"
                     >
                     </el-pagination>
                     <problems-table :problems="problems" :search="noTitle"
@@ -17,9 +17,9 @@
                         <el-pagination
                                 layout="prev, pager, next"
                                 :total="total"
-                                :page-size="100"
+                                :page-size="10"
                                 :current-page="parseInt($route.query.page)"
-                                @current-change="changeRouter"
+                                @current-change="changePageRoute"
                                 style="float: right;margin-top:-18px"
                         >
                         </el-pagination>
@@ -94,12 +94,30 @@
             }
         },
         mounted() {
-            this.setProblems(this.$route.query.page);
+            this.setProblems();
+        },
+        computed: {
+            'curPage' : function () {
+                return this.$route.query.page ? this.$route.query.page : 1;
+            },
+            'routeSearch' : function () {
+                return this.$route.query.search?this.$route.query.search:'';
+            },
+            'routeType' : function () {
+                return this.$route.query.type?this.$route.query.type:'title';
+            }
         },
         methods: {
-            setProblems(cp) {
-                const getUrl = '/api/problems' + '?page=' + cp + '&search=' + this.search.content
+            setProblems: function() {
+                let cp = this.curPage;
+                this.search.content = this.routeSearch;
+                this.search.type = this.routeType;
+                let getUrl = '/api/problems' + '?page=' + cp + '&search=' + this.search.content
                     + '&type=' + this.search.type;
+                console.log(getUrl);
+                if(this.search.content && this.search.type != 'title') {
+                    this.noTitle = true;
+                } else this.noTitle = false;
                 this.loading = true;
                 axios.get(getUrl)
                     .then((response) => {
@@ -114,20 +132,12 @@
                         console.log(error);
                     });
             },
-            handleCurrentChange: function (cp) {
-                this.changeRouter(cp);
-                this.setProblems(cp);
-            },
-            changeRouter: function (cp) {
+            changePageRoute: function (cp) {
                 let que = {page: cp};
-                if (this.search.content) {
-                    que.search = this.search.content;
-                    if((que.type = this.search.type) != 'title') {
-                        this.noTitle = true;
-                    } else {
-                        this.noTitle = false;
-                    }
-                } else this.noTitle = false;
+                if (this.$route.query.search) {
+                    que.search = this.$route.query.search;
+                    que.type = this.$route.query.type;
+                }
                 this.$router.push({query: que});
             },
             onSearch: function () {
@@ -135,10 +145,19 @@
                     if(this.emptySearch++ > 10) {
                         alert("老哥点那么多下干嘛？");
                     }
+                    alert("?");
                     return false;
                 }
-                this.handleCurrentChange(this.$route.query.page);
+                let que = {page: 1};
+                que.search = this.search.content;
+                que.type = this.search.type;
+                this.$router.push({query: que});
             },
+        },
+        watch: {
+            '$route.query' : function () {
+                this.setProblems();
+            }
         }
     }
 </script>

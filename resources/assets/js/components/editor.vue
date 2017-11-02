@@ -43,13 +43,6 @@
                 this.simplemde.codemirror.on('change', () => {
                     this.$emit('input', this.simplemde.value());
                 });
-
-                // for github md css
-                const wrapper = this.simplemde.codemirror.getWrapperElement();
-                const preview = document.createElement('div');
-                wrapper.nextSibling.className += `markdown-body`;
-                preview.className = `editor-preview markdown-body`;
-                wrapper.appendChild(preview);
             },
         },
         destroyed() {

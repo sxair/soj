@@ -54,13 +54,6 @@ window.hljs = __WEBPACK_IMPORTED_MODULE_1_highlight_js___default.a;
             this.simplemde.codemirror.on('change', function () {
                 _this.$emit('input', _this.simplemde.value());
             });
-
-            // for github md css
-            var wrapper = this.simplemde.codemirror.getWrapperElement();
-            var preview = document.createElement('div');
-            wrapper.nextSibling.className += 'markdown-body';
-            preview.className = 'editor-preview markdown-body';
-            wrapper.appendChild(preview);
         }
     },
     destroyed: function destroyed() {

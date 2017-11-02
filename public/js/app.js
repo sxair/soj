@@ -1525,14 +1525,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     mounted: function mounted() {
-        this.setProblems(this.$route.query.page);
+        this.setProblems();
     },
 
+    computed: {
+        'curPage': function curPage() {
+            return this.$route.query.page ? this.$route.query.page : 1;
+        },
+        'routeSearch': function routeSearch() {
+            return this.$route.query.search ? this.$route.query.search : '';
+        },
+        'routeType': function routeType() {
+            return this.$route.query.type ? this.$route.query.type : 'title';
+        }
+    },
     methods: {
-        setProblems: function setProblems(cp) {
+        setProblems: function setProblems() {
             var _this = this;
 
+            var cp = this.curPage;
+            this.search.content = this.routeSearch;
+            this.search.type = this.routeType;
             var getUrl = '/api/problems' + '?page=' + cp + '&search=' + this.search.content + '&type=' + this.search.type;
+            console.log(getUrl);
+            if (this.search.content && this.search.type != 'title') {
+                this.noTitle = true;
+            } else this.noTitle = false;
             this.loading = true;
             axios.get(getUrl).then(function (response) {
                 _this.loading = false;
@@ -1545,21 +1563,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         },
-
-        handleCurrentChange: function handleCurrentChange(cp) {
-            this.changeRouter(cp);
-            this.setProblems(cp);
-        },
-        changeRouter: function changeRouter(cp) {
+        changePageRoute: function changePageRoute(cp) {
             var que = { page: cp };
-            if (this.search.content) {
-                que.search = this.search.content;
-                if ((que.type = this.search.type) != 'title') {
-                    this.noTitle = true;
-                } else {
-                    this.noTitle = false;
-                }
-            } else this.noTitle = false;
+            if (this.$route.query.search) {
+                que.search = this.$route.query.search;
+                que.type = this.$route.query.type;
+            }
             this.$router.push({ query: que });
         },
         onSearch: function onSearch() {
@@ -1567,9 +1576,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (this.emptySearch++ > 10) {
                     alert("老哥点那么多下干嘛？");
                 }
+                alert("?");
                 return false;
             }
-            this.handleCurrentChange(this.$route.query.page);
+            var que = { page: 1 };
+            que.search = this.search.content;
+            que.type = this.search.type;
+            this.$router.push({ query: que });
+        }
+    },
+    watch: {
+        '$route.query': function $routeQuery() {
+            this.setProblems();
         }
     }
 });
@@ -23209,10 +23227,10 @@ var render = function() {
                   attrs: {
                     layout: "prev, pager, next",
                     total: _vm.total,
-                    "page-size": 100,
+                    "page-size": 10,
                     "current-page": parseInt(_vm.$route.query.page)
                   },
-                  on: { "current-change": _vm.handleCurrentChange }
+                  on: { "current-change": _vm.changePageRoute }
                 }),
                 _vm._v(" "),
                 _c("problems-table", {
@@ -23231,10 +23249,10 @@ var render = function() {
                       attrs: {
                         layout: "prev, pager, next",
                         total: _vm.total,
-                        "page-size": 100,
+                        "page-size": 10,
                         "current-page": parseInt(_vm.$route.query.page)
                       },
-                      on: { "current-change": _vm.changeRouter }
+                      on: { "current-change": _vm.changePageRoute }
                     })
                   ],
                   1
