@@ -1,10 +1,10 @@
 require('./bootstrap');
 
-window.Vue = require('vue');
 import 'element-ui/lib/theme-chalk/index.css'
 import ElementUI from 'element-ui'
 import VueRouter from 'vue-router'
 
+window.Vue = require('vue');
 Vue.use(ElementUI);
 Vue.use(VueRouter);
 

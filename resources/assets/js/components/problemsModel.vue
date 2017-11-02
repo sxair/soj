@@ -7,7 +7,7 @@
                             layout="prev, pager, next"
                             :total="total"
                             :page-size="10"
-                            :current-page="parseInt($route.query.page)"
+                            :current-page="parseInt(curPage)"
                             @current-change="changePageRoute"
                     >
                     </el-pagination>
@@ -18,7 +18,7 @@
                                 layout="prev, pager, next"
                                 :total="total"
                                 :page-size="10"
-                                :current-page="parseInt($route.query.page)"
+                                :current-page="parseInt(curPage)"
                                 @current-change="changePageRoute"
                                 style="float: right;margin-top:-18px"
                         >
@@ -32,7 +32,7 @@
                 <el-card>
                     <el-form ref="search" :model="search">
                         <el-form-item>
-                            <el-input v-model="search.content"></el-input>
+                            <el-input v-model="search.content"  @keyup.enter.native="onSearch"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-select v-model="search.type" style="width:120px">
@@ -97,25 +97,25 @@
             this.setProblems();
         },
         computed: {
-            'curPage' : function () {
+            'curPage': function () {
                 return this.$route.query.page ? this.$route.query.page : 1;
             },
-            'routeSearch' : function () {
-                return this.$route.query.search?this.$route.query.search:'';
+            'routeSearch': function () {
+                return this.$route.query.search ? this.$route.query.search : '';
             },
-            'routeType' : function () {
-                return this.$route.query.type?this.$route.query.type:'title';
+            'routeType': function () {
+                return this.$route.query.type ? this.$route.query.type : 'title';
             }
         },
         methods: {
-            setProblems: function() {
+            setProblems: function () {
                 let cp = this.curPage;
                 this.search.content = this.routeSearch;
                 this.search.type = this.routeType;
                 let getUrl = '/api/problems' + '?page=' + cp + '&search=' + this.search.content
                     + '&type=' + this.search.type;
                 console.log(getUrl);
-                if(this.search.content && this.search.type != 'title') {
+                if (this.search.content && this.search.type != 'title') {
                     this.noTitle = true;
                 } else this.noTitle = false;
                 this.loading = true;
@@ -126,14 +126,21 @@
                         this.total = parseInt(response.data.total);
                     })
                     .catch((error) => {
-                        if(error.response.status == 429) {
+                        if (error.response.status == 429) {
                             this.$message.error('访问过快，请稍后刷新');
                         }
                         console.log(error);
                     });
             },
             changePageRoute: function (cp) {
-                let que = {page: cp};
+                let que = {};
+                /* fix this:
+                 * problems -> problems?page = 3
+                 * if back then will add a route ?page=1
+                 */
+                if (cp != 1 || this.$rouet.query.page) {
+                    que.page = cp;
+                }
                 if (this.$route.query.search) {
                     que.search = this.$route.query.search;
                     que.type = this.$route.query.type;
@@ -141,11 +148,11 @@
                 this.$router.push({query: que});
             },
             onSearch: function () {
-                if(this.search.content === '') {
-                    if(this.emptySearch++ > 10) {
+                if (this.search.content === '') {
+                    if (this.emptySearch++ > 10) {
                         alert("老哥点那么多下干嘛？");
                     }
-                    alert("?");
+                    this.$message.error('请输入搜索内容');
                     return false;
                 }
                 let que = {page: 1};
@@ -155,7 +162,7 @@
             },
         },
         watch: {
-            '$route.query' : function () {
+            '$route.query': function () {
                 this.setProblems();
             }
         }
