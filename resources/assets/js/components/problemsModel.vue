@@ -97,18 +97,18 @@
             this.setProblems();
         },
         computed: {
-            'curPage': function () {
+            'curPage'() {
                 return this.$route.query.page ? this.$route.query.page : 1;
             },
-            'routeSearch': function () {
+            'routeSearch'() {
                 return this.$route.query.search ? this.$route.query.search : '';
             },
-            'routeType': function () {
+            'routeType'() {
                 return this.$route.query.type ? this.$route.query.type : 'title';
             }
         },
         methods: {
-            setProblems: function () {
+            setProblems() {
                 let cp = this.curPage;
                 this.search.content = this.routeSearch;
                 this.search.type = this.routeType;
@@ -132,7 +132,7 @@
                         console.log(error);
                     });
             },
-            changePageRoute: function (cp) {
+            changePageRoute(cp) {
                 let que = {};
                 /* fix this:
                  * problems -> problems?page = 3
@@ -147,7 +147,7 @@
                 }
                 this.$router.push({query: que});
             },
-            onSearch: function () {
+            onSearch() {
                 if (this.search.content === '') {
                     if (this.emptySearch++ > 10) {
                         alert("老哥点那么多下干嘛？");

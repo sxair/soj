@@ -1,5 +1,63 @@
-$slideout-media : 500px !default;
-$slideout-width : 256px !default;
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px dashed;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 0; // override default ul
+  list-style: none;
+  float: left;
+  font-size: 14px;
+  text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
+  background-color: #222;
+  border: 1px solid  rgba(0,0,0,.15);
+  border-radius: 0 0 4px 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175); // iOS <4.3 & Android <4.1
+  box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  background-clip: padding-box;
+  // Links within the dropdown menu
+  > li > a {
+    display: block;
+    padding: 5px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.428571429;
+    color: #9d9d9d;
+    white-space: nowrap; // prevent links from randomly breaking onto new lines
+    &:hover, &:focus {
+      text-decoration: none;
+      color: #ffffff;
+      background-color: transparent;
+    }
+  }
+}
+@media screen and (max-width: $slideout-media) {
+  .dropdown-menu {
+    display: block !important;
+    z-index: 1000;
+    margin: 0;
+    width: 100%;
+    padding: 10px 20px;
+    text-align: center;
+    list-style: none;
+    font-size: 14px;
+    border: 0px;
+    border-top: 1px solid  rgba(0,0,0,.15);
+  }
+}
+
 .s-navbar {
   position: relative;
   left: 0;
@@ -8,7 +66,7 @@ $slideout-width : 256px !default;
   min-height: 50px;
   border-bottom: 1px solid #d3d3d3;
   z-index: 1000;
-  background-color: #222;
+  background-color: $background-color;
   a {
     text-decoration: none;
   }
@@ -34,17 +92,28 @@ $slideout-width : 256px !default;
   }
 }
 
+.s-navfix {
+  display: block !important;
+  padding-bottom: 0;
+  overflow: visible !important;
+  height: auto !important;
+  width: auto;
+  &::after, &::before {
+    content: " ";
+    display: table;
+  }
+  &::after{
+    clear: both;
+  }
+}
+
 .s-nav {
   list-style: none;
   margin: 0;
-  width: auto;
-  display: block !important;
-  height: auto !important;
-  padding-bottom: 0;
-  overflow: visible !important;
+  padding: 0;
   > li {
-    float: left;
     > a {
+      position: relative;
       line-height: 22px;
       color: #9d9d9d;
       display: block;
@@ -56,12 +125,21 @@ $slideout-width : 256px !default;
       }
     }
   }
+  &::after, &::before {
+    content: " ";
+    display: table;
+  }
+  &::after{
+    clear: both;
+  }
 }
 
 @media (min-width: $slideout-media) {
   .s-nav-right {
-    margin-right: -15px;
     float: right !important;
+  }
+  .s-nav, .s-nav > li {
+    float: left;
   }
 }
 
