@@ -1,0 +1,206 @@
+$slideout-media : 500px !default;
+$slideout-width : 256px !default;
+.s-navbar {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  min-height: 50px;
+  border-bottom: 1px solid #d3d3d3;
+  z-index: 1000;
+  background-color: #222;
+  a {
+    text-decoration: none;
+  }
+}
+
+.s-navbar-brand {
+  color: #9d9d9d;
+  float: left;
+  padding: 14px 15px;
+  font-size: 18px;
+  line-height: 22px;
+  height: 50px;
+  margin-right: -15px;
+  margin-left: 0;
+  @media (min-width: $slideout-media) {
+    margin-right: 0;
+    margin-left: -15px;
+  }
+  &:hover,
+  &:focus {
+    color: #ffffff;
+    background-color: transparent;
+  }
+}
+
+.s-nav {
+  list-style: none;
+  margin: 0;
+  width: auto;
+  display: block !important;
+  height: auto !important;
+  padding-bottom: 0;
+  overflow: visible !important;
+  > li {
+    float: left;
+    > a {
+      line-height: 22px;
+      color: #9d9d9d;
+      display: block;
+      padding: 14px 15px;
+      &:hover,
+      &:focus {
+        color: #ffffff;
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+@media (min-width: $slideout-media) {
+  .s-nav-right {
+    margin-right: -15px;
+    float: right !important;
+  }
+}
+
+/*********slideout***********/
+@media screen and (min-width: $slideout-media) {
+  .slideout-menu {
+    display: block;
+  }
+
+  .s-navbar-btn {
+    display: none;
+  }
+}
+
+@media screen and (max-width: $slideout-media){
+  .s-mhidden{
+    display: none;
+  }
+
+  .s-navbar{
+    border-bottom:0;
+  }
+
+  .s-nav {
+    margin: 7px -15px;
+    list-style: none;
+    padding-left: 0;
+    &::before, &::after {
+      content: " ";
+      display: table;
+    }
+    &::after{
+      clear: both;
+    }
+    > li{
+      position: relative;
+      float: none;
+      > a {
+        text-align: center;
+        padding: 10px 15px 10px 15px;
+        line-height: 22px;
+      }
+    }
+  }
+
+  .s-navbar-btn {
+    position: fixed;
+    display: block;
+    left: 0;
+    top: 0;
+    width: 100%;
+    backface-visibility: hidden;
+    min-height: 50px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #d5d4d4;
+    z-index: 2;
+    background-color: #222;
+    will-change: transform;
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .slideout-btn {
+    position: static;
+    float: right;
+    padding: 9px 10px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    background-color: #333;
+    border: 1px solid #333;
+    border-radius: 4px;
+    .icon-bar {
+      display: block;
+      width: 22px;
+      height: 2px;
+      border-radius: 1px;
+      background: #fff;
+    }
+    .icon-bar + .icon-bar {
+      margin-top: 4px;
+    }
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  .slideout-menu {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: $slideout-width;
+    min-height: 100vh;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    z-index: 0; /*must less than slideout-panel*/
+    display: none;
+  }
+
+  .slideout-menu-left {
+    left: 0;
+  }
+
+  .slideout-menu-right {
+    right: 0;
+  }
+
+  .slideout-panel {
+    position: relative;
+    z-index: 1;
+    will-change: transform;
+    background-color: #fff; /* A background-color is required */
+    min-height: 100vh;
+    padding-top: 50px;
+  }
+
+  .slideout-open,
+  .slideout-open body,
+  .slideout-open .slideout-panel {
+    overflow: hidden;
+  }
+
+  .slideout-open .slideout-menu {
+    display: block;
+  }
+}
+
+.panel:before {
+  content: '';
+  display: block;
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 0.5s ease-in-out;
+}
+
+.panel-open:before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, .5);
+  z-index: 99;
+}
