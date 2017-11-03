@@ -32,7 +32,7 @@
                 <el-card>
                     <el-form ref="search" :model="search">
                         <el-form-item>
-                            <el-input v-model="search.content"  @keyup.enter.native="onSearch"></el-input>
+                            <el-input v-model="search.content" @keyup.enter.native="onSearch"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-select v-model="search.type" style="width:120px">
@@ -87,8 +87,7 @@
                 }, {
                     value: 'source',
                     label: 'source'
-                }
-                ],
+                }],
                 emptySearch: 0,
                 noTitle: false,
             }
@@ -114,7 +113,6 @@
                 this.search.type = this.routeType;
                 let getUrl = '/api/problems' + '?page=' + cp + '&search=' + this.search.content
                     + '&type=' + this.search.type;
-                console.log(getUrl);
                 if (this.search.content && this.search.type != 'title') {
                     this.noTitle = true;
                 } else this.noTitle = false;
@@ -138,7 +136,7 @@
                  * problems -> problems?page = 3
                  * if back then will add a route ?page=1
                  */
-                if (cp != 1 || this.$rouet.query.page) {
+                if(cp != 1 || this.$route.query.page) {
                     que.page = cp;
                 }
                 if (this.$route.query.search) {
@@ -162,7 +160,7 @@
             },
         },
         watch: {
-            '$route.query': function () {
+            '$route.query': function() {
                 this.setProblems();
             }
         }

@@ -14,7 +14,7 @@ class TestSeeder extends Seeder
         // if use model-factories while faster
         // but I'm lazy to create model
 
-        DB::table('oj_problems')->insert([
+        DB::table('users')->insert([
             'name' => 'sair',
             'email' => '80976512@qq.com',
             'password' => bcrypt('123123'),
@@ -65,14 +65,32 @@ class TestSeeder extends Seeder
 </code></pre>
 EOF;
 
-        for($i=0;$i<100;$i++) {
+        for($i=0;$i<200;$i++) {
             DB::table('oj_problems')->insert([
                 'problem_id' => $i+1,
                 'title' => str_random(10),
             ]);
-            DB::table('oj_status')->insert([
 
+            $randstatus = rand(1,11);
+            if($randstatus > 5) {
+                $randstatus *= 10000;
+                $randstatus += rand(1,10);
+            }
+            if(rand(0,1)) {
+                $user_name = str_random(8);
+            } else {
+                $user_name = 'sair';
+            }
+            DB::table('oj_status')->insert([
+                'problem_id' => 1000,
+                'lang' => rand(1, 4),
+                'user_name' => $user_name,
+                'status' => $randstatus,
+                'time' => rand(0,1000),
+                'memory' => rand(1000,100000),
+                'code_len' => rand(100,1000),
             ]);
+
             DB::table('admin_problems')->insert([
                 'problem_id' => $i+1,
                 'title' => str_random(10),

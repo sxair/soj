@@ -18,7 +18,6 @@ class CreateOjStatusTable extends Migration
             $table->unsignedInteger('problem_id')->index();
             $table->tinyInteger('lang')->index();
             $table->string('user_name', 20)->index();
-            $table->unsignedInteger('user_id');
             $table->unsignedInteger('status')->default(0)->index();
             $table->integer('time')->default(0);
             $table->integer('memory')->default(0);

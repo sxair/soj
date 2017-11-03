@@ -11,7 +11,7 @@
     </nav>
     <div class="container" style="padding-top: 10px">
         <el-card>
-            <status></status>
+            <status :user="user"></status>
         </el-card>
     </div>
 @endsection

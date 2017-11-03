@@ -42,7 +42,7 @@
             user: {
                 type: Object,
                 default() {
-                    return { id: 0, name: '', control: 0 }
+                    return { id: 0, name: '', control: 0}
                 }
             }
         },

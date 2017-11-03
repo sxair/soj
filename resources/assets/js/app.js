@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -53,10 +52,10 @@ Vue.use(Loading);
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$message = Message;
 
-Vue.component('navbar',require('./components/navbar.vue'));
-Vue.component('problems-table',require('./components/problemsTable.vue'));
-Vue.component('problems-model',require('./components/problemsModel.vue'));
-Vue.component('status',require('./components/status.vue'));
+Vue.component('navbar', require('./components/navbar.vue'));
+Vue.component('problems-table', require('./components/problemsTable.vue'));
+Vue.component('problems-model', require('./components/problemsModel.vue'));
+Vue.component('status', require('./components/status.vue'));
 const router = new VueRouter({
     mode: 'history',
 });
@@ -64,7 +63,7 @@ const router = new VueRouter({
 window.app = new Vue({
     router,
     data: {
-        user: {name:'',id:0,control:0}
+        user: {name: '', id: 0, control: 0}
     }
 }).$mount('#app');
 

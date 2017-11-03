@@ -1,13 +1,35 @@
 <template>
     <div style="overflow:auto">
-        <el-form :inline="true" ref="search" :model="search">
+        <el-form :inline="true" ref="search" :model="search" size="small" style="margin-left:10px">
             <el-form-item label="Author">
-                <el-input v-model="search.author"  @keyup.enter.native="onSearch"></el-input>
-            </el-form-item>
-            <el-form-item label="pro_id">
-                <el-input v-model="search.proId"
-                          :rules="[{ type: 'number', message: 'id必须为数字值'}]"
+                <el-input v-model="search.author" :maxlength="20"
+                          style="width: 130px"
                           @keyup.enter.native="onSearch"></el-input>
+            </el-form-item>
+            <el-form-item label="Pro_id">
+                <el-input v-model.number="search.proId" :maxlength="5"
+                          style="width: 80px"
+                          @keyup.enter.native="onSearch"></el-input>
+            </el-form-item>
+            <el-form-item label="Result">
+                <el-select v-model="search.status" style="width:180px">
+                    <el-option v-once
+                               v-for="item in results"
+                               :key="item.value"
+                               :label="item.label"
+                               :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="Language">
+                <el-select v-model="search.lang" style="width:120px">
+                    <el-option v-once
+                               v-for="item in languages"
+                               :key="item.value"
+                               :label="item.label"
+                               :value="item.value">
+                    </el-option>
+                </el-select>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="onSearch">查询</el-button>
@@ -33,9 +55,10 @@
                 <td>{{ sta.id }}</td>
                 <td><a href="#">{{ sta.user_name }}</a></td>
                 <td><a href="#">{{ sta.problem_id }}</a></td>
-                <td style="text-align: center">{{ ($sta.status) }}</td>
+                <td style="text-align: center">{{ sta.status }}</td>
                 <td>{{ sta.lang }}</td>
-                <td>{{ sta.code_len }}</td>
+                <td v-if="user.name != sta.user_name">{{ sta.code_len }}</td>
+                <td v-else><a href="/showcode">{{ sta.code_len }}</a></td>
                 <td>{{ sta.time }}</td>
                 <td>{{ sta.memory }}</td>
                 <td>{{ sta.created_at }}</td>
@@ -59,32 +82,70 @@
 <script>
     export default {
         props: {
-            'user': {
+            user: {
                 type: Object,
-                default: {
-                    'name': '',
-                    'id': 0
+                default() {
+                    return { id: 0, name: ''}
                 }
             }
         },
         data() {
             return {
-                'status': {},
-                'loading': false,
-                'search' : {
-                    'author' : '',
-                    'proId' : ''
-                }
+                status: {},
+                loading: true,
+                search: {
+                    author: '',
+                    proId: '',
+                    status: 0,
+                    lang: 0,
+                },
+                total: 0,
+                results: [{value: 0, label: 'All'}, {
+                    value: 1, label: 'Compilation error'
+                }, {
+                    value: 3, label: 'Accepted'
+                }, {
+                    value: 6, label: 'Wrong Answer'
+                }, {
+                    value: 11, label: 'Runtime Error'
+                }, {
+                    value: 9, label: 'Time Limit Exceeded'
+                }, {
+                    value: 7, label: 'Memory Limit Exceeded'
+                }, {
+                    value: 8, label: 'Output Limit Exceeded'
+                }, {
+                    value: 10, label: 'Presentation Error'
+                }],
+                languages: [{
+                    value: 0, label: 'All'
+                }, {
+                    value: 1, label: 'c'
+                }, {
+                    value: 2, label: 'c++'
+                }, {
+                    value: 3, label: 'java'
+                }, {
+                    value: 4, label: 'python3'
+                }]
             }
         },
+        computed: {
+            'curPage'() {
+                return this.$route.query.page ? this.$route.query.page : 1;
+            },
+        },
+        mounted() {
+            this.setStatus();
+        },
         methods: {
-            changePageRoute: function (cp) {
+            changePageRoute(cp) {
                 let que = {};
                 /* fix this:
                  * problems -> problems?page = 3
                  * if back then will add a route ?page=1
                  */
-                if (cp != 1 || this.$rouet.query.page) {
+                if (cp != 1 || this.$route.query.page) {
                     que.page = cp;
                 }
                 if (this.$route.query.search) {
@@ -93,11 +154,53 @@
                 }
                 this.$router.push({query: que});
             },
+            setStatus() {
+                const query = this.$route.query;
+                this.search.author = query.author ? query.author : '';
+                this.search.proId = query.proId ? query.proId : '';
+                this.search.status = query.status ? query.status : 0;
+                this.search.lang = query.lang ? query.lang : 0;
+                let getUrl = '/api/status' + '?page=' + this.curPage + '&author=' + this.search.author
+                    + '&proId=' + this.search.proId + '&status=' + this.search.status
+                    + '&lang=' + this.search.lang;
+                console.log(getUrl);
+                this.loading = true;
+                axios.get(getUrl)
+                    .then((response) => {
+                        this.loading = false;
+                        this.status = response.data.status;
+                        this.total = parseInt(response.data.total);
+                    })
+                    .catch((error) => {
+                        if (error.response.status == 429) {
+                            this.$message.error('访问过快，请稍后刷新');
+                        }
+                        console.log(error);
+                    });
+            },
+            onSearch() {
+                if (!this.search.author && !this.search.proId && !this.search.status && !this.search.lang) {
+                    this.$message.error('请输入搜索内容');
+                    return false;
+                }
+                let que = this.search;
+                que.page = 1;
+                this.$router.push({query: que});
+            },
         },
+        watch: {
+            '$route.query'() {
+                this.setStatus();
+            },
+        }
     }
 </script>
 <style>
-    .el-form-item {
-        margin-bottom:10px;
+    .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
+        margin-bottom: 5px;
+    }
+
+    .el-select-dropdown__item {
+        padding: 0 13px;
     }
 </style>
