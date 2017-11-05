@@ -18,7 +18,7 @@ class CreateProblemsTable extends Migration
             $table->increments('id');
             $table->string('title', 30);
             $table->integer('time_limit');
-            $table->integer('judge_cnt');
+            $table->integer('judge_cnt')->default(0);
             $table->integer('memory_limit');
             $table->tinyInteger('spj');
             $table->text('content');

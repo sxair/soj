@@ -19,9 +19,14 @@ class TestSeeder extends Seeder
             'email' => '80976512@qq.com',
             'password' => bcrypt('123123'),
             'locked' => 1,
-            'control' => 1,
+            'control' => 4294967295,
         ]);
 
+        DB::table('admins')->insert([
+            'id' => 1,
+            'type' => 1,
+            'password' => bcrypt('admin'),
+        ]);
 
         $content = <<<EOF
 <h3 id="problem-description">Problem Description</h3>
@@ -66,9 +71,18 @@ class TestSeeder extends Seeder
 EOF;
 
         for($i=0;$i<200;$i++) {
+            $sub = rand(0,1000);
+            $ac = rand(0, 1000);
+            if($sub < $ac) {
+                $t = $sub;
+                $sub = $ac;
+                $ac = $t;
+            }
             DB::table('oj_problems')->insert([
                 'problem_id' => $i+1,
                 'title' => str_random(10),
+                'accepted' => $ac,
+                'submitted' => $sub,
             ]);
 
             $randstatus = rand(1,11);

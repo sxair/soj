@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
-    <el-row class="container">
+    <div class="container">
         <el-card>
             welcome
         </el-card>
-    </el-row>
+    </div>
 @endsection

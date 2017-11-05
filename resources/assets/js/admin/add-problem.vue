@@ -79,6 +79,7 @@
         },
 
         mounted(){
+            this.form.author = this.user.name;
             this.$notify({
                 title: '提示',
                 dangerouslyUseHTMLString: true,
@@ -101,29 +102,32 @@
                         this.$message.error('你想干嘛');
                         return false;
                     }
+                    if (this.useSpj && !this.form.judge) {
+                        this.$message.error('请填写spj程序');
+                        return false;
+                    }
                     const t = this.form; //axios内部获取不到this
-                    axios.post('/admin/addProblem', {
-                        data: t,
-                    }).then((response) => {
+                    axios.post('/admin/addProblem', t).then((response) => {
                         console.log(response.data);
-                        if (response.data === true) {
+                        if (response.data > 0) {
                             this.$message({
                                 message: '提交成功',
                                 duration: 1500,
                                 type: 'success'
                             });
+                        } else if (response.data.result === -1) {
+                            this.$message.error({
+                                message: '你没有添加题目的权限',
+                            });
                         } else {
-                            this.$message({
-                                message: '我也不知为什么失败了。。',
-                                duration: 1500,
-                                type: 'success'
+                            this.$message.error({
+                                message: '添加题目失败',
                             });
                         }
-
                     }).catch((error) => {
                         console.log(error.response.data);
                         if (error.response.status === 422) {
-                            this.$message.error('表单填写错误，请联系管理员');
+                            this.$message.error('表单填写错误，请查看控制台信息');
                             console.log(error.response.data.errors);
                         } else {
                             this.$message({

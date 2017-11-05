@@ -55,12 +55,12 @@
                 <td>{{ sta.id }}</td>
                 <td><a href="#">{{ sta.user_name }}</a></td>
                 <td><a href="#">{{ sta.problem_id }}</a></td>
-                <td style="text-align: center">{{ sta.status }}</td>
-                <td>{{ sta.lang }}</td>
+                <td><to-html :arg="sta.status" :type=1></to-html></td>
+                <td><to-html :arg="sta.lang" :type=0></to-html></td>
                 <td v-if="user.name != sta.user_name">{{ sta.code_len }}</td>
-                <td v-else><a href="/showcode">{{ sta.code_len }}</a></td>
-                <td>{{ sta.time }}</td>
-                <td>{{ sta.memory }}</td>
+                <td v-else><a href="/showcode">A{{ sta.code_len }} B</a></td>
+                <td>{{ sta.time }} MS</td>
+                <td>{{ sta.memory }} KB</td>
                 <td>{{ sta.created_at }}</td>
             </tr>
             </tbody>

@@ -13,20 +13,22 @@
                 <tbody>
                 <tr>
                     <th width="10%">id</th>
-                    <th width="50%">title</th>
+                    <th width="45%">title</th>
                     <th>author</th>
                     <th>public</th>
                     <th>operation</th>
                 </tr>
                 <tr v-for="problem in problems">
                     <td>{{ problem.problem_id }}</td>
-                    <td>{{ problem.title }}</td>
+                    <td><a href="">{{ problem.title }}</a></td>
                     <td>{{ problem.user_name }}</td>
                     <td>{{ problem.public ? 'yes' : 'no' }}</td>
                     <td>
-                        <a href="#">修改</a>
-                        <a v-if="problem.show" href="#">添加到oj</a>
-                        <a href="#" v-else>已添加</a>
+                        <el-button size="mini" type="info"
+                                @click="">编辑</el-button>
+                        <el-button size="mini" v-if="problem.show" type="primary">加至oj</el-button>
+                        <el-button size="mini" v-else type="success">已添加</el-button>
+                        <el-button size="mini" type="warning">修改数据</el-button>
                     </td>
                 </tr>
                 </tbody>

@@ -51,6 +51,14 @@ class ProblemsController extends Controller
         return response()->json($this->getPageJson($sql, [], 'status', $page, $perPage));
     }
 
+    public function problem($id = 1000) {
+        $ojpro = DB::table('oj_problems')->where('id', $id)->first();
+        if(is_null($ojpro)) return view('errors.noFind');
+        $pro = DB::table('problems')->where('id', $ojpro->problem_id)->first();
+        $problem = (object)array_merge((array)$pro, (array)$ojpro);
+        return view('problem', ['pro' => $problem]);
+    }
+
     public function proinfo($id)
     {
         $pro = DB::table('oj_problem_infos')

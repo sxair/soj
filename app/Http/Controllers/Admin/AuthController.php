@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
@@ -25,17 +26,19 @@ class AuthController extends Controller
     {
         $this->user = Auth::user();
         $this->validate($request, [
-            'password' => 'required|string',
+            'password' => 'required',
         ]);
         if ($this->hasTooManyLoginAttempts($request)) {
             return $this->sendLockoutResponse($request);
         }
-        if (DB::table('admin_passwd')->where('passwd', $request->input('password'))
-            ->find($this->user->id)) {
+        $user = DB::table('admins')->find($this->user->id);
+        if(is_null($user))
+            return redirect()->back()->with('failed', '您没有管理权限');
+        if (Hash::check($request->input('password'), $user->password)) {
             $this->clearLoginAttempts($request);
             $str = str_random(16);
             session(['control' => $str]);
-            return redirect('control')->cookie('control', $str);
+            return redirect('admin')->cookie('control', $str);
         }
         $this->incrementLoginAttempts($request);
         $time = $this->maxAttempts() - $this->limiter()->attempts($this->throttleKey($request));

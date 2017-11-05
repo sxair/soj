@@ -1,7 +1,14 @@
 <?php
 
-Route::view('/', 'admin.index');
+Route::middleware('control')->group(function () {
+    Route::view('/', 'admin.index');
 
-Route::get('problems', 'Admin\ProblemsController@problems');
+    Route::get('problems', 'ProblemsController@problems');
 
-Route::post('addProblem', 'Admin\ProblemsController@addProblem');
+    Route::post('addProblem', 'ProblemsController@addProblem');
+});
+
+
+Route::view('login', 'admin.login')->middleware('haveControl');
+
+Route::post('login', 'AuthController@login')->middleware('haveControl');

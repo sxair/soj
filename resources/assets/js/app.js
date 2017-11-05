@@ -5,6 +5,7 @@
  */
 
 require('./bootstrap');
+
 window.Vue = require('vue');
 
 import 'element-ui/lib/theme-chalk/index.css'
@@ -21,10 +22,7 @@ import {
     FormItem,
     Select,
     Option,
-    Table,
-    TableColumn,
     Card,
-    Row,
     Col,
     Loading,
     Message,
@@ -42,10 +40,7 @@ Vue.use(Select);
 Vue.use(Option);
 Vue.use(Form);
 Vue.use(FormItem);
-Vue.use(Table);
-Vue.use(TableColumn);
 Vue.use(Card);
-Vue.use(Row);
 Vue.use(Col);
 //Vue.use(Message); 不能加
 Vue.use(Loading);
@@ -53,6 +48,7 @@ Vue.prototype.$loading = Loading.service;
 Vue.prototype.$message = Message;
 
 Vue.component('navbar', require('./components/navbar.vue'));
+Vue.component('to-html', require('./components/toHtml.vue'));
 Vue.component('problems-table', require('./components/problemsTable.vue'));
 Vue.component('problems-model', require('./components/problemsModel.vue'));
 Vue.component('status', require('./components/status.vue'));
@@ -60,11 +56,17 @@ const router = new VueRouter({
     mode: 'history',
 });
 
-window.app = new Vue({
-    router,
-    data: {
-        user: {name: '', id: 0, control: 0}
+if(typeof user ==="undefined") {
+    var user = {
+        id: 0,
+        name: '',
+        control: 0
     }
+}
+Vue.prototype.user = user;
+
+window.app = new Vue({
+    router
 }).$mount('#app');
 
 // import {

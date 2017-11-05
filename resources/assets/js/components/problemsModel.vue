@@ -1,23 +1,26 @@
 <template>
-    <el-row class="container">
+    <div class="container">
         <el-col :md="19">
             <div style="margin-top: 10px">
                 <el-card>
                     <el-pagination
                             layout="prev, pager, next"
                             :total="total"
-                            :page-size="10"
+                            :page-size="100"
                             :current-page="parseInt(curPage)"
                             @current-change="changePageRoute"
                     >
                     </el-pagination>
-                    <problems-table :problems="problems" :search="noTitle"
-                                    :loading="loading"></problems-table>
+                    <problems-table :problems="problems"
+                                    :search="noTitle"
+                                    :loading="loading"
+                                    :proUrl="/problem/"
+                    ></problems-table>
                     <div>
                         <el-pagination
                                 layout="prev, pager, next"
                                 :total="total"
-                                :page-size="10"
+                                :page-size="100"
                                 :current-page="parseInt(curPage)"
                                 @current-change="changePageRoute"
                                 style="float: right;margin-top:-18px"
@@ -65,7 +68,7 @@
                 </div>
             </div>
         </el-col>
-    </el-row>
+    </div>
 </template>
 <script>
     export default {
@@ -136,7 +139,7 @@
                  * problems -> problems?page = 3
                  * if back then will add a route ?page=1
                  */
-                if(cp != 1 || this.$route.query.page) {
+                if (cp != 1 || this.$route.query.page) {
                     que.page = cp;
                 }
                 if (this.$route.query.search) {
@@ -160,7 +163,7 @@
             },
         },
         watch: {
-            '$route.query': function() {
+            '$route.query': function () {
                 this.setProblems();
             }
         }

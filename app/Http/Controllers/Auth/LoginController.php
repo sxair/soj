@@ -58,6 +58,19 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
+    protected function attemptLogin(Request $request)
+    {
+        if(strrchr($request->input('email'), '@')) {
+            return $this->guard()->attempt(
+                $this->credentials($request), $request->filled('remember')
+            );
+        }
+        return $this->guard()->attempt(
+            ['name' => $request->input('email'), 'password' => $request->input('password')],
+            $request->filled('remember')
+        );
+    }
+
     protected function sendLoginResponse(Request $request)
     {
         $request->session()->regenerate();

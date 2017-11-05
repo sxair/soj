@@ -6,8 +6,8 @@
             <thead>
             <tr>
                 <th width="10%">id</th>
-                <th v-if="search">title</th>
-                <th width="70%" v-else>title</th>
+                <th v-if="search" :href="proUrl">title</th>
+                <th width="70%" v-else :href="proUrl">title</th>
                 <th v-if="search">author</th>
                 <th v-if="search">source</th>
                 <th>Ac/Sub</th>
@@ -16,10 +16,12 @@
             <tbody>
             <tr v-for="problem in problems">
                 <td>{{ problem.id }}</td>
-                <td><a href="api/problems">{{ problem.title }}</a></td>
+                <td><a :href="prourl(problem.id)">{{ problem.title }}</a></td>
                 <td v-if="search">{{ problem.author }}</td>
                 <td v-if="search">{{ problem.source }}</td>
-                <td>{{ problem.submitted ? (parseFloat(problem.accepted) / problem.submitted * 100).toFixed(2) + '%' : '0.00%' }}</td>
+                <td>{{ problem.submitted ? (parseFloat(problem.accepted) / problem.submitted * 100).toFixed(2) + '%' : '0.00%' }}
+                    ({{ problem.accepted }}/{{ problem.submitted }})
+                </td>
             </tr>
             </tbody>
         </table>
@@ -40,8 +42,17 @@
             'loading': {
                 type: Boolean,
                 default: true,
+            },
+            'proUrl': {
+                typt: String,
+                default: '#'
             }
         },
+        methods: {
+            prourl(id) {
+                return this.proUrl + id;
+            }
+        }
     }
 </script>
 <style>

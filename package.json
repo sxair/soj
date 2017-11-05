@@ -22,6 +22,7 @@
         "vue": "^2.5.2"
     },
     "dependencies": {
+        "ace-builds": "^1.2.9",
         "element-ui": "^2.0.1",
         "font-awesome": "^4.7.0",
         "github-markdown-css": "^2.9.0",

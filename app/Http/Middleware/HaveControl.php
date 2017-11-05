@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class Admin
+class HaveControl
 {
     protected $user;
 
@@ -20,10 +20,8 @@ class Admin
             return redirect('login');
         }
         if($this->user->control & config('soj.admin.control')) {
-            if(session()->has('control') && session('control') == $request->cookie('control')) {
-                return $next($request);
-            }
+            return $next($request);
         }
-        return redirect('/control/login');
+        return redirect('/');
     }
 }

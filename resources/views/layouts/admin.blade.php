@@ -11,7 +11,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/soj.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/soj.css') }}" rel="stylesheet">
 </head>
 <body>
 <div id="app">
@@ -20,7 +20,7 @@
     </nav>
     <div id="panel">
         <nav class="s-navbar-btn">
-            <div class="s-container">
+            <div class="container">
                 <a class="s-navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'MNNUOJ') }}
                 </a>
@@ -48,7 +48,7 @@
             control: '{{ Auth::user()->control }}'
         };
     </script>
-    @else
+@else
     <script>
         var user = {
             id: 0,
@@ -59,8 +59,8 @@
 @endif
 <script src="{{ mix('js/manifest.js') }}"></script>
 <script src="{{ mix('js/vendor.js') }}"></script>
-<script src="{{ mix('js/app.js') }}"></script>
+<script src="{{ mix('js/admin.js') }}"></script>
 <script src="{{ mix('js/soj.js') }}"></script>
-@stack('js')
+
 </body>
 </html>
