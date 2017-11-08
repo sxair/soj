@@ -32,3 +32,4 @@ Route::view('problems', 'problems');
 Route::view('status', 'status');
 Route::view('ranks', 'ranks');
 Route::get('/problem/{id?}', 'ProblemsController@problem');
+

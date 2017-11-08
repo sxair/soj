@@ -28,6 +28,16 @@ class TestSeeder extends Seeder
             'password' => bcrypt('admin'),
         ]);
 
+        DB::table('soj')->insert([
+            'name' => 'label',
+            'content' => '[
+    {"name": "全部问题", "id": 1000},
+    {"name": "图论", "id": 2000, "son": [
+           {"name": "最短路", "id": 2001}
+        ]
+    },
+]']);
+
         $content = <<<EOF
 <h3 id="problem-description">Problem Description</h3>
 <p>Calculate a + b.</p>

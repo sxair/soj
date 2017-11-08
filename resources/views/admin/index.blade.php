@@ -8,5 +8,7 @@
             <router-view class="s-fix"></router-view>
         </el-col>
     </div>
-    <script src="{{ mix('js/ace.js') }}"></script>
 @endsection
+@push('js')
+<script src="{{ asset('ace-builds/src-min/ace.js') }}"></script>
+@endpush

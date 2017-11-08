@@ -61,6 +61,6 @@
 <script src="{{ mix('js/vendor.js') }}"></script>
 <script src="{{ mix('js/admin.js') }}"></script>
 <script src="{{ mix('js/soj.js') }}"></script>
-
+@stack('js')
 </body>
 </html>

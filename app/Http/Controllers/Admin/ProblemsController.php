@@ -69,4 +69,10 @@ class ProblemsController extends Controller
         ]);
         return response()->json(['result' => $id]);
     }
+
+    public function cgLabel(Request $request) {
+        DB::table('soj')->where('name', 'label')
+            ->update(['content' => $request->input('label')]);
+        return response()->json(['result' => 1]);
+    }
 }

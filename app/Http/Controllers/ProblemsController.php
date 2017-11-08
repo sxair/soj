@@ -59,6 +59,12 @@ class ProblemsController extends Controller
         return view('problem', ['pro' => $problem]);
     }
 
+    public function label() {
+        $lable = DB::table('soj')->select('content')
+            ->where('name','label')->first();
+        return response()->json($lable);
+    }
+
     public function proinfo($id)
     {
         $pro = DB::table('oj_problem_infos')

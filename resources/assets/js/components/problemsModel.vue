@@ -52,18 +52,13 @@
                 </el-card>
                 <div style="padding-top: 10px;">
                     <el-card>
-                        <el-menu>
-                            <el-submenu index="1">
-                                <template slot="title">
-                                    <i class="el-icon-location"></i>
-                                    <span>导航一</span>
-                                </template>
-                                <el-menu-item-group>
-                                    <el-menu-item index="1-1">选项1</el-menu-item>
-                                    <el-menu-item index="1-2">选项2</el-menu-item>
-                                </el-menu-item-group>
-                            </el-submenu>
-                        </el-menu>
+                        <div style="margin-bottom: 10px">
+                            <el-menu :default-active="$route.query.label">
+                                <el-menu-item v-for="it in label" :index=(String)"it.id">
+                                    <span slot="title">{{ it.name }}</span>
+                                </el-menu-item>
+                            </el-menu>
+                        </div>
                     </el-card>
                 </div>
             </div>
@@ -93,10 +88,15 @@
                 }],
                 emptySearch: 0,
                 noTitle: false,
+                label: [{
+                    name: '所有问题',
+                    id: 0
+                }]
             }
         },
         mounted() {
             this.setProblems();
+            this.setLabel();
         },
         computed: {
             'curPage'() {
@@ -110,6 +110,15 @@
             }
         },
         methods: {
+            setLabel() {
+                axios.get("api/label")
+                    .then((response) => {
+                        this.label = eval(response.data.content);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            },
             setProblems() {
                 let cp = this.curPage;
                 this.search.content = this.routeSearch;
@@ -127,7 +136,7 @@
                         this.total = parseInt(response.data.total);
                     })
                     .catch((error) => {
-                        if (error.response.status == 429) {
+                        if (error.response.status === 429) {
                             this.$message.error('访问过快，请稍后刷新');
                         }
                         console.log(error);
@@ -161,6 +170,9 @@
                 que.type = this.search.type;
                 this.$router.push({query: que});
             },
+            onLabel() {
+                alert("?");
+            }
         },
         watch: {
             '$route.query': function () {
