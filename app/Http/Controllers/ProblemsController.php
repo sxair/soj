@@ -12,7 +12,7 @@ class ProblemsController extends Controller
     public function getPageJson($sql, $select, $pageName, $page, $perPage)
     {
         $total = $sql->count();
-        if(!empty($select)) {
+        if (!empty($select)) {
             $sql = $sql->select($select);
         }
         $problems = $sql->offset(($page - 1) * $perPage)->limit($perPage)->get();
@@ -23,9 +23,9 @@ class ProblemsController extends Controller
     {
         $type = $request->input('type');
         $search = $request->input('search');
-        $page = $request->input('page');
-        if (is_null($page)) $page = 1;
-        $perPage = 100;
+        $page = (int)$request->input('page');
+        if (is_null($page) || $page <= 0) $page = 1;
+        $perPage = 50;
         if (!is_null($search)) {
             if ($type == 'author' || $type == 'source') {
                 $sql = DB::table('oj_problems')
@@ -44,24 +44,38 @@ class ProblemsController extends Controller
 
     public function status(Request $request)
     {
+        $search['author'] = $request->input('author');
+        $search['problem_id'] = $request->input('proId');
+        $search['lang'] = $request->input('lang');
+        $search = array_filter($search);
         $page = $request->input('page');
-        if (is_null($page)) $page = 1;
-        $perPage = 30;
-        $sql = DB::table('oj_status')->orderBy('id', 'dasc');
+        $perPage = 15;
+        $status = (integer)$request->input('status');
+        $sql = DB::table('oj_status')->where($search)->orderBy('id', 'dasc');
+        if ($status > 0 && $status <= 11 && $status != 2 && $status != 4 && $status != 5) {
+            if ($status < 4) {
+                $sql = $sql->where('status', $status);
+            } else {
+                $sql = $sql->where('status', '>', $status * 10000)
+                    ->where('status', '<', ($status + 1) * 10000);
+            }
+        }
         return response()->json($this->getPageJson($sql, [], 'status', $page, $perPage));
     }
 
-    public function problem($id = 1000) {
+    public function problem($id = 1000)
+    {
         $ojpro = DB::table('oj_problems')->where('id', $id)->first();
-        if(is_null($ojpro)) return view('errors.noFind');
+        if (is_null($ojpro)) return view('errors.noFind');
         $pro = DB::table('problems')->where('id', $ojpro->problem_id)->first();
         $problem = (object)array_merge((array)$pro, (array)$ojpro);
         return view('problem', ['pro' => $problem]);
     }
 
-    public function label() {
+    public function label()
+    {
         $lable = DB::table('soj')->select('content')
-            ->where('name','label')->first();
+            ->where('name', 'label')->first();
         return response()->json($lable);
     }
 
@@ -85,12 +99,12 @@ class ProblemsController extends Controller
         return view('rank', ['ranks' => $ranks]);
     }
 
-    public function submitPage($id, $time, $memory)
+    public function submitPage($id)
     {
         if (!Auth::check()) {
             return redirect('login?to=' . urlencode(url()->current()));
         }
-        return view('submit', ['id' => $id, 'time' => $time, 'memory' => $memory]);
+        return view('submit', ['id' => $id]);
     }
 
     /*

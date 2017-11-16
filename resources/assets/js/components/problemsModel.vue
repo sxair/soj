@@ -6,7 +6,7 @@
                     <el-pagination
                             layout="prev, pager, next"
                             :total="total"
-                            :page-size="100"
+                            :page-size="50"
                             :current-page="parseInt(curPage)"
                             @current-change="changePageRoute"
                     >
@@ -20,7 +20,7 @@
                         <el-pagination
                                 layout="prev, pager, next"
                                 :total="total"
-                                :page-size="100"
+                                :page-size="50"
                                 :current-page="parseInt(curPage)"
                                 @current-change="changePageRoute"
                                 style="float: right;margin-top:-18px"
@@ -53,11 +53,14 @@
                 <div style="padding-top: 10px;">
                     <el-card>
                         <div style="margin-bottom: 10px">
-                            <el-menu :default-active="$route.query.label">
-                                <el-menu-item v-for="it in label" :index=(String)"it.id">
-                                    <span slot="title">{{ it.name }}</span>
-                                </el-menu-item>
-                            </el-menu>
+                            <ul>
+                                <li v-for="it in label">
+                                    <button @click="onLabelSearch(it.id)">{{ it.name }}</button>
+                                    <ul v-for="s in it.son">
+                                        <li><button @click="onLabelSearch(s.id)">{{ s.name }}</button></li>
+                                    </ul>
+                                </li>
+                            </ul>
                         </div>
                     </el-card>
                 </div>
@@ -73,7 +76,8 @@
                 total: 0,
                 search: {
                     content: '',
-                    type: 'title'
+                    type: 'title',
+                    label: 0
                 },
                 loading: true,
                 options: [{
@@ -107,6 +111,9 @@
             },
             'routeType'() {
                 return this.$route.query.type ? this.$route.query.type : 'title';
+            },
+            'routeLabel'() {
+                return this.$route.query.label ?  this.$route.query.label : 0;
             }
         },
         methods: {
@@ -123,12 +130,15 @@
                 let cp = this.curPage;
                 this.search.content = this.routeSearch;
                 this.search.type = this.routeType;
+                this.search.label = this.routeLabel;
                 let getUrl = '/api/problems' + '?page=' + cp + '&search=' + this.search.content
                     + '&type=' + this.search.type;
                 if (this.search.content && this.search.type != 'title') {
                     this.noTitle = true;
                 } else this.noTitle = false;
                 this.loading = true;
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
                 axios.get(getUrl)
                     .then((response) => {
                         this.loading = false;
@@ -168,10 +178,16 @@
                 let que = {page: 1};
                 que.search = this.search.content;
                 que.type = this.search.type;
+                if(this.search.label) {
+                    que.label = this.search.label;
+                }
                 this.$router.push({query: que});
             },
-            onLabel() {
-                alert("?");
+            onLabelSearch(lid) {
+                this.search.label = parseInt(lid);
+                if(this.search.content === '') {
+                    this.$router.push({query: {label: this.search.label}});
+                } else this.onSearch();
             }
         },
         watch: {
@@ -192,5 +208,9 @@
 
     .el-menu {
         border: 0;
+    }
+
+    .el-pager,.el-pager li, .btn-next, .btn-prev {
+        float: left;
     }
 </style>

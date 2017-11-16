@@ -21,6 +21,9 @@ class TestSeeder extends Seeder
             'locked' => 1,
             'control' => 4294967295,
         ]);
+        DB::table('user_infos')->insert([
+            'id' => '1',
+        ]);
 
         DB::table('admins')->insert([
             'id' => 1,

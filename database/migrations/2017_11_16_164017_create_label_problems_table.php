@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLabelsTable extends Migration
+class CreateLabelProblemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateLabelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('labels', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name', 50);
-            $table->json('son');
+        Schema::create('label_problems', function (Blueprint $table) {
+            $table->integer('id');
+            $table->unsignedInteger('problem_id');
+
+            $table->primary(['id', 'problem_id']);
         });
     }
 
@@ -27,6 +28,6 @@ class CreateLabelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('labels');
+        Schema::dropIfExists('label_problems');
     }
 }

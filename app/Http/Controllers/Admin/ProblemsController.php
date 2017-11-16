@@ -67,7 +67,31 @@ class ProblemsController extends Controller
             'public' => 1,
             'show' => 0,
         ]);
+        DB::table('oj_problems')->insert([
+            'problem_id' => $id,
+            'title' => $request->input('title'),
+        ]);
         return response()->json(['result' => $id]);
+    }
+
+    public function addProblemToOj(Request $request)
+    {
+        $proId = $request->input('proid');
+        $pro = DB::table('problems')->where('id',$proId)->first();
+        if(is_null($pro)) {
+            return;
+        }
+        if(DB::table('oj_problems')->where('problem_id',$proId)->first()) {
+            return;
+        }
+        $id = DB::table('oj_problems')->insert([
+            'problem_id' => $pro->id,
+            'title' => $pro->title,
+        ]);
+        DB::table('oj_problem_infos')->insert([
+            'id' => $id
+        ]);
+        return redirect()->back();
     }
 
     public function cgLabel(Request $request) {

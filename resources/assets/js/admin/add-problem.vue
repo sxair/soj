@@ -24,15 +24,13 @@
                     <el-form-item label="特殊判断">
                         <el-radio-group v-model="form.spj" @change="onChange">
                             <el-radio :label="0">关闭</el-radio>
-                            <el-radio :label="1">精度3位</el-radio>
-                            <el-radio :label="2">精度6位</el-radio>
-                            <el-radio :label="3">自定义</el-radio>
+                            <el-radio :label="1">自定义</el-radio>
                         </el-radio-group>
                         <el-input
                                 v-if="useSpj"
                                 type="textarea"
                                 :autosize="{minRows: 5, maxRows: 10}"
-                                style="width: 60%"
+                                style="width: 60%;display: block"
                                 placeholder="请输入判断代码"
                                 v-model="form.judge">
                         </el-input>
@@ -96,9 +94,8 @@
                         this.$message.error('表单填写错误，请检查');
                         return false;
                     }
-                    this.form.content = this.$refs.contentEditor.simplemde.value();
-                    this.form.content = this.$refs.contentEditor.simplemde.markdown(this.form.content);
-                    if (!this.form.content) {
+                    this.form.content = this.$refs.contentEditor.getValue();
+                     if (!this.form.content) {
                         this.$message.error('你想干嘛');
                         return false;
                     }
@@ -109,7 +106,7 @@
                     const t = this.form; //axios内部获取不到this
                     axios.post('/admin/addProblem', t).then((response) => {
                         console.log(response.data);
-                        if (response.data > 0) {
+                        if (response.data.result > 0) {
                             this.$message({
                                 message: '提交成功',
                                 duration: 1500,
@@ -141,9 +138,7 @@
                 });
             },
             onChange(val) {
-                if (val === 3) {
-                    this.useSpj = true;
-                } else this.useSpj = false;
+                this.useSpj = Boolean(val);
             }
         }
     }

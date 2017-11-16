@@ -42,7 +42,7 @@
 <!-- Scripts -->
 @if(Auth::user())
     <script>
-        var user = {
+        window.user = {
             id: '{{ Auth::id() }}',
             name: '{{ Auth::user()->name }}',
             control: '{{ Auth::user()->control }}'
@@ -50,7 +50,7 @@
     </script>
     @else
     <script>
-        var user = {
+        window.user = {
             id: 0,
             name: '',
             control: 0
