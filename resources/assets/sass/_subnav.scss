@@ -1,5 +1,6 @@
 .s-subbar {
   width: 100%;
+  margin: -13px 0 10px 0;
   position: relative;
   left: 0;
   top: 0;
@@ -51,7 +52,7 @@
       border-radius: 3px 3px 0 0;
       text-decoration: none;
     }
-    .s-active{
+    .router-link-active{
       color: #24292e;
       background-color: #fff;
       border-color: #e36209 #e1e4e8 #fff;

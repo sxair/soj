@@ -1,13 +1,13 @@
 <template>
-    <div style="overflow:auto">
+    <div style="overflow:auto;">
         <table class="table table-hover table-center table-striped" v-loading="loading"
                element-loading-text="加载中╮(╯▽╰)╭"
                :class="problems.length > 13 ? 's-loading':''">
             <thead>
             <tr>
                 <th width="10%">id</th>
-                <th v-if="search" :href="proUrl">title</th>
-                <th width="70%" v-else :href="proUrl">title</th>
+                <th v-if="search" width="40%">title</th>
+                <th width="70%" v-else>title</th>
                 <th v-if="search">author</th>
                 <th v-if="search">source</th>
                 <th>Ac/Sub</th>
@@ -16,7 +16,7 @@
             <tbody>
             <tr v-for="problem in problems">
                 <td>{{ problem.id }}</td>
-                <td><a :href="prourl(problem.id)">{{ problem.title }}</a></td>
+                <td><a :href="pro_url(problem.id)">{{ problem.title }}</a></td>
                 <td v-if="search">{{ problem.author }}</td>
                 <td v-if="search">{{ problem.source }}</td>
                 <td>{{ problem.submitted ? (parseFloat(problem.accepted) / problem.submitted * 100).toFixed(2) + '%' : '0.00%' }}
@@ -43,14 +43,11 @@
                 type: Boolean,
                 default: true,
             },
-            'proUrl': {
-                typt: String,
-                default: '#'
-            }
+            'proUrl': String,
         },
         methods: {
-            prourl(id) {
-                return this.proUrl + id;
+            pro_url(id) {
+                return this.proUrl + '/' + id;
             }
         }
     }

@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class TestSeeder extends Seeder
@@ -34,9 +35,9 @@ class TestSeeder extends Seeder
         DB::table('soj')->insert([
             'name' => 'label',
             'content' => '[
-    {"name": "全部问题", "id": 1000},
-    {"name": "图论", "id": 2000, "son": [
-           {"name": "最短路", "id": 2001}
+    {"name": "全部问题", "id": 0},
+    {"name": "图论", "id": 1000, "son": [
+           {"name": "最短路", "id": 1001}
         ]
     },
 ]']);
@@ -83,27 +84,27 @@ class TestSeeder extends Seeder
 </code></pre>
 EOF;
 
-        for($i=0;$i<200;$i++) {
-            $sub = rand(0,1000);
+        for ($i = 0; $i < 200; $i++) {
+            $sub = rand(0, 1000);
             $ac = rand(0, 1000);
-            if($sub < $ac) {
+            if ($sub < $ac) {
                 $t = $sub;
                 $sub = $ac;
                 $ac = $t;
             }
             DB::table('oj_problems')->insert([
-                'problem_id' => $i+1,
+                'problem_id' => $i + 1,
                 'title' => str_random(10),
                 'accepted' => $ac,
                 'submitted' => $sub,
             ]);
 
-            $randstatus = rand(1,11);
-            if($randstatus > 5) {
+            $randstatus = rand(1, 11);
+            if ($randstatus > 5) {
                 $randstatus *= 10000;
-                $randstatus += rand(1,10);
+                $randstatus += rand(1, 10);
             }
-            if(rand(0,1)) {
+            if (rand(0, 1)) {
                 $user_name = str_random(8);
             } else {
                 $user_name = 'sair';
@@ -113,17 +114,17 @@ EOF;
                 'lang' => rand(1, 4),
                 'user_name' => $user_name,
                 'status' => $randstatus,
-                'time' => rand(0,1000),
-                'memory' => rand(1000,100000),
-                'code_len' => rand(100,1000),
+                'time' => rand(0, 1000),
+                'memory' => rand(1000, 100000),
+                'code_len' => rand(100, 1000),
             ]);
 
             DB::table('admin_problems')->insert([
-                'problem_id' => $i+1,
+                'problem_id' => $i + 1,
                 'title' => str_random(10),
                 'user_name' => 'admin',
                 'public' => rand(0, 1),
-                'show' =>rand(0, 1)
+                'show' => rand(0, 1)
             ]);
             DB::table('problems')->insert([
                 'title' => str_random(10),
@@ -134,6 +135,12 @@ EOF;
                 'content' => $content,
                 'author' => str_random(10),
                 'source' => str_random(10),
+            ]);
+            DB::table('contests')->insert([
+                'title' => str_random(10),
+                'start_time' => Carbon::now(),
+                'end_time' => Carbon::now()->addHour(rand(1, 20)),
+                'user_name' => $user_name
             ]);
         }
     }

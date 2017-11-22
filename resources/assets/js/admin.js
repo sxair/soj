@@ -20,10 +20,7 @@ const router = new VueRouter({
     ]
 });
 
-Vue.prototype.user = user;
-
+Vue.prototype.user = window.user;
 window.app = new Vue({
     router,
 }).$mount('#app');
-
-

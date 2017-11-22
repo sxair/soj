@@ -1,34 +1,32 @@
 <template>
     <div class="container">
         <el-col :md="19">
-            <div style="margin-top: 10px">
-                <el-card>
+            <el-card>
+                <el-pagination
+                        layout="prev, pager, next"
+                        :total="total"
+                        :page-size="50"
+                        :current-page="parseInt(curPage)"
+                        @current-change="changePageRoute"
+                >
+                </el-pagination>
+                <problems-table :problems="problems"
+                                :search="noTitle"
+                                :loading="loading"
+                                proUrl="/problem"
+                ></problems-table>
+                <div>
                     <el-pagination
                             layout="prev, pager, next"
                             :total="total"
                             :page-size="50"
                             :current-page="parseInt(curPage)"
                             @current-change="changePageRoute"
+                            style="float: right"
                     >
                     </el-pagination>
-                    <problems-table :problems="problems"
-                                    :search="noTitle"
-                                    :loading="loading"
-                                    :proUrl="/problem/"
-                    ></problems-table>
-                    <div>
-                        <el-pagination
-                                layout="prev, pager, next"
-                                :total="total"
-                                :page-size="50"
-                                :current-page="parseInt(curPage)"
-                                @current-change="changePageRoute"
-                                style="float: right;margin-top:-18px"
-                        >
-                        </el-pagination>
-                    </div>
-                </el-card>
-            </div>
+                </div>
+            </el-card>
         </el-col>
         <el-col :md="5">
             <div class="s-fix">
@@ -50,20 +48,6 @@
                         </el-form-item>
                     </el-form>
                 </el-card>
-                <div style="padding-top: 10px;">
-                    <el-card>
-                        <div style="margin-bottom: 10px">
-                            <ul>
-                                <li v-for="it in label">
-                                    <button @click="onLabelSearch(it.id)">{{ it.name }}</button>
-                                    <ul v-for="s in it.son">
-                                        <li><button @click="onLabelSearch(s.id)">{{ s.name }}</button></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </el-card>
-                </div>
             </div>
         </el-col>
     </div>
@@ -98,7 +82,7 @@
                 }]
             }
         },
-        mounted() {
+        created() {
             this.setProblems();
             this.setLabel();
         },
@@ -113,14 +97,14 @@
                 return this.$route.query.type ? this.$route.query.type : 'title';
             },
             'routeLabel'() {
-                return this.$route.query.label ?  this.$route.query.label : 0;
+                return this.$route.query.label ? this.$route.query.label : 0;
             }
         },
         methods: {
             setLabel() {
                 axios.get("api/label")
                     .then((response) => {
-                        this.label = eval(response.data.content);
+                        this.label = JSON.parse(response.data.content);
                     })
                     .catch((error) => {
                         console.log(error);
@@ -128,7 +112,8 @@
             },
             setProblems() {
                 let cp = this.curPage;
-                this.search.content = this.routeSearch;
+                if ((this.search.content = this.routeSearch) != '')
+                    this.emptySearch = -1;
                 this.search.type = this.routeType;
                 this.search.label = this.routeLabel;
                 let getUrl = '/api/problems' + '?page=' + cp + '&search=' + this.search.content
@@ -142,7 +127,7 @@
                 axios.get(getUrl)
                     .then((response) => {
                         this.loading = false;
-                        this.problems = response.data.problems;
+                        this.problems = response.data.content;
                         this.total = parseInt(response.data.total);
                     })
                     .catch((error) => {
@@ -169,23 +154,25 @@
             },
             onSearch() {
                 if (this.search.content === '') {
-                    if (this.emptySearch++ > 10) {
-                        alert("老哥点那么多下干嘛？");
+                    if (this.emptySearch == -1) {
+                        this.emptySearch = 0;
+                        this.$router.push({query: {}});
+                        return;
                     }
                     this.$message.error('请输入搜索内容');
-                    return false;
+                    return;
                 }
                 let que = {page: 1};
                 que.search = this.search.content;
                 que.type = this.search.type;
-                if(this.search.label) {
+                if (this.search.label) {
                     que.label = this.search.label;
                 }
                 this.$router.push({query: que});
             },
             onLabelSearch(lid) {
                 this.search.label = parseInt(lid);
-                if(this.search.content === '') {
+                if (this.search.content === '') {
                     this.$router.push({query: {label: this.search.label}});
                 } else this.onSearch();
             }
@@ -210,7 +197,27 @@
         border: 0;
     }
 
-    .el-pager,.el-pager li, .btn-next, .btn-prev {
-        float: left;
+    .s-menu-down{
+        position: absolute;
+        top:50%;
+        right: 18%;
+    }
+    .s-menu {
+        display: inline-block;
+        text-align: left;
+        width: 100%;
+        padding: 0px;
+        list-style: none;
+        background-color: #fff;
+    }
+    .s-menu li {
+        height: 56px;
+        line-height: 56px;
+        font-size: 14px;
+        padding: 0 20px;
+        cursor: pointer;
+        position: relative;
+        box-sizing: border-box;
+        white-space: nowrap;
     }
 </style>

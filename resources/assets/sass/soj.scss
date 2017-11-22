@@ -6,7 +6,6 @@
 
 // Reset and dependencies
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/normalize";
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/glyphicons";
 
 // Core CSS
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
@@ -32,8 +31,15 @@ body,button, input, select, textarea, nav, a{font-family: Microsoft YaHei,'å®‹ä½
   text-align: center;
 }
 
+.table {
+  margin-bottom: 3px;
+}
+
+.el-pager,.el-pager li, .btn-next, .btn-prev {
+  float: left;
+}
+
 .s-fix{
   margin: auto;
   width: 97%;
-  padding-top: 10px;
 }

@@ -19,7 +19,7 @@
         <navbar title="{{ config('app.name', 'MNNUOJ') }}"></navbar>
     </nav>
     <div id="panel">
-        <nav class="s-navbar-btn">
+        <nav class="s-navbar-media">
             <div class="container">
                 <a class="s-navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'MNNUOJ') }}
@@ -39,24 +39,12 @@
         </footer>
     </div>
 </div>
-<!-- Scripts -->
-@if(Auth::user())
-    <script>
-        var user = {
-            id: '{{ Auth::id() }}',
-            name: '{{ Auth::user()->name }}',
-            control: '{{ Auth::user()->control }}'
-        };
-    </script>
-@else
-    <script>
-        var user = {
-            id: 0,
-            name: '',
-            control: 0
-        };
-    </script>
-@endif
+<script>
+    window.user = @if(Auth::user()){!! Auth::user() !!}
+        @else {
+        id: 0, name: ''
+    }; @endif
+</script>
 <script src="{{ mix('js/manifest.js') }}"></script>
 <script src="{{ mix('js/vendor.js') }}"></script>
 <script src="{{ mix('js/admin.js') }}"></script>

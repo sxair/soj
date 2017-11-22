@@ -7,18 +7,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 
-class ProblemsController extends Controller
+class ProblemController extends Controller
 {
-    public function getPageJson($sql, $select, $pageName, $page, $perPage)
-    {
-        $total = $sql->count();
-        if (!empty($select)) {
-            $sql = $sql->select($select);
-        }
-        $problems = $sql->offset(($page - 1) * $perPage)->limit($perPage)->get();
-        return array_merge([$pageName => $problems], ['total' => $total]);
-    }
-
+    /**
+     * for problem list api
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function problems(Request $request)
     {
         $type = $request->input('type');
@@ -31,6 +25,9 @@ class ProblemsController extends Controller
                 $sql = DB::table('oj_problems')
                     ->join('problems', 'problems.id', '=', 'oj_problems.problem_id')
                     ->where('problems.' . $type, 'like', '%' . $search . '%');
+                return response()->json(getPage($sql, ['oj_problems.id', 'oj_problems.title',
+                    'oj_problems.accepted', 'oj_problems.submitted',
+                    'problems.author', 'problems.source'], $page, $perPage));
             } else {
                 $sql = DB::table('oj_problems')
                     ->where('title', 'like', '%' . $search . '%');
@@ -38,21 +35,24 @@ class ProblemsController extends Controller
         } else {
             $sql = DB::table('oj_problems');
         }
-        return response()->json($this->getPageJson($sql, ['id', 'title', 'accepted', 'submitted'],
-            'problems', $page, $perPage));
+        return response()->json(getPage($sql, ['id', 'title', 'accepted', 'submitted'], $page, $perPage));
     }
 
+    /**
+     * for status api
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function status(Request $request)
     {
-        $search['author'] = $request->input('author');
+        $search['user_name'] = $request->input('author');
         $search['problem_id'] = $request->input('proId');
         $search['lang'] = $request->input('lang');
         $search = array_filter($search);
         $page = $request->input('page');
         $perPage = 15;
         $status = (integer)$request->input('status');
-        $sql = DB::table('oj_status')->where($search)->orderBy('id', 'dasc');
-        if ($status > 0 && $status <= 11 && $status != 2 && $status != 4 && $status != 5) {
+        $sql = DB::table('oj_status')->where($search)->orderBy('id', 'desc');
+        if ($status > 0 && $status <= 11 && $status != 1 && $status != 4 && $status != 5) {
             if ($status < 4) {
                 $sql = $sql->where('status', $status);
             } else {
@@ -60,7 +60,7 @@ class ProblemsController extends Controller
                     ->where('status', '<', ($status + 1) * 10000);
             }
         }
-        return response()->json($this->getPageJson($sql, [], 'status', $page, $perPage));
+        return response()->json(getPage($sql, [], $page, $perPage));
     }
 
     public function problem($id = 1000)
@@ -68,15 +68,17 @@ class ProblemsController extends Controller
         $ojpro = DB::table('oj_problems')->where('id', $id)->first();
         if (is_null($ojpro)) return view('errors.noFind');
         $pro = DB::table('problems')->where('id', $ojpro->problem_id)->first();
-        $problem = (object)array_merge((array)$pro, (array)$ojpro);
-        return view('problem', ['pro' => $problem]);
+        return view('problem', ['pro' => array_merge((array)$pro, (array)$ojpro)]);
     }
 
+    /**
+     * for label api
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function label()
     {
-        $lable = DB::table('soj')->select('content')
-            ->where('name', 'label')->first();
-        return response()->json($lable);
+        return response()->json(DB::table('soj')->select('content')
+            ->where('name', 'label')->first());
     }
 
     public function proinfo($id)

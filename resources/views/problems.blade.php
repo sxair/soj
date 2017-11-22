@@ -1,13 +1,13 @@
 @extends('layouts.app')
 @section('content')
-    <nav class="s-subbar">
-        <div class="s-subcon">
-            <ul class="s-subnav">
-                <li><a href="javascript:void(0);" class="s-active">Problems</a></li>
-                <li><a href="{{ url('status') }}">Status</a></li>
-                <li><a href="{{ url('ranks') }}">Ranks</a></li>
-            </ul>
-        </div>
+    <nav class="s-navbar-media">
+        <a class="s-navbar-brand" href="{{ url('/') }}">
+            {{ config('app.name', 'MNNUOJ') }}
+        </a>
+        <button class="slideout-btn">
+            <i class="el-icon-menu" style="font-size: 26px;"></i>
+        </button>
     </nav>
+    <div style="margin-bottom: 13px;"></div>
     <problems-model></problems-model>
 @endsection

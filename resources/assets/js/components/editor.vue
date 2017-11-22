@@ -44,8 +44,11 @@
 //                    }
                 });
             },
-            getValue() {
+            getHtml() {
                 return this.simplemde.markdown(this.simplemde.value());
+            },
+            getMD() {
+                return this.simplemde.value();
             }
         },
         destroyed() {

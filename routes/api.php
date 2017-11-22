@@ -17,6 +17,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('problems', 'ProblemsController@problems');
-Route::get('status', 'ProblemsController@status');
-Route::get('label', 'ProblemsController@label');
+/*
+ * problem api
+ */
+Route::get('problems', 'ProblemController@problems');
+Route::get('status', 'ProblemController@status');
+Route::get('label', 'ProblemController@label');
+
+/*
+ * contest api
+ */
+Route::get('contests', 'ContestController@contests');

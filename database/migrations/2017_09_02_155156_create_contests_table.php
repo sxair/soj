@@ -15,13 +15,14 @@ class CreateContestsTable extends Migration
     {
         Schema::create('contests', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
+            $table->string('title', 50)->index();
             $table->timestamp('start_time');
+            // two timestamp no default will be wrong
             $table->timestamp('end_time')->nullable();
-            $table->string('password');
-            $table->unsignedInteger('lang');
-            $table->json('choose')->nullable();
-            $table->unsignedInteger('creator_id');
+            $table->string('password')->default('');
+            $table->unsignedInteger('lang')->default(0);
+            $table->string('choose')->nullable();
+            $table->string('user_name', 50);
         });
     }
 

@@ -94,7 +94,7 @@
                         this.$message.error('表单填写错误，请检查');
                         return false;
                     }
-                    this.form.content = this.$refs.contentEditor.getValue();
+                    this.form.content = this.$refs.contentEditor.getHtml();
                      if (!this.form.content) {
                         this.$message.error('你想干嘛');
                         return false;

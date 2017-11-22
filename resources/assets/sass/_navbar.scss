@@ -22,10 +22,10 @@
   font-size: 14px;
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
   background-color: #222;
-  border: 1px solid  rgba(0,0,0,.15);
+  border: 1px solid rgba(0, 0, 0, .15);
   border-radius: 0 0 4px 4px;
-  -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175); // iOS <4.3 & Android <4.1
-  box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175); // iOS <4.3 & Android <4.1
+  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
   background-clip: padding-box;
   // Links within the dropdown menu
   > li > a {
@@ -43,6 +43,7 @@
     }
   }
 }
+
 @media screen and (max-width: $slideout-media) {
   .dropdown-menu {
     display: block !important;
@@ -54,14 +55,12 @@
     list-style: none;
     font-size: 14px;
     border: 0px;
-    border-top: 1px solid  rgba(0,0,0,.15);
+    border-top: 1px solid rgba(0, 0, 0, .15);
   }
 }
 
 .s-navbar {
-  position: relative;
-  left: 0;
-  top: 0;
+  margin-bottom: 13px;
   width: 100%;
   min-height: 50px;
   border-bottom: 1px solid #d3d3d3;
@@ -102,7 +101,7 @@
     content: " ";
     display: table;
   }
-  &::after{
+  &::after {
     clear: both;
   }
 }
@@ -129,7 +128,7 @@
     content: " ";
     display: table;
   }
-  &::after{
+  &::after {
     clear: both;
   }
 }
@@ -149,18 +148,18 @@
     display: block;
   }
 
-  .s-navbar-btn {
+  .s-navbar-media {
     display: none;
   }
 }
 
-@media screen and (max-width: $slideout-media){
-  .s-mhidden{
+@media screen and (max-width: $slideout-media) {
+  .s-mhidden {
     display: none;
   }
 
-  .s-navbar{
-    border-bottom:0;
+  .s-navbar {
+    border-bottom: 0;
   }
 
   .s-nav {
@@ -171,10 +170,10 @@
       content: " ";
       display: table;
     }
-    &::after{
+    &::after {
       clear: both;
     }
-    > li{
+    > li {
       position: relative;
       float: none;
       > a {
@@ -185,15 +184,13 @@
     }
   }
 
-  .s-navbar-btn {
+  .s-navbar-media {
     position: fixed;
-    display: block;
     left: 0;
     top: 0;
     width: 100%;
     backface-visibility: hidden;
     min-height: 50px;
-    margin-bottom: 20px;
     border-bottom: 1px solid #d5d4d4;
     z-index: 2;
     background-color: #222;
@@ -206,22 +203,9 @@
   .slideout-btn {
     position: static;
     float: right;
-    padding: 9px 10px;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    background-color: #333;
-    border: 1px solid #333;
-    border-radius: 4px;
-    .icon-bar {
-      display: block;
-      width: 22px;
-      height: 2px;
-      border-radius: 1px;
-      background: #fff;
-    }
-    .icon-bar + .icon-bar {
-      margin-top: 4px;
-    }
+    padding: 11px 12px;
+    background-color: transparent;
+    border: 0px;
     &:focus {
       outline: 0;
     }

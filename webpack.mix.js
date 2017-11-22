@@ -13,7 +13,7 @@ let mix = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js')
     .js('resources/assets/js/admin.js', 'public/js')
-    .extract(['vue','axios'])
+    .extract(['vue','axios','vue-router'])
     .version();
 
 mix.scripts(['resources/assets/js/soj.js'], 'public/js/soj.js').version();

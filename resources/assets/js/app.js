@@ -5,9 +5,10 @@
  */
 
 require('./bootstrap');
-
 window.Vue = require('vue');
+import problemsRouter from './problemsRouter'
 import VueRouter from 'vue-router'
+Vue.use(VueRouter);
 
 import 'element-ui/lib/theme-chalk/pagination.css'
 import 'element-ui/lib/theme-chalk/button.css'
@@ -29,12 +30,12 @@ import {
     Select,
     Option,
     Card,
+    Icon,
     Col,
     Loading,
     Message,
 } from 'element-ui'
 
-Vue.use(VueRouter);
 Vue.use(Pagination);
 Vue.use(Button);
 Vue.use(Input);
@@ -43,102 +44,30 @@ Vue.use(Option);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Card);
+Vue.use(Icon);
 Vue.use(Col);
 //Vue.use(Message); 不能加
 Vue.use(Loading);
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$message = Message;
 
+/****************global****************/
 Vue.component('navbar', require('./components/navbar.vue'));
 Vue.component('to-html', require('./components/toHtml.vue'));
+Vue.component('editor', resolve => require(['./components/editor.vue'], resolve));
 Vue.component('problems-table', require('./components/problemsTable.vue'));
-Vue.component('problems-model', require('./components/problemsModel.vue'));
-Vue.component('status', require('./components/status.vue'));
+Vue.component('problems-model', require('./problems/problemsModel.vue'));
+Vue.component('contests-model', require('./contests/contestModel.vue'));
 
-const router = new VueRouter({
+let routes = [{path: '/', component: { template: '<div>foo</div>' }}];
+routes = routes.concat(problemsRouter);
+let router = new VueRouter({
     mode: 'history',
+    routes: routes
 });
 
-if(typeof window.user ==="undefined") {
-    window.user = {
-        id: 0,
-        name: '',
-        control: 0
-    }
-    alert("?");
-}
 Vue.prototype.user = window.user;
-
 window.app = new Vue({
-    router
+    router,
+    data: window.VueData,
 }).$mount('#app');
-
-// import {
-//     Pagination,
-//     Dialog,
-//     Autocomplete,
-//     Dropdown,
-//     DropdownMenu,
-//     DropdownItem,
-//     Menu,
-//     Submenu,
-//     MenuItem,
-//     MenuItemGroup,
-//     Input,
-//     InputNumber,
-//     Radio,
-//     RadioGroup,
-//     RadioButton,
-//     Checkbox,
-//     CheckboxButton,
-//     CheckboxGroup,
-//     Switch,
-//     Select,
-//     Option,
-//     OptionGroup,
-//     Button,
-//     ButtonGroup,
-//     Table,
-//     TableColumn,
-//     DatePicker,
-//     TimeSelect,
-//     TimePicker,
-//     Popover,
-//     Tooltip,
-//     Breadcrumb,
-//     BreadcrumbItem,
-//     Form,
-//     FormItem,
-//     Tabs,
-//     TabPane,
-//     Tag,
-//     Tree,
-//     Alert,
-//     Slider,
-//     Icon,
-//     Row,
-//     Col,
-//     Upload,
-//     Progress,
-//     Badge,
-//     Card,
-//     Rate,
-//     Steps,
-//     Step,
-//     Carousel,
-//     CarouselItem,
-//     Collapse,
-//     CollapseItem,
-//     Cascader,
-//     ColorPicker,
-//     Transfer,
-//     Container,
-//     Header,
-//     Aside,
-//     Main,
-//     Footer,
-//     Loading,
-//     MessageBox,
-//     Message,
-//     Notification
-// } from 'element-ui
