@@ -18,6 +18,7 @@ class CreateOjSolvedProblemsTable extends Migration
             $table->unsignedInteger('problem_id');
             $table->integer('submitted')->default(1);
             $table->integer('accepted')->default(0);
+
             $table->primary(['user_id','problem_id']);
         });
     }

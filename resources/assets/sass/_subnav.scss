@@ -19,7 +19,7 @@
   &::after {
     clear: both;
   }
-  @media (max-width: $slideout-media) {
+  @media (max-width: $media-width) {
     padding: 2px 15px 0;
   }
   @media (min-width: 768px) {
@@ -58,7 +58,7 @@
       border-color: #e36209 #e1e4e8 #fff;
       z-index: 1000;
     }
-    @media screen and (max-width: $slideout-media) {
+    @media screen and (max-width: $media-width) {
       float: none;
       display: inline-block;
     }

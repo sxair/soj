@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2" style="margin-top: 20px">
+            <div class="col-md-8 col-md-offset-2">
                 <el-card>
                     <div slot="header" class="clearfix">
                         <span>Login</span>

@@ -1,5 +1,5 @@
 <template>
-    <div style="overflow:auto;">
+    <div style="overflow:auto">
         <table class="table table-hover table-center table-striped" v-loading="loading"
                element-loading-text="加载中╮(╯▽╰)╭"
                :class="problems.length > 13 ? 's-loading':''">
@@ -14,13 +14,13 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="problem in problems">
-                <td>{{ problem.id }}</td>
-                <td><a :href="pro_url(problem.id)">{{ problem.title }}</a></td>
-                <td v-if="search">{{ problem.author }}</td>
-                <td v-if="search">{{ problem.source }}</td>
-                <td>{{ problem.submitted ? (parseFloat(problem.accepted) / problem.submitted * 100).toFixed(2) + '%' : '0.00%' }}
-                    ({{ problem.accepted }}/{{ problem.submitted }})
+            <tr v-for="pro in problems">
+                <td>{{ pro.id }}</td>
+                <td><router-link :to="proUrl + '/' + pro.id">{{ pro.title }}</router-link></td>
+                <td v-if="search">{{ pro.author }}</td>
+                <td v-if="search">{{ pro.source }}</td>
+                <td>{{ pro.submitted ? (parseFloat(pro.accepted) / pro.submitted * 100).toFixed(2) + '%' : '0.00%' }}
+                    ({{ pro.accepted }}/{{ pro.submitted }})
                 </td>
             </tr>
             </tbody>
@@ -45,11 +45,6 @@
             },
             'proUrl': String,
         },
-        methods: {
-            pro_url(id) {
-                return this.proUrl + '/' + id;
-            }
-        }
     }
 </script>
 <style>

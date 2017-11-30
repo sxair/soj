@@ -17,13 +17,8 @@
             },
         },
         mounted() {
+            hljs.initHighlighting();
             this.initialize();
-        },
-        activated() {
-            const editor = this.simplemde;
-            if (!editor) return;
-            const isActive = editor.isSideBySideActive() || editor.isPreviewActive();
-            if (isActive) editor.toggleFullScreen();
         },
         methods: {
             initialize() {
@@ -31,40 +26,40 @@
                     element: this.$el.firstElementChild,
                     initialValue: this.value,
                     renderingConfig: {
-                       // codeSyntaxHighlighting:true
+                        singleLineBreaks: false,
+                        codeSyntaxHighlighting: true,
                     },
                     autoDownloadFontAwesome: false,
                     toolbar: ["bold", "italic", "heading", "|",
                         "quote", "unordered-list", "ordered-list", "|",
                         "link", "image", "code", "|",
                         "preview", "side-by-side", "fullscreen", "guide"],
-//                    previewRender: (plainText) => {
-//
-//                        return this.simplemde.markdown(plainText);
-//                    }
+                    previewRender: (plainText) => {
+                        let val = this.simplemde.markdown(plainText);
+                        return val.replace(/<code>/g, '<code class="hljs">');
+                    }
                 });
             },
             getHtml() {
-                return this.simplemde.markdown(this.simplemde.value());
+                let val = this.simplemde.markdown(this.simplemde.value());
+                return val.replace(/<code>/g, '<code class="hljs">');
             },
             getMD() {
                 return this.simplemde.value();
             }
         },
+        watch: {
+            value() {
+                this.simplemde.value(this.value);
+            }
+        },
         destroyed() {
             this.simplemde = null;
-        },
-        watch: {
-            // 接收props
-            value(val) {
-                if (val === this.simplemde.value()) return;
-                this.simplemde.value(val);
-            },
-        },
+        }
     };
 </script>
 <style>
     @import '~simplemde/dist/simplemde.min.css';
     @import "~font-awesome/css/font-awesome.min.css";
-    @import '~highlight.js/styles/github-gist.css';
+    @import '~highlight.js/styles/monokai-sublime.css';
 </style>

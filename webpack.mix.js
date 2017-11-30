@@ -11,6 +11,13 @@ let mix = require('laravel-mix');
  |
  */
 
+mix.webpackConfig({
+    output: {
+        publicPath: "/",
+        chunkFilename: 'js/[name].[chunkhash].js'
+    },
+});
+
 mix.js('resources/assets/js/app.js', 'public/js')
     .js('resources/assets/js/admin.js', 'public/js')
     .extract(['vue','axios','vue-router'])

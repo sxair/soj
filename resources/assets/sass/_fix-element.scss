@@ -1,0 +1,22 @@
+.el-pager,.el-pager li, .btn-next, .btn-prev {
+  float: left !important;
+}
+
+.el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
+  margin-bottom: 5px !important;
+}
+
+.el-select-dropdown__item {
+  padding: 0 13px !important;
+}
+
+.el-popper[x-placement^=bottom] .popper__arrow {
+  left: 50% !important;
+}
+
+@media screen and (max-width: $media-width) {
+  .el-message {
+    width: 95% !important;
+    min-width: 50px !important;
+  }
+}

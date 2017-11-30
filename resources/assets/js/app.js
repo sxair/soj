@@ -7,6 +7,7 @@
 require('./bootstrap');
 window.Vue = require('vue');
 import problemsRouter from './problemsRouter'
+import contestsRouter from './contestsRouter'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter);
 
@@ -18,7 +19,6 @@ import 'element-ui/lib/theme-chalk/form-item.css'
 import 'element-ui/lib/theme-chalk/select.css'
 import 'element-ui/lib/theme-chalk/option.css'
 import 'element-ui/lib/theme-chalk/card.css'
-import 'element-ui/lib/theme-chalk/col.css'
 import 'element-ui/lib/theme-chalk/loading.css'
 import 'element-ui/lib/theme-chalk/message.css'
 import {
@@ -31,7 +31,6 @@ import {
     Option,
     Card,
     Icon,
-    Col,
     Loading,
     Message,
 } from 'element-ui'
@@ -45,7 +44,6 @@ Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Card);
 Vue.use(Icon);
-Vue.use(Col);
 //Vue.use(Message); 不能加
 Vue.use(Loading);
 Vue.prototype.$loading = Loading.service;
@@ -57,10 +55,10 @@ Vue.component('to-html', require('./components/toHtml.vue'));
 Vue.component('editor', resolve => require(['./components/editor.vue'], resolve));
 Vue.component('problems-table', require('./components/problemsTable.vue'));
 Vue.component('problems-model', require('./problems/problemsModel.vue'));
-Vue.component('contests-model', require('./contests/contestModel.vue'));
 
-let routes = [{path: '/', component: { template: '<div>foo</div>' }}];
+let routes = [{path: '/', component: {template: '<div>foo</div>'}}];
 routes = routes.concat(problemsRouter);
+routes = routes.concat(contestsRouter);
 let router = new VueRouter({
     mode: 'history',
     routes: routes

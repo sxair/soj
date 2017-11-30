@@ -17,8 +17,7 @@ class ProblemController extends Controller
     {
         $type = $request->input('type');
         $search = $request->input('search');
-        $page = (int)$request->input('page');
-        if (is_null($page) || $page <= 0) $page = 1;
+        $page = getCurrentPage($request->input('page'));
         $perPage = 50;
         if (!is_null($search)) {
             if ($type == 'author' || $type == 'source') {
@@ -48,7 +47,7 @@ class ProblemController extends Controller
         $search['problem_id'] = $request->input('proId');
         $search['lang'] = $request->input('lang');
         $search = array_filter($search);
-        $page = $request->input('page');
+        $page = getCurrentPage($request->input('page'));
         $perPage = 15;
         $status = (integer)$request->input('status');
         $sql = DB::table('oj_status')->where($search)->orderBy('id', 'desc');
@@ -63,12 +62,12 @@ class ProblemController extends Controller
         return response()->json(getPage($sql, [], $page, $perPage));
     }
 
-    public function problem($id = 1000)
+    public function problem($id)
     {
         $ojpro = DB::table('oj_problems')->where('id', $id)->first();
-        if (is_null($ojpro)) return view('errors.noFind');
+        if (is_null($ojpro)) return '{}';
         $pro = DB::table('problems')->where('id', $ojpro->problem_id)->first();
-        return view('problem', ['pro' => array_merge((array)$pro, (array)$ojpro)]);
+        return response()->json(array_merge((array)$pro, (array)$ojpro));
     }
 
     /**
@@ -79,6 +78,24 @@ class ProblemController extends Controller
     {
         return response()->json(DB::table('soj')->select('content')
             ->where('name', 'label')->first());
+    }
+
+    public function rank(Request $request)
+    {
+        $page = getCurrentPage($request->input('page'));
+        $ranks = DB::table('user_infos')->orderBy('accepted', 'dasc')
+            ->join('users', 'users.id', '=', 'user_infos.id')
+            ->orderBy('submitted', 'asc');
+        return response()->json(getPage($ranks, ['users.id', 'users.name', 'user_infos.accepted', 'user_infos.submitted'
+            , 'user_infos.motto'], $page, 15));
+    }
+
+    public function submitPage($id)
+    {
+        if (!Auth::check()) {
+            return redirect('login?to=' . urlencode(url()->current()));
+        }
+        return view('problems');
     }
 
     public function proinfo($id)
@@ -94,21 +111,6 @@ class ProblemController extends Controller
         return view('proinfo', ['pro' => $pro[0]]);
     }
 
-    public function rank()
-    {
-        $ranks = DB::table('user_infos')->orderBy('accepted', 'dasc')
-            ->orderBy('submitted', 'asc')->paginate(15);
-        return view('rank', ['ranks' => $ranks]);
-    }
-
-    public function submitPage($id)
-    {
-        if (!Auth::check()) {
-            return redirect('login?to=' . urlencode(url()->current()));
-        }
-        return view('submit', ['id' => $id]);
-    }
-
     /*
      * add for judge: oj_status,judges,oj_codes
      * add for problem:oj_problems
@@ -118,16 +120,20 @@ class ProblemController extends Controller
     {
         $user = Auth::user();
         if (is_null($user)) {
-            return redirect()->back()->withErrors('Login', '请登录后再提交');
+            return response()->json(['failed' => '请登录']);
         }
-        $code = $request->input('code');
+        $lang = (int)$request->input('lang');
+        if($lang <= 0 || $lang > 4) return response()->json(['failed' => '请选择正确语言']);
         $this->validate($request, [
             'code' => 'min:50|max:65535',
             'problem_id' => 'numeric|exists:oj_problems,id'
         ]);
-        DB::statement('CALL `oj_submit`(' . $request->input('problem_id') . $request->input('lang') . $code
-            . $request->input('user_name') . $request->input('user_id') . strlen($code) . ')');
-        return redirect('status');
+        DB::statement('CALL `oj_submit`(?,?,?,?,?,?)', [
+            $request->input('problem_id'),
+            $request->input('lang'),
+            $request->input('code'), $user->name, $user->id,
+            strlen($request->input('code'))]);
+        return response()->json(['success' => true]);
     }
 
     public function showcode($id)

@@ -20,7 +20,6 @@ class CreateUserInfosTable extends Migration
             $table->unsignedInteger('accepted')->default(0);
             $table->unsignedInteger('submitted')->default(0);
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->primary('id');
         });
     }
 

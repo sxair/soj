@@ -63,8 +63,8 @@
                         <td>
                             <to-html :arg="sta.lang" :type=0></to-html>
                         </td>
-                        <td v-if="user.name != sta.user_name">{{ sta.code_len }}B</td>
-                        <td v-else><a :href="'showcode' + sta.id">{{ sta.code_len }}B</a></td>
+                        <td v-if="this.user.name != sta.user_name">{{ sta.code_len }}B</td>
+                        <td v-else><a :href="'showcode/' + sta.id">{{ sta.code_len }}B</a></td>
                         <td>{{ sta.time }} MS</td>
                         <td>{{ sta.memory }} KB</td>
                         <td>{{ sta.created_at }}</td>
@@ -88,14 +88,6 @@
 </template>
 <script>
     export default {
-        props: {
-            user: {
-                type: Object,
-                default() {
-                    return {id: 0, name: ''}
-                }
-            }
-        },
         data() {
             return {
                 status: {},
@@ -107,34 +99,24 @@
                     lang: 0,
                 },
                 total: 0,
-                results: [{value: 0, label: 'All'}, {
-                    value: 2, label: 'Compilation error'
-                }, {
-                    value: 3, label: 'Accepted'
-                }, {
-                    value: 6, label: 'Wrong Answer'
-                }, {
-                    value: 11, label: 'Runtime Error'
-                }, {
-                    value: 9, label: 'Time Limit Exceeded'
-                }, {
-                    value: 7, label: 'Memory Limit Exceeded'
-                }, {
-                    value: 8, label: 'Output Limit Exceeded'
-                }, {
-                    value: 10, label: 'Presentation Error'
-                }],
-                languages: [{
-                    value: 0, label: 'All'
-                }, {
-                    value: 1, label: 'c'
-                }, {
-                    value: 2, label: 'c++'
-                }, {
-                    value: 3, label: 'java'
-                }, {
-                    value: 4, label: 'python3'
-                }]
+                results: [
+                    {value: 0, label: 'All'},
+                    {value: 2, label: 'Compilation error'},
+                    {value: 3, label: 'Accepted'},
+                    {value: 6, label: 'Wrong Answer'},
+                    {value: 11, label: 'Runtime Error'},
+                    {value: 9, label: 'Time Limit Exceeded'},
+                    {value: 7, label: 'Memory Limit Exceeded'},
+                    {value: 8, label: 'Output Limit Exceeded'},
+                    {value: 10, label: 'Presentation Error'}
+                ],
+                languages: [
+                    {value: 0, label: 'All'},
+                    {value: 1, label: 'c'},
+                    {value: 2, label: 'c++'},
+                    {value: 3, label: 'java'},
+                    {value: 4, label: 'python3'}
+                ]
             }
         },
         computed: {
@@ -147,7 +129,6 @@
         },
         methods: {
             changePageRoute(cp) {
-                console.log('cp='+cp);
                 /* fix this:
                  * status -> status?page = 3
                  * if back then will add a route ?page=1
@@ -175,18 +156,11 @@
                     + '&proId=' + this.search.proId + '&status=' + this.search.status
                     + '&lang=' + this.search.lang;
                 this.loading = true;
-                axios.get(getUrl)
-                    .then((response) => {
-                        this.loading = false;
-                        this.status = response.data.content;
-                        this.total = parseInt(response.data.total);
-                    })
-                    .catch((error) => {
-                        if (error.response.status == 429) {
-                            this.$message.error('访问过快，请稍后刷新');
-                        }
-                        console.log(error);
-                    });
+                axios.get(getUrl).then((response) => {
+                    this.loading = false;
+                    this.status = response.data.content;
+                    this.total = parseInt(response.data.total);
+                });
             },
             onSearch() {
                 let que = JSON.parse(JSON.stringify(this.search));
@@ -201,12 +175,3 @@
         }
     }
 </script>
-<style>
-    .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
-        margin-bottom: 5px;
-    }
-
-    .el-select-dropdown__item {
-        padding: 0 13px;
-    }
-</style>

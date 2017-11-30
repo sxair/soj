@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <el-col :md="19">
+        <div class="col-md-9">
             <el-card>
                 <el-pagination
                         layout="prev, pager, next"
@@ -27,8 +27,8 @@
                     </el-pagination>
                 </div>
             </el-card>
-        </el-col>
-        <el-col :md="5">
+        </div>
+        <div class="col-md-3">
             <div class="s-fix">
                 <el-card>
                     <el-form ref="search" :model="search">
@@ -49,7 +49,7 @@
                     </el-form>
                 </el-card>
             </div>
-        </el-col>
+        </div>
     </div>
 </template>
 <script>
@@ -104,7 +104,7 @@
             setLabel() {
                 axios.get("api/label")
                     .then((response) => {
-                        this.label = JSON.parse(response.data.content);
+                        this.label = eval(response.data.content);
                     })
                     .catch((error) => {
                         console.log(error);
@@ -124,18 +124,11 @@
                 this.loading = true;
                 document.body.scrollTop = 0;
                 document.documentElement.scrollTop = 0;
-                axios.get(getUrl)
-                    .then((response) => {
-                        this.loading = false;
-                        this.problems = response.data.content;
-                        this.total = parseInt(response.data.total);
-                    })
-                    .catch((error) => {
-                        if (error.response.status === 429) {
-                            this.$message.error('访问过快，请稍后刷新');
-                        }
-                        console.log(error);
-                    });
+                axios.get(getUrl).then((response) => {
+                    this.loading = false;
+                    this.problems = response.data.content;
+                    this.total = parseInt(response.data.total);
+                });
             },
             changePageRoute(cp) {
                 let que = {};
@@ -184,40 +177,3 @@
         }
     }
 </script>
-<style>
-    .el-form-item {
-        margin-bottom: 10px;
-    }
-
-    .s-fix .el-card__body {
-        padding: 10px 10px 0 10px;
-    }
-
-    .el-menu {
-        border: 0;
-    }
-
-    .s-menu-down{
-        position: absolute;
-        top:50%;
-        right: 18%;
-    }
-    .s-menu {
-        display: inline-block;
-        text-align: left;
-        width: 100%;
-        padding: 0px;
-        list-style: none;
-        background-color: #fff;
-    }
-    .s-menu li {
-        height: 56px;
-        line-height: 56px;
-        font-size: 14px;
-        padding: 0 20px;
-        cursor: pointer;
-        position: relative;
-        box-sizing: border-box;
-        white-space: nowrap;
-    }
-</style>

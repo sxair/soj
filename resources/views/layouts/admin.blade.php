@@ -15,9 +15,7 @@
 </head>
 <body>
 <div id="app">
-    <nav class="s-navbar" id="menu">
-        <navbar title="{{ config('app.name', 'MNNUOJ') }}"></navbar>
-    </nav>
+    <navbar title="{{ config('app.name', 'MNNUOJ') }}"></navbar>
     <div id="panel">
         <nav class="s-navbar-media">
             <div class="container">

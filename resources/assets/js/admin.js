@@ -14,7 +14,7 @@ Vue.component('editor', resolve => require(['./components/editor.vue'], resolve)
 const router = new VueRouter({
     routes: [
         { path: '/',component:  {template: '<div>welcome</div>'}},
-        { path: '/problems',component: resolve => require(['./admin/problems.vue'], resolve)},
+        { path: '/problems',component: require(['./admin/problems.vue'])},
         { path: '/addProblem',component: resolve => require(['./admin/add-problem.vue'],resolve)},
         { path: '/label',component: resolve => require(['./admin/label.vue'],resolve)},
     ]

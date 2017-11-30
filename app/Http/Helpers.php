@@ -16,3 +16,8 @@ function getPage($sql, $select, $page, $perPage)
     $problems = $sql->offset(($page - 1) * $perPage)->limit($perPage)->get();
     return array_merge(['content' => $problems], ['total' => $total]);
 }
+
+function getCurrentPage($page) {
+    $page = (int)$page;
+    return $page > 1 ? $page : 1;
+}

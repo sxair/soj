@@ -36,10 +36,12 @@ Route::post('change', 'UserController@changeUserInfo')->middleware('auth');
  */
 Route::view('problems', 'problems');
 Route::view('status', 'problems');
-Route::view('ranks', 'problems');
-Route::get('problem/{id?}', 'ProblemController@problem');
+Route::view('rank', 'problems');
+Route::view('problem/{id}','problems');
 Route::get('submit/{id?}', 'ProblemController@submitPage');
 Route::post('submit', 'ProblemController@submit');
+Route::view('showcode/{id}', 'problems');
+Route::get('code/{id}', 'ProblemController@getCode');
 
 /*
  * contest model

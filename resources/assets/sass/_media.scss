@@ -1,0 +1,16 @@
+@media (min-width: $media-width) { // >= media-width
+  .media-show {
+    display: none;
+  }
+}
+
+@media screen and (max-width: $media-width) {
+  .media-hidden {
+    display: none;
+  }
+}
+
+.media-item {
+  border-bottom: 1px #99a2aa solid;
+  padding: 5px 20px 5px;
+}
