@@ -25,10 +25,12 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.interceptors.response.use(function(response){
     return response;
 },function (error) {
-    if(error.response.status == 429 && window.app && window.app.$message) {
-        window.app.$message.error('访问过快，请稍后再试');
-    } else {
-        alert('访问过快，请稍后再试');
+    if(error.response.status == 429) {
+        if (window.app && window.app.$message) {
+            window.app.$message.error('访问过快，请稍后再试');
+        } else {
+            alert('访问过快，请稍后再试');
+        }
     }
     return Promise.reject(error);
 });

@@ -4,5 +4,5 @@ export default [
     {path: '/rank', component: require('./problems/rank.vue')},
     {path: '/problem/:id', component: require('./components/showProblem.vue'), props: true},
     {path: '/submit/:id', component: require('./problems/submit.vue'), props: true},
-    {path: '/showcode/:id', component: require('./problems/showcode.vue'), props:true}
+    {path: '/showcode/:id', component: require('./problems/showCode.vue'), props:true}
 ]

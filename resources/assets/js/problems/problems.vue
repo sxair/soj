@@ -177,3 +177,16 @@
         }
     }
 </script>
+<style>
+    .el-form-item {
+        margin-bottom: 10px;
+    }
+
+    .s-fix .el-card__body {
+        padding: 10px 10px 0 10px;
+    }
+
+    .el-menu {
+        border: 0;
+    }
+</style>
