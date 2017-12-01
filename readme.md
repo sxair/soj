@@ -1,4 +1,4 @@
-## soj
+# soj
 
 ### 安装
 
@@ -11,6 +11,19 @@ npm run prod
 ```
 
 判题端请看https://github.com/sxair/online-judge
+
+数据库表：
+```
+php artisan migrate:refresh
+```
+创建管理员用户请输入
+```
+php artisan db:seed
+```
+如需测试样例请输入
+```
+php artisan db:seed --class=TestSeeder
+```
 
 ### 展示
 
