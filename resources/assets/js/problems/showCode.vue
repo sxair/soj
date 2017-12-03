@@ -1,22 +1,25 @@
 <template>
-    <div>
-
+    <div style="width: 500px;margin:auto">
+        <show-code :code="code" :status="status"></show-code>
     </div>
 </template>
 <script>
     export default {
         props: {
-            id: Number
+            id: String
         },
         data() {
-            return {}
+            return {
+                code: '',
+                status: {}
+            }
         },
         mounted() {
+            this.auth();
             const s = this;
-            axios.get('code/' + s.id).then((response) => {
-                this.loading = false;
-                this.status = response.data.content;
-                this.total = parseInt(response.data.total);
+            axios.get('/code/' + s.id).then((response) => {
+                this.code = response.data.code;
+                this.status = response.data.status
             });
         }
     }

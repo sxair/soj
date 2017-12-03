@@ -1,5 +1,5 @@
 <template>
-    <div style="padding-top: 10px">
+    <div>
         <el-card>
             <el-pagination
                     layout="prev, pager, next"
@@ -28,7 +28,7 @@
                                 @click="">编辑</el-button>
                         <el-button size="mini" v-if="problem.show" type="primary">加至oj</el-button>
                         <el-button size="mini" v-else type="success">已添加</el-button>
-                        <el-button size="mini" type="warning">修改数据</el-button>
+                        <router-link :to="'/problemData/' + problem.problem_id"><el-button size="mini" type="warning">修改数据</el-button></router-link>
                     </td>
                 </tr>
                 </tbody>
@@ -53,14 +53,13 @@
                 'problems': [],
             }
         },
-        created() {
+        mounted() {
             this.setProblems(this.$route.query.page);
         },
         methods: {
             setProblems(cp) {
                 axios.get('/admin/problems?page=' + cp)
                     .then((response) => {
-                        console.log(response.data);
                         this.problems = response.data.problems;
                         this.total = parseInt(response.data.total);
                     })

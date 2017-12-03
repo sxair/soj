@@ -34,7 +34,7 @@ class ContestController extends Controller
                 $sql = $sql->where('start_time', '>', now());
             }
         }
-        $contest = getPage($sql, [], $page, 50);
+        $contest = getPaginate($sql, [], $page, 50);
         foreach ($contest['content'] as $c) {
             $c->password = ($c->password == "");
         }

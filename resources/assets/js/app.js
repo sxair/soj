@@ -52,7 +52,8 @@ Vue.prototype.$message = Message;
 /****************global****************/
 Vue.component('navbar', require('./components/navbar.vue'));
 Vue.component('to-html', require('./components/toHtml.vue'));
-Vue.component('editor', resolve => require(['./components/editor.vue'], resolve));
+Vue.component('show-code', require('./components/showCode.vue'));
+// Vue.component('show-code', resolve => require(['./components/showCode.vue'], resolve));
 Vue.component('problems-table', require('./components/problemsTable.vue'));
 Vue.component('problems-model', require('./problems/problemsModel.vue'));
 
@@ -65,6 +66,11 @@ let router = new VueRouter({
 });
 
 Vue.prototype.user = window.user;
+Vue.prototype.auth = function() {
+    if(window.user.id == 0) {
+        window.location.href='/login?to='+window.location.href;
+    }
+};
 window.app = new Vue({
     router,
     data: window.VueData,

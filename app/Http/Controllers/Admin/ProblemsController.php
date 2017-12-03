@@ -11,8 +11,7 @@ class ProblemsController extends Controller
 {
     public function problems(Request $request)
     {
-        $page = $request->input('page');
-        if (is_null($page)) $page = 1;
+        $page = getCurrentPage($request->input('page'));
         $perPage = 50;
         $total = DB::table('admin_problems')
             ->where('user_name',Auth::user()->name)
@@ -92,6 +91,49 @@ class ProblemsController extends Controller
             'id' => $id
         ]);
         return redirect()->back();
+    }
+
+    public function changeData(Request $request)
+    {
+        $infile = $request->file('input_file');
+        $outfile = $request->file('output_file');
+        $cnt = count($infile);
+        if($cnt == 0 || is_null($infile) || is_null($outfile)) {
+            return response()->json('failed',"请选择输入输出文件");
+        }
+        $proid = $request->input('id');
+        foreach ($infile as $i => $f) {
+            if (!array_key_exists($i, $outfile) && !array_key_exists($i,$infile)) {
+                DB::table('problems')->update(['judge_cnt' => $i+1]);
+                return response()->json('warning', '成功传输'.$i.'组测试文件,但收到'.$cnt.'组测试');
+            }
+            if (!array_key_exists($i,$infile)) {
+                return response()->json('failed',"第 ".($i+1)." 个输入文件为空但输出文件不为空");
+            }
+            if($infile[$i]->isValid()) {
+                $x = $infile[$i]->getClientOriginalExtension();
+                if($x != 'txt' && $x != 'in') {
+                    return response()->json('failed',"第 ".($i+1)." 个输入文件后缀为 $x 应为txt或in结尾");
+                }
+                $infile[$i]->storeAs('data', $proid.'/pro'.$proid.'_test'.($i+1).'.in');
+            } else {
+                return response()->json('failed',"第 ".($i+1)." 个输入文件上传失败");
+            }
+            if (!array_key_exists($i, $outfile)) {
+                return response()->json('failed',"第 ".($i+1)." 个输出文件为空但输入文件不为空");
+            }
+            if($outfile[$i]->isValid()) {
+                $x = $outfile[$i]->getClientOriginalExtension();
+                if($x != 'txt' && $x != 'out') {
+                    return response()->json('failed',"第 ".($i+1)." 个输出文件后缀为 $x 应为txt或out结尾");
+                }
+                $outfile[$i]->storeAs('data', $proid.'/pro'.$proid.'_test'.($i+1).'.out');
+            } else {
+                return response()->json('failed',"第 ".($i+1)." 个输出文件上传失败");
+            }
+        }
+        DB::table('problems')->update(['judge_cnt' => $cnt]);
+        return response()->json('success', '成功传输'.$cnt.'组测试文件');
     }
 
     public function cgLabel(Request $request) {

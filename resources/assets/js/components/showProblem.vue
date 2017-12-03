@@ -1,6 +1,6 @@
 <template>
 <div class="container">
-    <div v-if="problem.title">
+    <div v-if="problem.title" style="position: relative">
         <div class="col-md-9">
             <el-card>
                 <div class="pro-header">
@@ -13,10 +13,13 @@
                 </div>
             </el-card>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 media-hidden">
             <el-card>
                 <router-link :to="'/submit/'+id" class="btn btn-primary" style="width:100%">提交</router-link>
             </el-card>
+        </div>
+        <div class="media-show bottom-right">
+            <router-link :to="'/submit/'+id"><i class="el-icon-edit"></i></router-link>
         </div>
     </div>
     <div v-else-if="down">

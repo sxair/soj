@@ -31,6 +31,9 @@
 </template>
 <script>
     export default {
+        props: {
+            id:String
+        },
         data() {
             return {
                 search: {
@@ -46,6 +49,10 @@
                 code: '',
                 tmpCode: '',
             }
+        },
+        mounted() {
+            this.auth();
+            this.search.proId = parseInt(this.id);
         },
         methods: {
             onSubmit() {

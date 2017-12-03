@@ -7,7 +7,7 @@
  * @param $perPage
  * @return array
  */
-function getPage($sql, $select, $page, $perPage)
+function getPaginate($sql, $select, $page, $perPage)
 {
     $total = $sql->count();
     if (!empty($select)) {

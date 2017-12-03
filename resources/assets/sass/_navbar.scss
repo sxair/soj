@@ -185,7 +185,7 @@
   }
 
   .s-navbar-media {
-    position: fixed;
+    position: absolute;
     left: 0;
     top: 0;
     width: 100%;
@@ -194,7 +194,6 @@
     border-bottom: 1px solid #d5d4d4;
     z-index: 2;
     background-color: #222;
-    will-change: transform;
     a {
       text-decoration: none;
     }
@@ -234,7 +233,8 @@
   .slideout-panel {
     position: relative;
     z-index: 1;
-    will-change: transform;
+    //fixed can't use in transform
+    //will-change: transform;
     background-color: #fff; /* A background-color is required */
     min-height: 100vh;
     padding-top: 50px;

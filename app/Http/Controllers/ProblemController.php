@@ -24,7 +24,7 @@ class ProblemController extends Controller
                 $sql = DB::table('oj_problems')
                     ->join('problems', 'problems.id', '=', 'oj_problems.problem_id')
                     ->where('problems.' . $type, 'like', '%' . $search . '%');
-                return response()->json(getPage($sql, ['oj_problems.id', 'oj_problems.title',
+                return response()->json(getPaginate($sql, ['oj_problems.id', 'oj_problems.title',
                     'oj_problems.accepted', 'oj_problems.submitted',
                     'problems.author', 'problems.source'], $page, $perPage));
             } else {
@@ -34,7 +34,7 @@ class ProblemController extends Controller
         } else {
             $sql = DB::table('oj_problems');
         }
-        return response()->json(getPage($sql, ['id', 'title', 'accepted', 'submitted'], $page, $perPage));
+        return response()->json(getPaginate($sql, ['id', 'title', 'accepted', 'submitted'], $page, $perPage));
     }
 
     /**
@@ -59,7 +59,7 @@ class ProblemController extends Controller
                     ->where('status', '<', ($status + 1) * 10000);
             }
         }
-        return response()->json(getPage($sql, [], $page, $perPage));
+        return response()->json(getPaginate($sql, [], $page, $perPage));
     }
 
     public function problem($id)
@@ -86,7 +86,7 @@ class ProblemController extends Controller
         $ranks = DB::table('user_infos')->orderBy('accepted', 'dasc')
             ->join('users', 'users.id', '=', 'user_infos.id')
             ->orderBy('submitted', 'asc');
-        return response()->json(getPage($ranks, ['users.id', 'users.name', 'user_infos.accepted', 'user_infos.submitted'
+        return response()->json(getPaginate($ranks, ['users.id', 'users.name', 'user_infos.accepted', 'user_infos.submitted'
             , 'user_infos.motto'], $page, 15));
     }
 
@@ -136,16 +136,14 @@ class ProblemController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function showcode($id)
+    public function getCode($id)
     {
-        if (Auth::guest()) {
-            return redirect()->back();
-        }
-        $status = DB::table('oj_status')->where(['id' => $id, 'user_id' => Auth::id()])->get();
-        if ($status->isEmpty()) {
-            return redirect()->back();
+        $status = DB::table('oj_status')->where(['id' => $id])->get();
+        if ($status->isEmpty() || Auth::guest() || $status[0]->user_name != Auth::user()->name) {
+            return response()->json(['code' => '']);
         }
         $code = DB::table('oj_codes')->where(['status_id' => $id])->get();
-        return view('showcode', ['code' => $code[0], 'status' => $status[0]]);
+        if($code->isEmpty()) return response()->json(['code' => '']);
+        return response()->json(['code' => $code[0]->code, 'status' => $status[0]]);
     }
 }
