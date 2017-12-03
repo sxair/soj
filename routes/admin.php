@@ -8,6 +8,8 @@ Route::middleware('control')->group(function () {
     Route::post('addProblem', 'ProblemsController@addProblem');
 
     Route::post('cgLabel', 'ProblemsController@cgLabel');
+
+    Route::post('setProblemData', 'ProblemsController@setProblemData');
 });
 
 

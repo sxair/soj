@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('content')
-    <div>
+    <div class="clearfix">
         <el-col :md="4">
             <admin-menu></admin-menu>
         </el-col>

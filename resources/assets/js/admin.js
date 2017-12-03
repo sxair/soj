@@ -18,12 +18,14 @@ import {
     MenuItemGroup,
     Card,
     Col,
+    Alert,
     Radio,
     RadioGroup,
     RadioButton,
     Icon,
     Loading,
     Message,
+    MessageBox,
     Notification,
 } from 'element-ui'
 
@@ -44,10 +46,13 @@ Vue.use(MenuItemGroup);
 Vue.use(Col);
 Vue.use(Card);
 Vue.use(Icon);
+Vue.use(Alert);
 //Vue.use(Message); 不能加
 Vue.use(Loading);
 Vue.prototype.$loading = Loading.service;
 Vue.prototype.$message = Message;
+Vue.prototype.$msgbox = MessageBox;
+Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$notify = Notification;
 
 Vue.component('navbar', require('./components/navbar.vue'));
@@ -60,7 +65,7 @@ const router = new VueRouter({
         {path: '/problems', component: require('./admin/problems.vue')},
         {path: '/addProblem', component: require('./admin/add-problem.vue')},
         {path: '/label', component: resolve => require(['./admin/label.vue'], resolve)},
-        {path: '/problemData/:id', component: (resolve) => require(['./admin/problem-data.vue'], resolve)},
+        {path: '/problemData/:id', component: require('./admin/problem-data.vue'), props: true},
     ]
 });
 
