@@ -6,6 +6,7 @@ use Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProblemsController extends Controller
 {
@@ -93,48 +94,54 @@ class ProblemsController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * store input and output file
+     * if a kind of file is none,then will create a empty file
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function setProblemData(Request $request)
     {
-        dump($request->all()); return;
-        $infile = $request->file('input_file');
-        $outfile = $request->file('output_file');
-        $cnt = count($infile);
-        if($cnt == 0 || is_null($infile) || is_null($outfile)) {
+        $in = $request->file('input_file');
+        $out = $request->file('output_file');
+        if (is_null($in) && is_null($out)) {
             return response()->json(['failed' => "请选择输入输出文件"]);
         }
         $proId = $request->input('id');
-        foreach ($infile as $i => $f) {
-            if (!array_key_exists($i, $outfile) && !array_key_exists($i,$infile)) {
-                DB::table('problems')->update(['judge_cnt' => $i+1]);
-                return response()->json(['warning' => '成功传输'.$i.'组测试文件,但收到'.$cnt.'组测试']);
-            }
-            if (!array_key_exists($i,$infile)) {
-                return response()->json(['failed' => "第 ".($i+1)." 个输入文件为空但输出文件不为空"]);
-            }
-            if($infile[$i]->isValid()) {
-                $x = $infile[$i]->getClientOriginalExtension();
-                if($x != 'txt' && $x != 'in') {
-                    return response()->json(['failed' => "第 ".($i+1)." 个输入文件后缀为 $x 应为txt或in结尾"]);
+        $cnt_in = count($in); $cnt_out = count($out);
+        $max = max($cnt_in, $cnt_out);
+        for($i = 0; $i < $max; $i++) {
+            $in_file =  $proId . '/pro' . $proId . '_test' . ($i + 1) . '.in';
+            $out_file =  $proId . '/pro' . $proId . '_test' . ($i + 1) . '.out';
+            if($i < $cnt_in) {
+                if ($in[$i]->isValid()) { // if upload success
+                    $x = $in[$i]->getClientOriginalExtension();
+                    if ($x != 'txt' && $x != 'in') {
+                        return response()->json(['failed' => "第 " . ($i + 1) . " 个输入文件后缀为 $x 应为txt或in"]);
+                    }
+                    $in[$i]->storeAs('data', $in_file);
+                } else {
+                    return response()->json(['failed' => "第 " . ($i + 1) . " 个输入文件上传失败"]);
                 }
-                $infile[$i]->storeAs('data', $proId.'/pro'.$proId.'_test'.($i+1).'.in');
             } else {
-                return response()->json(['failed' => "第 ".($i+1)." 个输入文件上传失败"]);
+                Storage::disk()->put('data/' . $in_file,"");
             }
-            if (!array_key_exists($i, $outfile)) {
-                return response()->json(['failed' => "第 ".($i+1)." 个输出文件为空但输入文件不为空"]);
-            }
-            if($outfile[$i]->isValid()) {
-                $x = $outfile[$i]->getClientOriginalExtension();
-                if($x != 'txt' && $x != 'out') {
-                    return response()->json(['failed' => "第 ".($i+1)." 个输出文件后缀为 $x 应为txt或out结尾"]);
+            if($i < $cnt_out) {
+                if ($out[$i]->isValid()) { // if upload success
+                    $x = $out[$i]->getClientOriginalExtension();
+                    if ($x != 'txt' && $x != 'out') {
+                        return response()->json(['failed' => "第 " . ($i + 1) . " 个输出文件后缀为 $x 应为txt或out"]);
+                    }
+                    $out[$i]->storeAs('data', $out_file);
+                } else {
+                    return response()->json(['failed' => "第 " . ($i + 1) . " 个输出文件上传失败"]);
                 }
-                $outfile[$i]->storeAs('data', $proId.'/pro'.$proId.'_test'.($i+1).'.out');
             } else {
-                return response()->json(['failed'=>"第 ".($i+1)." 个输出文件上传失败"]);
+                Storage::disk()->put('data/' . $out_file,"");
             }
         }
-        DB::table('problems')->where('id',$proId)->update(['judge_cnt' => $cnt]);
-        return response()->json(['success' => '成功传输'.$cnt.'组测试文件']);
+        DB::table('problems')->where('id', $proId)->update(['judge_cnt' => $max]);
+        return response()->json(['success' => '成功上传' . $cnt_in . '个输入文件和' . $cnt_out . '个输出文件']);
     }
 
     public function cgLabel(Request $request) {

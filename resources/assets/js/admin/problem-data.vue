@@ -49,16 +49,21 @@
                 }
                 axios.post('admin/setProblemData', fd, {headers: {'Content-Type': 'multipart/form-data'}}).then((response) => {
                     this.subing = false;
-                    this.$message({
-                        message: '提交成功',
-                        duration: 1500,
-                        type: 'success'
-                    });
+                    console.log(response.data);
+                    if(response.data.success) {
+                        this.$message({
+                            message: response.data.success,
+                            duration: 5000,
+                            type: 'success'
+                        });
+                    } else {
+                        this.$message.error(response.data.failed);
+                    }
                 }).catch((error) => {
                     this.subing = false;
                     this.$message({
                         message: '提交失败，请重新提交',
-                        duration: 1500,
+                        duration: 3000,
                         type: 'error'
                     });
                 });
