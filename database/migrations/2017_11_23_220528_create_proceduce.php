@@ -25,12 +25,16 @@ class CreateProceduce extends Migration
 //END$$
 //DELIMITER ;
 
-//        BEGIN
+//        DELIMITER $$
+//CREATE DEFINER=`root`@`localhost` PROCEDURE `get_judges`(IN `i_id` TINYINT, IN `i_maxnum` TINYINT)
+//    NO SQL
+//BEGIN
 //start transaction;
 //SELECT status_id,judge_for FROM judges WHERE running=0 LIMIT i_maxnum FOR UPDATE;
 //                                                                          UPDATE judges set running=i_id WHERE running=0 LIMIT i_maxnum;
 //COMMIT;
-//END
+//END$$
+//DELIMITER ;
 
 //        DELIMITER $$
 //CREATE DEFINER=`root`@`localhost` PROCEDURE `oj_submit`(IN `i_problem_id` INT UNSIGNED, IN `i_lang` TINYINT, IN `i_code` TEXT, IN `i_user_name` VARCHAR(20), IN `i_user_id` INT UNSIGNED, IN `i_code_len` INT)
