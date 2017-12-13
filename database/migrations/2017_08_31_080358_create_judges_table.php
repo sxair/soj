@@ -16,7 +16,7 @@ class CreateJudgesTable extends Migration
         Schema::create('judges', function (Blueprint $table) {
             $table->unsignedInteger('status_id');
             $table->unsignedInteger('judge_for');
-            $table->tinyInteger('running')->default('0');
+            $table->tinyInteger('running')->default('0')->index();
         });
     }
 

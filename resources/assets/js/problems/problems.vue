@@ -122,8 +122,7 @@
                     this.noTitle = true;
                 } else this.noTitle = false;
                 this.loading = true;
-                document.body.scrollTop = 0;
-                document.documentElement.scrollTop = 0;
+                toTop();
                 axios.get(getUrl).then((response) => {
                     this.loading = false;
                     this.problems = response.data.content;

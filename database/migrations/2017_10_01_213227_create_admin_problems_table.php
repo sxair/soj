@@ -19,7 +19,7 @@ class CreateAdminProblemsTable extends Migration
             $table->string('title', 50)->index();
             $table->string('user_name',20)->index();
             $table->boolean('public');
-            $table->boolean('show');
+            $table->unsignedInteger('oj_id');
 
             $table->primary('problem_id');
         });

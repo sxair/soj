@@ -142,9 +142,8 @@
                 if (cp != 1 || this.$route.query.page) {
                     que.page = cp;
                 }
+                toTop();
                 this.$router.push({query: que});
-                document.body.scrollTop = 0;
-                document.documentElement.scrollTop = 0;
             },
             setStatus() {
                 const query = this.$route.query;

@@ -62,10 +62,13 @@ Vue.component('editor', resolve => require(['./components/editor.vue'], resolve)
 const router = new VueRouter({
     routes: [
         {path: '/', component: {template: '<div>welcome</div>'}},
-        {path: '/problems', component: require('./admin/problems.vue')},
         {path: '/addProblem', component: require('./admin/add-problem.vue')},
+        {path: '/changeProblem/:id', component: require('./admin/add-problem.vue'), props:true},
+        {path: '/changePassword', component: require('./admin/change-password.vue')},
         {path: '/label', component: resolve => require(['./admin/label.vue'], resolve)},
+        {path: '/problems', component: require('./admin/problems.vue')},
         {path: '/problemData/:id', component: require('./admin/problem-data.vue'), props: true},
+        {path: '/problemOperation/:id', component: require('./admin/problem-operation.vue'), props: true},
     ]
 });
 

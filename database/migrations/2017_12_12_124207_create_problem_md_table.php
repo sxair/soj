@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSpjTable extends Migration
+class CreateProblemMdTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateSpjTable extends Migration
      */
     public function up()
     {
-        Schema::create('spj', function (Blueprint $table) {
-            // if exist
+        Schema::create('problem_md', function (Blueprint $table) {
             $table->unsignedInteger('id');
+            $table->text('content');
         });
     }
 
@@ -26,6 +26,6 @@ class CreateSpjTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('spj');
+        Schema::dropIfExists('problem_md');
     }
 }

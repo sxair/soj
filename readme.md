@@ -3,6 +3,7 @@
 ### 安装
 
 依赖laravel框架，具体配置要求请看https://d.laravel-china.org/docs/5.5/installation
+需php-zip拓展
 
 ```
 composer install

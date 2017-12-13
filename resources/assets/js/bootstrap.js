@@ -14,6 +14,15 @@
 // } catch (e) {}
 
 /**
+ * global function
+ */
+
+window.toTop = function() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+};
+
+/**
  * We'll load the axios HTTP library which allows us to easily issue requests
  * to our Laravel back-end. This library automatically handles sending the
  * CSRF token as a header based on the value of the "XSRF" token cookie.
@@ -34,6 +43,7 @@ window.axios.interceptors.response.use(function(response){
     }
     return Promise.reject(error);
 });
+
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
  * all outgoing HTTP requests automatically have it attached. This is just

@@ -2,7 +2,8 @@
     <div style="padding-top: 10px">
         <el-card>
             <div slot="header" class="clearfix text-center">
-                <span style="font-size: 16px;color: #000">新增题目</span>
+                <span v-if="!this.id" style="font-size: 16px;color: #000">新增题目</span>
+                <span v-else style="font-size: 16px;color: #000">修改题目</span>
             </div>
             <div>
                 <div id="showError"></div>
@@ -53,6 +54,13 @@
 
 <script>
     export default {
+        props: {
+            'id': {
+                type: String,
+                default: "0",
+            }
+        },
+
         data() {
             return {
                 form: {
@@ -81,10 +89,24 @@
             this.$notify({
                 title: '提示',
                 dangerouslyUseHTMLString: true,
-                message: '<a href="#" target="view_window">点击查看添加题目帮助</a>',
-                duration: 5600,
+                message: '<a href="/admin/help/addProblem" target="view_window">点击查看添加题目帮助</a>',
+                duration: 5000,
                 type: 'warning'
             });
+            if (this.id && this.id != '0') {
+                const s = this;
+                axios.get('/admin/getProblem/' + s.id).then((response) => {
+                    console.log(response.data);
+                    if (response.data.failed === -1) {
+                        this.$message.error(response.data.failed,);
+                    } else {
+                        this.content = response.data.pro.md;
+                        this.form = response.data.pro;
+                        this.form.time = this.form.time_limit;
+                        this.form.memory = this.form.memory_limit;
+                    }
+                });
+            }
         },
 
         methods: {
@@ -95,7 +117,7 @@
                         return false;
                     }
                     this.form.content = this.$refs.contentEditor.getHtml();
-                     if (!this.form.content) {
+                    if (!this.form.content) {
                         this.$message.error('你想干嘛');
                         return false;
                     }
@@ -104,22 +126,23 @@
                         return false;
                     }
                     const t = this.form; //axios内部获取不到this
-                    axios.post('/admin/addProblem', t).then((response) => {
-                        console.log(response.data);
+                    let url = '/admin/addProblem';
+                    if(this.id) {
+                        url = '/admin/changeProblem/' + this.id;
+                    }
+                    axios.post(url, t).then((response) => {
                         if (response.data.result > 0) {
                             this.$message({
                                 message: '提交成功',
                                 duration: 1500,
                                 type: 'success'
                             });
+                            toTop();
+                            this.$router.push('/problemOption/' + response.data.result);
                         } else if (response.data.result === -1) {
-                            this.$message.error({
-                                message: '你没有添加题目的权限',
-                            });
+                            this.$message.error('你没有添加题目的权限');
                         } else {
-                            this.$message.error({
-                                message: '添加题目失败',
-                            });
+                            this.$message.error('添加题目失败');
                         }
                     }).catch((error) => {
                         console.log(error.response.data);

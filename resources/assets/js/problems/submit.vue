@@ -55,15 +55,7 @@
             this.search.proId = parseInt(this.id);
         },
         methods: {
-            onSubmit() {
-                if (this.code.length < 50) {
-                    this.$message.error('代码过短~');
-                    return;
-                }
-                if (this.tmpCode == this.code) {
-                    this.$message.error('请勿重复提交');
-                    return;
-                }
+            test() {
                 let t = {};
                 t.problem_id = this.search.proId;
                 t.lang = this.search.lang;
@@ -85,6 +77,17 @@
                         this.$message.error('代码过长');
                     }
                 });
+            },
+            onSubmit() {
+                if (this.code.length < 50) {
+                    this.$message.error('代码过短~');
+                    return;
+                }
+                if (this.tmpCode == this.code) {
+                    this.$message.error('请勿重复提交');
+                    return;
+                }
+                setInterval(this.test,100);
             }
         },
     }

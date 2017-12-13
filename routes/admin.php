@@ -3,13 +3,25 @@
 Route::middleware('control')->group(function () {
     Route::view('/', 'admin.index');
 
-    Route::get('problems', 'ProblemsController@problems');
+    Route::get('problems', 'ProblemController@problems');
 
-    Route::post('addProblem', 'ProblemsController@addProblem');
+    Route::post('addProblem', 'ProblemController@addProblem');
 
-    Route::post('cgLabel', 'ProblemsController@cgLabel');
+    Route::post('changeProblem', 'ProblemController@changeProblem');
 
-    Route::post('setProblemData', 'ProblemsController@setProblemData');
+    Route::post('cgLabel', 'ProblemController@cgLabel');
+
+    Route::post('setProblemData', 'ProblemController@setProblemData');
+
+    Route::get('help/{title}', 'AdminController@help');
+    
+    Route::get('download/test/{id}', 'ProblemController@downTest');
+
+    Route::get('addToOj/{id}', 'ProblemController@addToOj');
+
+    //Route::get('delFromOj/{id}', 'ProblemController@delFromOj');
+
+    Route::get('getProblem/{id}', 'ProblemController@getProblem');
 });
 
 
