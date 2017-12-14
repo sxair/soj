@@ -4,14 +4,16 @@
 
 依赖laravel框架，具体配置要求请看https://d.laravel-china.org/docs/5.5/installation
 需php-zip拓展
-
+安装composer和nodejs后运行
 ```
 composer install
 npm install
 npm run prod
 ```
-
-判题端请看https://github.com/sxair/online-judge
+之后复制.env.example文件为.env。运行
+```
+php artisan key:generate
+```
 
 数据库表：
 ```
@@ -25,6 +27,9 @@ php artisan db:seed
 ```
 php artisan db:seed --class=TestSeeder
 ```
+
+判题端请看https://github.com/sxair/online-judge
+
 
 ### 展示
 
