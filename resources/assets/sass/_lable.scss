@@ -1,0 +1,34 @@
+.label-header {
+  border-bottom: 1px solid #d8d8d8;
+  margin-bottom: 3px;
+}
+
+.label-group {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  > li {
+    display: inline-block;
+  }
+}
+
+.label-item {
+  display: block;
+  padding: 5px 13px;
+  margin: 2px;
+  text-decoration: none;
+  color: #333333 !important;
+  &:hover, &:focus {
+    text-decoration: none;
+  }
+  &:hover {
+    color: #ffffff !important;
+    background: #409EFF;
+  }
+}
+
+.label-active {
+  background: #409EFF;
+  text-decoration: none;
+  color: #ffffff !important;
+}

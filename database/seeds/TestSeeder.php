@@ -37,7 +37,15 @@ class TestSeeder extends Seeder
             'content' => '[
     {"name": "全部问题", "id": 0},
     {"name": "图论", "id": 1000, "son": [
-           {"name": "最短路", "id": 1001}
+           {"name": "最短路", "id": 1001},
+           {"name": "最长路", "id": 1002},
+           {"name": "网络流", "id": 1003}
+        ]
+    },
+     {"name": "数论", "id": 1000, "son": [
+           {"name": "最短路", "id": 1001},
+           {"name": "最长路", "id": 1002},
+           {"name": "网络流", "id": 1003}
         ]
     },
 ]']);

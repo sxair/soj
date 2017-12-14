@@ -48,6 +48,16 @@
                         </el-form-item>
                     </el-form>
                 </el-card>
+                <el-card style="margin-top:7px">
+                    <div v-for="(i, index) in labels">
+                        <div v-if="i.son" class="label-header">{{ i.name }}</div>
+                        <ul class="label-group">
+                            <li v-for="(s, sindex) in i.son">
+                                <a href="javascript:void(0)" @click="onLabelClick(index, sindex)" class="label-item" :class="{'label-active': s.id < 0}">{{ s.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </el-card>
             </div>
         </div>
     </div>
@@ -76,15 +86,13 @@
                 }],
                 emptySearch: 0,
                 noTitle: false,
-                label: [{
-                    name: '所有问题',
-                    id: 0
-                }]
+                labels: [],
+                clickLable: {i:-1,s:0}
             }
         },
         created() {
             this.setProblems();
-            this.setLabel();
+            this.setLabels();
         },
         computed: {
             'curPage'() {
@@ -101,14 +109,42 @@
             }
         },
         methods: {
-            setLabel() {
+            setLabels() {
                 axios.get("api/label")
                     .then((response) => {
-                        this.label = eval(response.data.content);
+                        this.labels = eval(response.data.content);
+                        console.log(this.labels);
                     })
                     .catch((error) => {
                         console.log(error);
                     });
+            },
+            onLabelClick(i, s) {
+                if(this.clickLable.i != -1) { // if have active
+                    if(this.labels[i].son[s].id >= 0) { //if this no actived
+                        //set pre no active
+                        this.labels[this.clickLable.i].son[this.clickLable.s].id = -this.labels[this.clickLable.i].son[this.clickLable.s].id;
+                        //now active
+                        this.search.label = this.labels[i].son[s].id;
+                        this.labels[i].son[s].id = -this.labels[i].son[s].id;
+                        this.clickLable = {i:i,s:s};//set now active
+                    } else { // if this is active.we need to set no active
+                        this.labels[i].son[s].id = -this.labels[i].son[s].id;
+                        this.clickLable = {i:-1,s:0};
+                        this.search.label = 0;
+                    }
+                } else {
+                    this.clickLable = {i:i,s:s};
+                    this.search.label = this.labels[i].son[s].id;
+                    this.labels[i].son[s].id = -this.labels[i].son[s].id;
+                }
+                this.search.type = 'title';
+                this.search.content = '';
+                if(this.search.label) {
+                    this.$router.push({query: {label: this.search.label}});
+                } else {
+                    this.$router.push({});
+                }
             },
             setProblems() {
                 let cp = this.curPage;
@@ -117,7 +153,7 @@
                 this.search.type = this.routeType;
                 this.search.label = this.routeLabel;
                 let getUrl = '/api/problems' + '?page=' + cp + '&search=' + this.search.content
-                    + '&type=' + this.search.type;
+                    + '&type=' + this.search.type + '&label=' + this.search.label;
                 if (this.search.content && this.search.type != 'title') {
                     this.noTitle = true;
                 } else this.noTitle = false;
@@ -141,6 +177,9 @@
                 if (this.$route.query.search) {
                     que.search = this.$route.query.search;
                     que.type = this.$route.query.type;
+                }
+                if (this.$route.query.label) {
+                    que.label = this.$route.query.label;
                 }
                 this.$router.push({query: que});
             },
