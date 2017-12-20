@@ -5,7 +5,7 @@
             <div class="col-md-8 col-md-offset-2">
                 <el-card>
                     <div slot="header" class="clearfix">
-                        <span>Login</span>
+                        <span>Admin Login</span>
                     </div>
                         <form class="form-horizontal" method="post" action="{{ url('admin/login') }}">
                             {{ csrf_field() }}

@@ -113,7 +113,6 @@
                 axios.get("api/label")
                     .then((response) => {
                         this.labels = eval(response.data.content);
-                        console.log(this.labels);
                     })
                     .catch((error) => {
                         console.log(error);

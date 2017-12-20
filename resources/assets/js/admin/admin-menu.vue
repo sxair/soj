@@ -30,6 +30,16 @@
                 <el-menu-item index="3-2">新增比赛</el-menu-item>
             </el-menu-item-group>
         </el-submenu>
+        <el-submenu index="3">
+            <template slot="title">
+                <i class="el-icon-menu"></i>
+                <span>管理员管理</span>
+            </template>
+            <el-menu-item-group>
+                <el-menu-item index="3-1">修改管理密码</el-menu-item>
+                <el-menu-item index="3-2">查看管理员</el-menu-item>
+            </el-menu-item-group>
+        </el-submenu>
         <el-menu-item index="4">
             <i class="el-icon-document"></i>
             <span slot="title">学生管理</span>
