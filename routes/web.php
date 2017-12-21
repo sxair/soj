@@ -28,6 +28,8 @@ Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
 Route::get('userinfo/{username}', 'UserController@userinfo');
+Route::view('registerSuccess', 'auth.registerSuccess');
+Route::get('confirmEmail/{token}/{email}', 'UserController@confirmEmail');
 
 Route::get('change', 'UserController@changeUserInfoPage')->middleware('auth');
 Route::post('change', 'UserController@changeUserInfo')->middleware('auth');

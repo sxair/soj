@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Validator;
 
 class UserController extends Controller
@@ -80,5 +82,22 @@ class UserController extends Controller
         if ($motto) $newInfo['motto'] = $motto;
         DB::table('user_infos')->where('id', $user->id)->update($newInfo);
         return response()->json('success');
+    }
+
+    public function broker()
+    {
+        return Password::broker();
+    }
+
+    public function confirmEmail($token, $email) {
+        $user = User::where('email', $email)->first();
+        $t = DB::table('password_resets')->where('email', $email)->first();
+        if($t && Hash::check($token, $t->token)) {
+            $user->locked = ($user->locked | 1) ^ 1;
+            DB::table('users')->where('email', $email)->update(['locked' => $user->locked]);
+            $this->broker()->deleteToken($user);
+            Auth::guard()->login($user);
+        }
+        return redirect('/');
     }
 }

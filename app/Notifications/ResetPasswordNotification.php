@@ -51,8 +51,8 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('You are receiving this email because we received a password reset request for your account.')
+            ->line('您收到这封邮件是因为您可以更改密码，点击下面按钮来更改.')
             ->action('Reset Password', url(config('app.url').route('password.reset', $this->token, false)))
-            ->line('If you did not request a password reset, no further action is required.');
+            ->line('如果您不需要修改密码，请忽视该邮件.');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notifications\ConfirmEmail;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -31,7 +32,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * 发送密码重置通知。
+     * 发送密码重置通知
      *
      * @param  string  $token
      * @return void
@@ -40,4 +41,13 @@ class User extends Authenticatable
     {
         $this->notify(new ResetPasswordNotification($token));
     }
+
+    /**
+     * 发送邮箱确认通知
+     * @param $token
+     */
+    public function sendConfirmNotification($token, $email) {
+        $this->notify(new ConfirmEmail($token, $email));
+    }
+
 }

@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\User;
 use App\Http\Controllers\Controller;
 use DB;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Request;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -41,13 +43,20 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    public function broker()
+    {
+        return Password::broker();
+    }
+
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
 
-        DB::table('password_resets');
+        DB::table('user_infos')->insert(['id' => $user->id]);
+        $user->sendConfirmNotification($this->broker()->createToken($user), $user->email);
+
         //$this->guard()->login($user);
 
         return redirect('/registerSuccess');
