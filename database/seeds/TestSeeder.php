@@ -30,6 +30,8 @@ class TestSeeder extends Seeder
         DB::table('admins')->insert([
             'id' => 1,
             'password' => bcrypt('admin'),
+            'presenter_name' => 'admin',
+            'remark' => 'admin'
         ]);
 
         DB::table('soj')->insert([
