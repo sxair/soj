@@ -40,8 +40,7 @@ function changeUserInfo() {
             'password': getIdVal('password'),
             'password_confirmation': getIdVal('password-confirm'),
             'school': getIdVal('school'),
-            //判断组件是否加载完成
-            'motto': window.app.$refs.editor === undefined ? null : window.app.$refs.editor.getMD()
+            'motto': getIdVal('motto')
         }) .then(function (response) {
             if(response.data.failed) {
                 window.app.$message.error(response.data.failed);

@@ -31,8 +31,19 @@ return [
         'submit' => 2,
     ],
     'admin' => [
-        // base control
-        'control' => 1,
-        'addProblem' => 2,
+        'control' => 1,  // 可以进入后台
+        'all' => 2, // 完全控制
+        'teacher' => 4, // 教师
+        'student' => 8, // 学生
+    ],
+    'admin_map' => [
+        '1' => 3,
+        '2' => 5,
+        '3' => 9,
+    ],
+    'admin_name' => [
+        '1' => '管理员',
+        '2' => '教师管理员',
+        '3' => '学生管理员',
     ]
 ];

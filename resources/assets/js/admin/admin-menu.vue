@@ -12,8 +12,8 @@
             <el-menu-item-group>
                 <el-menu-item index="/problems">查看题目库</el-menu-item>
                 <el-menu-item index="/addProblem">新增题目</el-menu-item>
-                <el-menu-item index="1-3">查看选择题</el-menu-item>
-                <el-menu-item index="1-4">新增选择题</el-menu-item>
+                <!--<el-menu-item index="1-3">查看选择题</el-menu-item>-->
+                <!--<el-menu-item index="1-4">新增选择题</el-menu-item>-->
             </el-menu-item-group>
         </el-submenu>
         <el-menu-item index="/label">
@@ -30,14 +30,15 @@
                 <el-menu-item index="3-2">新增比赛</el-menu-item>
             </el-menu-item-group>
         </el-submenu>
-        <el-submenu index="3">
+        <el-submenu index="4">
             <template slot="title">
-                <i class="el-icon-menu"></i>
+                <i class="el-icon-star-off"></i>
                 <span>管理员管理</span>
             </template>
             <el-menu-item-group>
-                <el-menu-item index="3-1">修改管理密码</el-menu-item>
-                <el-menu-item index="3-2">查看管理员</el-menu-item>
+                <el-menu-item index="/changePassword">修改管理密码</el-menu-item>
+                <el-menu-item index="/showAdmins">查看管理员</el-menu-item>
+                <el-menu-item index="/addAdmin">新增管理员</el-menu-item>
             </el-menu-item-group>
         </el-submenu>
         <el-menu-item index="4">

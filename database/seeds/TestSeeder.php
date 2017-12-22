@@ -22,13 +22,13 @@ class TestSeeder extends Seeder
             'locked' => 1,
             'control' => 4294967295,
         ]);
+
         DB::table('user_infos')->insert([
             'id' => '1',
         ]);
 
         DB::table('admins')->insert([
             'id' => 1,
-            'type' => 1,
             'password' => bcrypt('admin'),
         ]);
 
@@ -39,7 +39,7 @@ class TestSeeder extends Seeder
     {"name": "图论", "id": 1000, "son": [
            {"name": "最短路", "id": 1001},
            {"name": "最长路", "id": 1002},
-           {"name": "网络流", "id": 1003}
+           {"name": "网络流", "id": 1003},
         ]
     },
      {"name": "数论", "id": 1000, "son": [

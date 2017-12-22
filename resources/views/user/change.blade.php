@@ -1,5 +1,13 @@
 @extends('layouts.app')
 @section('content')
+    <nav class="s-navbar-media">
+        <a class="s-navbar-brand" href="{{ url('/') }}">
+            {{ config('app.name', 'MNNUOJ') }}
+        </a>
+        <button class="slideout-btn">
+            <i class="el-icon-menu" style="font-size: 26px;"></i>
+        </button>
+    </nav>
     <div class="container">
         <div class="col-md-10 col-md-offset-1" style="margin-top: 20px">
             <el-card>
@@ -53,7 +61,7 @@
                     <div class="form-group">
                         <label for="school" class="col-md-3 control-label">Quote</label>
                         <div class="col-md-8">
-                            <editor ref="editor" :value="motto"></editor>
+                            <textarea id="motto">{{ $info->motto }}</textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -68,6 +76,3 @@
         </div>
     </div>
 @endsection
-@push('setData')
-    window.VueData.motto = "{{ $info->motto }}";
-@endpush

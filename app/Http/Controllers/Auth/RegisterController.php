@@ -55,6 +55,7 @@ class RegisterController extends Controller
         event(new Registered($user = $this->create($request->all())));
 
         DB::table('user_infos')->insert(['id' => $user->id]);
+
         $user->sendConfirmNotification($this->broker()->createToken($user), $user->email);
 
         //$this->guard()->login($user);

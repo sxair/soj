@@ -69,10 +69,13 @@ const router = new VueRouter({
         {path: '/problems', component: require('./admin/problems.vue')},
         {path: '/problemData/:id', component: require('./admin/problem-data.vue'), props: true},
         {path: '/problemOperation/:id', component: require('./admin/problem-operation.vue'), props: true},
+        {path: '/changePassword', component: require('./admin/change-password.vue')},
+        {path: '/addAdmin', component: require('./admin/add-admin.vue')},
     ]
 });
 
 Vue.prototype.user = window.user;
+
 window.app = new Vue({
     router,
 }).$mount('#app');

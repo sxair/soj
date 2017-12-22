@@ -78,9 +78,12 @@ class UserController extends Controller
         }
         if ($newUser != [])
             DB::table('users')->where('id', $user->id)->update($newUser);
+        $newInfo = [];
         if ($school) $newInfo['school'] = $school;
         if ($motto) $newInfo['motto'] = $motto;
-        DB::table('user_infos')->where('id', $user->id)->update($newInfo);
+        if($newInfo != []) {
+            DB::table('user_infos')->where('id', $user->id)->update($newInfo);
+        }
         return response()->json('success');
     }
 
