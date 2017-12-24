@@ -4,34 +4,38 @@ namespace App\Http\Controllers\Admin;
 
 use Auth;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\BaseController as Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Tools\zip;
 
 class ProblemController extends Controller
 {
+
     public function problems(Request $request)
     {
         $page = getCurrentPage($request->input('page'));
         $perPage = 50;
-        $total = DB::table('admin_problems')
-            ->where('user_name',Auth::user()->name)
-            ->orWhere('public', 1)
-            ->count();
-        $problems = DB::table('admin_problems')
-            ->where('user_name',Auth::user()->name)
-            ->orWhere('public', 1)
-            ->offset(($page - 1) * $perPage)->limit($perPage)->get();
+        if($this->isStudent()) {
+            $total = DB::table('admin_problems')
+                ->where('user_name', Auth::user()->name)
+                ->orWhere('public', 1)
+                ->count();
+            $problems = DB::table('admin_problems')
+                ->where('user_name', Auth::user()->name)
+                ->orWhere('public', 1)
+                ->offset(($page - 1) * $perPage)->limit($perPage)->get();
+        } else {
+            $total = DB::table('admin_problems')
+                ->count();
+            $problems = DB::table('admin_problems')
+                ->offset(($page - 1) * $perPage)->limit($perPage)->get();
+        }
         return response()->json(array_merge(['problems' => $problems], ['total' => $total]));
     }
 
-    public function addProblem(Request $request)
+    public function problemValidator(Request $request)
     {
-        $user = Auth::user();
-        if (!($user->control & config('soj.admin.addProblem'))) {
-            return response()->json(['result' => -1]);
-        }
         $this->validate($request, [
             'title' => 'required|max:30',
             'time' => 'required|numeric|max:99999',
@@ -40,7 +44,13 @@ class ProblemController extends Controller
             'md' => 'required|min:50|max:65535',
             'author' => 'max:50',
             'source' => 'max:50',
+            'public' => 'required'
         ]);
+    }
+
+    public function addProblem(Request $request)
+    {
+        $this->problemValidator($request);
         /*
          * 存入题目库
          */
@@ -49,6 +59,7 @@ class ProblemController extends Controller
             'time_limit' => $request->input('time'),
             'memory_limit' => $request->input('memory'),
             'judge_cnt' => 0,
+            'spj' => 0,
             'content' => $request->input('content'),
             'author' => $request->input('author'),
             'source' => $request->input('source'),
@@ -59,9 +70,9 @@ class ProblemController extends Controller
         DB::table('admin_problems')->insert([
             'problem_id' => $id,
             'title' => $request->input('title'),
-            'user_name' => $user->name,
-            'public' => 1,
-            'show' => 0,
+            'user_name' => Auth::user()->name,
+            'public' => $request->input('show') ? 1 : 0,
+            'oj_id' => 0,
         ]);
         /*
          * 存入markdown源码
@@ -75,7 +86,34 @@ class ProblemController extends Controller
 
     public function changeProblem(Request $request)
     {
-
+        $this->problemValidator($request);
+        $this->validate($request,[
+            'id' => 'required'
+        ]);
+        $id = $request->input('id');
+        $pro = DB::table('admin_problems')->where('problem_id', $id)->first();
+        if($pro == null || (!$pro->public && $this->isStudent())) abort(422);
+        DB::table('problems')->where('id', $id)->update([
+            'title' => $request->input('title'),
+            'time_limit' => $request->input('time'),
+            'memory_limit' => $request->input('memory'),
+            'content' => $request->input('content'),
+            'author' => $request->input('author'),
+            'source' => $request->input('source'),
+        ]);
+        DB::table('admin_problems')->where('problem_id', $id)->update([
+            'title' => $request->input('title'),
+            'public' => $request->input('show') ? 1 : 0,
+        ]);
+        DB::table('problem_md')->where('id', $id)->update([
+            'content' => $request->input('md')
+        ]);
+        if($pro->oj_id) {
+            DB::table('oj_problems')->where('id', $pro->oj_id)->update([
+                'title' => $request->input('title')
+            ]);
+        }
+        return response()->json(['result' => $id]);
     }
 
     public function addToOj($proId)
@@ -107,7 +145,8 @@ class ProblemController extends Controller
         return response()->json(['success' => $id]);
     }
 
-    public function delFromOj($proId) {
+    public function delFromOj($proId)
+    {
 
     }
 
@@ -194,16 +233,87 @@ class ProblemController extends Controller
 
     public function getProblem($id)
     {
-        $pro = DB::table('admin_problems')->where(['problem_id' => $id])->first();
-        if(is_null($pro)) {
+        $admin_pro = DB::table('admin_problems')->where(['problem_id' => $id])->first();
+        if (is_null($admin_pro)) {
             return response()->json(['failed' => '题目不存在']);
         }
-        if($pro->user_name != Auth::user()->name && !$pro->public) {
-            return response()->json(['failed' => '您没有修改权限']);
+        if ($admin_pro->user_name != Auth::user()->name && !$admin_pro->public
+            && (Auth::user()->conrtol & config('soj.admin.student'))
+        ) {
+            return response()->json(['failed' => '您没有获取权限']);
         }
         $pro = DB::table('problems')->where('id', $id)->first();
         $md = DB::table('problem_md')->where('id', $id)->first();
         $pro->md = $md->content;
+        $pro->public = $admin_pro->public;
         return response()->json(['pro' => $pro]);
+    }
+
+    public function getLabelArray()
+    {
+        $label = DB::table('soj')->select('content')
+            ->where('name', 'label')->first()->content;
+        return json_decode(preg_replace('# |\n|\r#', '', $label), true);
+    }
+
+    public function saveLabel($l)
+    {
+        return DB::table('soj')->where('name', 'label')->update(['content' => json_encode($l)]);
+    }
+
+    public function addLabel(Request $request)
+    {
+        $this->validate($request,[
+            'index' => 'required',
+            'name' => 'required|min:1|max:25'
+        ]);
+        $label = $this->getLabelArray();
+        $index = $request->input('index');
+        if(!array_key_exists($index, $label)) {
+            abort(422);
+        }
+        $max = 0;
+        if($index == 0) {
+            foreach ($label as $l) {
+                $max = max($max, $l['id']);
+            }
+            $label[] = ['name' => $request->input('name'), 'id' => $max + 1000];
+        } else {
+            if(array_key_exists('son',$label[$index])) {
+                foreach ($label[$index]['son'] as $s) {
+                    $max = max($max, $s['id']);
+                }
+                $label[$index]['son'][] = ['name' => $request->input('name'), 'id' => $max + 1];
+            } else {
+                $label[$index]['son'] = [];
+                $label[$index]['son'][0] = ['name' => $request->input('name'), 'id' => $max + 1];
+            }
+        }
+        $this->saveLabel($label);
+        return response()->json('success');
+    }
+
+    public function changeLabel(Request $request)
+    {
+        $this->validate($request,[
+            'index' => 'required',
+            'son' => 'required',
+            'name' => 'required|min:1|max:25'
+        ]);
+        $label = $this->getLabelArray();
+        $son = $request->input('son');
+        $index = $request->input('index');
+        if(!array_key_exists($index, $label)) {
+            abort(422);
+        }
+        if($son != -1) {
+            if(array_key_exists($son, $label[$index]['son'])) {
+                $label[$index]['son'][$son]['name'] = $request->input('name');
+            } else  abort(422);
+        } else {
+            $label[$index]['name'] = $request->input('name');
+        }
+        $this->saveLabel($label);
+        return response()->json('success');
     }
 }

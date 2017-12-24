@@ -6,7 +6,7 @@ use App\Mail\AddAdmin;
 use Auth;
 use Hash;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\BaseController as Controller;
 use Illuminate\Support\Facades\DB;
 use Mail;
 
@@ -17,6 +17,19 @@ class AdminController extends Controller
         return view('admin.help', ['content' => $content]);
     }
 
+    public function admins(Request $request) {
+        $page = getCurrentPage($request->input('page'));
+        $perPage = 50;
+        $total = DB::table('admins')->count();
+        $admins = DB::table('admins')
+            ->offset(($page - 1) * $perPage)
+            ->limit($perPage)
+            ->join('users', 'admins.id', '=', 'users.id')
+            ->select('users.name', 'admins.id','admins.presenter_name','admins.remark')
+            ->get();
+        return response()->json(array_merge(['content' => $admins], ['total' => $total]));
+    }
+
     public function addAdmin(Request $request) {
         $name = $request->input('name');
         $email = $request->input('email');
@@ -24,7 +37,10 @@ class AdminController extends Controller
         if($name && $email && $type >= 1 && $type <= 3) {
             $new = DB::table('users')->where(['name' => $name, 'email' => $email])->first();
             if($new == null) {
-                return response()->json(['failed' => '管理员不存在']);
+                return response()->json(['failed' => '用户不存在']);
+            }
+            if(DB::table('admins')->where(['id' => $new->id])->first() != null) {
+                return response()->json(['failed' => '管理员已存在']);
             }
             $pass = str_random(6);
             DB::table('admins')->insert([
@@ -40,11 +56,36 @@ class AdminController extends Controller
                 ->queue(new AddAdmin((object)[
                     'name' => $name,
                     'presenter_name' => Auth::user()->name,
+                    'password' => $pass,
                     'type' => $type
                 ]));
             return response()->json(['success' => '添加成功，请让新管理员查收邮件']);
         }
         return response()->json(['failed' => '请填入新管理员用户名和注册邮箱']);
+    }
+
+    public function delAdmin(Request $request) {
+        $id = $request->input('id');
+        if($id == null) {
+            abort(404);
+        }
+        $control = Auth::user()->control;
+        $user = DB::table('users')->where(['id' => $id])->first();
+        if($user->id == Auth::user()->id) {
+            return response()->json(['failed' => '别闹了~']);
+        }
+        if($user == null) return response()->json(['failed' => '管理员不存在']);
+        if(
+            ($control & config('soj.admin.student')) ||
+            (($control & config('soj.admin.teacher')) && ($user->control & config('soj.admin.teacher'))) ||
+            (($control & config('soj.admin.teacher')) && ($user->control & config('soj.admin.all')))
+        ) {
+            return response()->json(['failed' => '权限不够']);
+        }
+        if(DB::table('admins')->delete(['id' => $id])) {
+            return response()->json(['success' => '删除成功']);
+        }
+        return response()->json(['failed' => '管理员不存在']);
     }
 
     public function changePassword(Request $request) {

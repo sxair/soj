@@ -50,7 +50,9 @@
                 </el-card>
                 <el-card style="margin-top:7px">
                     <div v-for="(i, index) in labels">
-                        <div v-if="i.son" class="label-header">{{ i.name }}</div>
+                        <div class="label-header">
+                            <a href="javascript:void(0)" @click="onLabelClick(i.id, -1)" class="label-item" :class="[{'label-active': i.id < 0}, {'text-center': i.son === undefined}]">{{ i.name }}</a>
+                        </div>
                         <ul class="label-group">
                             <li v-for="(s, sindex) in i.son">
                                 <a href="javascript:void(0)" @click="onLabelClick(index, sindex)" class="label-item" :class="{'label-active': s.id < 0}">{{ s.name }}</a>

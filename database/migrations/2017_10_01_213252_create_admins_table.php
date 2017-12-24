@@ -14,7 +14,7 @@ class CreateAdminsTable extends Migration
     public function up()
     {
         Schema::create('admins', function (Blueprint $table) {
-            $table->unsignedInteger('id');
+            $table->unsignedInteger('id')->index();
             $table->string('password');
             $table->string('presenter_name', 20)->default('admin');
             $table->string('remark')->default('');

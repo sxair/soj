@@ -3,6 +3,8 @@
 Route::middleware('control')->group(function () {
     Route::view('/', 'admin.index');
 
+    Route::get('admins', 'AdminController@admins');
+
     Route::get('problems', 'ProblemController@problems');
 
     Route::post('addProblem', 'ProblemController@addProblem');
@@ -17,6 +19,8 @@ Route::middleware('control')->group(function () {
 
     Route::post('addAdmin', 'AdminController@addAdmin');
 
+    Route::post('delAdmin', 'AdminController@delAdmin');
+
     Route::post('changePassword', 'AdminController@changePassword');
     
     Route::get('download/test/{id}', 'ProblemController@downTest');
@@ -26,6 +30,10 @@ Route::middleware('control')->group(function () {
     //Route::get('delFromOj/{id}', 'ProblemController@delFromOj');
 
     Route::get('getProblem/{id}', 'ProblemController@getProblem');
+
+    Route::post('addLabel', 'ProblemController@addLabel');
+
+    Route::post('changeLabel', 'ProblemController@changeLabel');
 });
 
 

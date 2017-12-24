@@ -20,7 +20,7 @@ class TestSeeder extends Seeder
             'email' => '80976512@qq.com',
             'password' => bcrypt('123123'),
             'locked' => 1,
-            'control' => 4294967295,
+            'control' => config('soj.admin.all') | 1,
         ]);
 
         DB::table('user_infos')->insert([
@@ -41,15 +41,15 @@ class TestSeeder extends Seeder
     {"name": "图论", "id": 1000, "son": [
            {"name": "最短路", "id": 1001},
            {"name": "最长路", "id": 1002},
-           {"name": "网络流", "id": 1003},
-        ]
-    },
-     {"name": "数论", "id": 1000, "son": [
-           {"name": "最短路", "id": 1001},
-           {"name": "最长路", "id": 1002},
            {"name": "网络流", "id": 1003}
         ]
     },
+     {"name": "数论", "id": 2000, "son": [
+           {"name": "最短路", "id": 2001},
+           {"name": "最长路", "id": 2002},
+           {"name": "网络流", "id": 2003}
+        ]
+    }
 ]']);
 
         $content = <<<EOF
@@ -136,6 +136,24 @@ EOF;
                 'public' => rand(0, 1),
                 'oj_id' => $i + 1000
             ]);
+
+            DB::table('problem_md')->insert([
+                'id' => $i + 1,
+                'content' => '### Problem Description
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+### Input
+aaaaaaaa
+### Output
+aaa
+### Sample Input
+adddddddddd
+### Sample Output
+asdasd
+### Hints
+asdasdasdasd'
+            ]);
+
             DB::table('problems')->insert([
                 'title' => str_random(10),
                 'time_limit' => 1000,

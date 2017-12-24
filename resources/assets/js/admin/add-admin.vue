@@ -53,7 +53,6 @@
                         this.$message.error(response.data.failed);
                     }
                 }).catch((error) => {
-                    this.subing = false;
                     this.$message.error('添加失败');
                 });
             }

@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             'email' => '80976512@qq.com',
             'password' => bcrypt('admin'),
             'locked' => 1,
-            'control' => 4294967295,
+            'control' => config('soj.admin.all')|1,
         ]);
         DB::table('user_infos')->insert([
             'id' => '1',
@@ -26,5 +26,8 @@ class DatabaseSeeder extends Seeder
             'id' => 1,
             'password' => bcrypt('admin'),
         ]);
+        DB::table('soj')->insert([
+            'name' => 'label',
+            'content' => '[{"name": "全部问题", "id": 0}]']);
     }
 }

@@ -20,21 +20,13 @@
                         <el-input v-model="form.memory" style="width: 30%" :maxlength="6">
                             <template slot="append">KB</template>
                         </el-input>
-                        <i>推荐最大不超过524288KB（512MB）</i>
+                        <i>最大不超过524288KB（512MB）</i>
                     </el-form-item>
-                    <el-form-item label="特殊判断">
-                        <el-radio-group v-model="form.spj" @change="onChange">
-                            <el-radio :label="0">关闭</el-radio>
-                            <el-radio :label="1">自定义</el-radio>
+                    <el-form-item label="公开">
+                        <el-radio-group v-model="form.public">
+                            <el-radio :label="1">是</el-radio>
+                            <el-radio :label="0">否</el-radio>
                         </el-radio-group>
-                        <el-input
-                                v-if="useSpj"
-                                type="textarea"
-                                :autosize="{minRows: 5, maxRows: 10}"
-                                style="width: 60%;display: block"
-                                placeholder="请输入判断代码"
-                                v-model="form.judge">
-                        </el-input>
                     </el-form-item>
                     <editor :value="content" ref="contentEditor" style="width: 80%;margin: auto"></editor>
                     <el-form-item label="来源">
@@ -67,20 +59,17 @@
                     title: '',
                     time: '1000',
                     memory: '32768',
-                    spj: 0,
-                    judge: '',
+                    public: 1,
                     content: '',
+                    md: '',
                     source: '',
                     author: ''
                 },
                 rules: {
                     title: [{required: true, message: '请输入标题', trigger: 'blur'}],
-                    time: [{required: true, message: '自己看着办把', trigger: 'blur'}],
-                    memory: [{required: true, message: '自己看着办把', trigger: 'blur'}],
                 },
                 content: '### Problem Description\n\n### Input\n\n### Output\n\n' +
                 '### Sample Input\n\n### Sample Output\n\n### Hints\n',
-                useSpj: false,
             }
         },
 
@@ -90,18 +79,18 @@
                 title: '提示',
                 dangerouslyUseHTMLString: true,
                 message: '<a href="/admin/help/addProblem" target="view_window">点击查看添加题目帮助</a>',
-                duration: 5000,
+                duration: 3000,
                 type: 'warning'
             });
             if (this.id && this.id != '0') {
                 const s = this;
                 axios.get('/admin/getProblem/' + s.id).then((response) => {
-                    console.log(response.data);
                     if (response.data.failed === -1) {
                         this.$message.error(response.data.failed,);
                     } else {
                         this.content = response.data.pro.md;
                         this.form = response.data.pro;
+                        this.form.public = response.data.pro.public;
                         this.form.time = this.form.time_limit;
                         this.form.memory = this.form.memory_limit;
                     }
@@ -117,19 +106,18 @@
                         return false;
                     }
                     this.form.content = this.$refs.contentEditor.getHtml();
+                    this.form.md = this.$refs.contentEditor.getMD();
                     if (!this.form.content) {
                         this.$message.error('你想干嘛');
                         return false;
                     }
-                    if (this.useSpj && !this.form.judge) {
-                        this.$message.error('请填写spj程序');
-                        return false;
-                    }
-                    const t = this.form; //axios内部获取不到this
+                    let t = this.form; //axios内部获取不到this
                     let url = '/admin/addProblem';
-                    if(this.id) {
-                        url = '/admin/changeProblem/' + this.id;
+                    if(this.id != '0') {
+                        url = '/admin/changeProblem';
+                        t.id = this.id;
                     }
+                    console.log(url);
                     axios.post(url, t).then((response) => {
                         if (response.data.result > 0) {
                             this.$message({
@@ -138,30 +126,38 @@
                                 type: 'success'
                             });
                             toTop();
-                            this.$router.push('/problemOption/' + response.data.result);
+                            this.$router.push('/problemOperation/' + response.data.result);
                         } else if (response.data.result === -1) {
                             this.$message.error('你没有添加题目的权限');
                         } else {
-                            this.$message.error('添加题目失败');
+                            this.$message.error('提交失败');
                         }
                     }).catch((error) => {
-                        console.log(error.response.data);
                         if (error.response.status === 422) {
                             this.$message.error('表单填写错误，请查看控制台信息');
                             console.log(error.response.data.errors);
                         } else {
-                            this.$message({
-                                showClose: true,
-                                message: '提交失败' + error,
-                                type: 'error',
-                                duration: 0
-                            });
+                            this.$message('提交失败' + error);
                         }
                     });
                 });
-            },
-            onChange(val) {
-                this.useSpj = Boolean(val);
+            }
+        },
+        watch: {
+            '$route' () {
+                this.form = {
+                    title: '',
+                    time: '1000',
+                    memory: '32768',
+                    public: 1,
+                    content: '',
+                    md: '',
+                    source: '',
+                    author: ''
+                };
+                this.content= '### Problem Description\n\n### Input\n\n### Output\n\n' +
+                '### Sample Input\n\n### Sample Output\n\n### Hints\n';
+                this.id = '0';
             }
         }
     }

@@ -16,6 +16,8 @@ class CreateProblemMdTable extends Migration
         Schema::create('problem_md', function (Blueprint $table) {
             $table->unsignedInteger('id');
             $table->text('content');
+
+            $table->primary('id');
         });
     }
 

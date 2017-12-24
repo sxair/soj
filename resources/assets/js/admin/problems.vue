@@ -74,7 +74,6 @@
             changePageRoute(cp) {
                 if (cp != 1 || this.$route.query.page) {
                     this.$router.push({query: {page: cp}});
-                    this.setProblems(cp);
                 }
             },
             addToOj(id, index) {
