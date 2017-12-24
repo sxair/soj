@@ -73,7 +73,7 @@
             }
         },
 
-        mounted(){
+        mounted() {
             this.form.author = this.user.name;
             this.$notify({
                 title: '提示',
@@ -94,6 +94,8 @@
                         this.form.time = this.form.time_limit;
                         this.form.memory = this.form.memory_limit;
                     }
+                }).catch((error) => {
+                    this.$message.error('获取题目失败');
                 });
             }
         },
@@ -113,7 +115,7 @@
                     }
                     let t = this.form; //axios内部获取不到this
                     let url = '/admin/addProblem';
-                    if(this.id != '0') {
+                    if (this.id != '0') {
                         url = '/admin/changeProblem';
                         t.id = this.id;
                     }
@@ -137,7 +139,7 @@
                             this.$message.error('表单填写错误，请查看控制台信息');
                             console.log(error.response.data.errors);
                         } else {
-                            this.$message('提交失败' + error);
+                            this.$message.error('提交失败' + error);
                         }
                     });
                 });
@@ -155,8 +157,9 @@
                     source: '',
                     author: ''
                 };
-                this.content= '### Problem Description\n\n### Input\n\n### Output\n\n' +
-                '### Sample Input\n\n### Sample Output\n\n### Hints\n';
+                this.form.author = this.user.name;
+                this.content = '### Problem Description\n\n### Input\n\n### Output\n\n' +
+                    '### Sample Input\n\n### Sample Output\n\n### Hints\n';
                 this.id = '0';
             }
         }

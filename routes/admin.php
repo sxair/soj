@@ -22,7 +22,7 @@ Route::middleware('control')->group(function () {
     Route::post('delAdmin', 'AdminController@delAdmin');
 
     Route::post('changePassword', 'AdminController@changePassword');
-    
+
     Route::get('download/test/{id}', 'ProblemController@downTest');
 
     Route::get('addToOj/{id}', 'ProblemController@addToOj');
@@ -34,6 +34,10 @@ Route::middleware('control')->group(function () {
     Route::post('addLabel', 'ProblemController@addLabel');
 
     Route::post('changeLabel', 'ProblemController@changeLabel');
+
+    Route::get('getProblemLabel/{id}', 'ProblemController@getProblemLabel');
+
+    Route::post('addProblemLabel', 'ProblemController@addProblemLabel');
 });
 
 

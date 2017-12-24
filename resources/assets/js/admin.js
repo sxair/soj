@@ -72,6 +72,9 @@ const router = new VueRouter({
         {path: '/changePassword', component: require('./admin/change-password.vue')},
         {path: '/showAdmins', component: require('./admin/show-admins.vue')},
         {path: '/addAdmin', component: require('./admin/add-admin.vue')},
+        {path: '/useSpj/:id', component: require('./admin/use-spj.vue'), props: true},
+        {path: '/setProblemLabel/:id', component: require('./admin/set-problem-label.vue'), props: true},
+        {path: '/testProblem/:id', component: require('./admin/test-problem.vue'), props: true},
     ]
 });
 

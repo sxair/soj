@@ -77,10 +77,7 @@
             onSubmit() {
                 if (confirm("确认更改标签？")) {
                     axios.post('/admin/cgLabel', val).then((response) => {
-                        this.$message({
-                            message: '更改成功',
-                            type: 'success'
-                        });
+                        this.$message.success('更改成功');
                     }).catch((error) => {
                         this.$message.error('更改失败');
                     });

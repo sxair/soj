@@ -231,17 +231,65 @@ class ProblemController extends Controller
         return response()->json(['result' => 1]);
     }
 
-    public function getProblem($id)
+    public function getAdminProblem($id)
     {
         $admin_pro = DB::table('admin_problems')->where(['problem_id' => $id])->first();
         if (is_null($admin_pro)) {
-            return response()->json(['failed' => '题目不存在']);
+            return abort(422, json_encode(['failed' => '题目不存在']));
         }
         if ($admin_pro->user_name != Auth::user()->name && !$admin_pro->public
             && (Auth::user()->conrtol & config('soj.admin.student'))
         ) {
-            return response()->json(['failed' => '您没有获取权限']);
+            return abort(422, json_encode(['failed' => '您没有获取权限']));
         }
+        return $admin_pro;
+    }
+
+    public function getProblemLabelJson($id)
+    {
+        $label = DB::table('oj_problem_labels')->where('id', $id)->first();
+        if($label == null) $label = '';
+        else $label = $label->labels;
+        return $label;
+    }
+
+    public function getProblemLabel($id)
+    {
+        $admin_pro = $this->getAdminProblem($id);
+        $label = $this->getProblemLabelJson($id);
+        return response()->json(['title' => $admin_pro->title, 'labels' => $label]);
+    }
+
+    public function addProblemLabel(Request $request)
+    {
+        $id = $request->input('id');
+        $labelId = $request->input('label');
+        /*
+         * use getAdminProblem to ensure can edited
+         */
+        $this->getAdminProblem($id);
+        $label = $this->getProblemLabelJson($id);
+        if($label == '') {
+            DB::table('oj_problem_labels')->insert([
+                'id' =>$id,
+                'labels' => json_encode([$labelId])
+            ]);
+        } else {
+            $label = json_decode($label, true);
+            if(in_array($labelId, $label)) {
+                return response()->json(['failed' => '标签已存在']);
+            }
+            $label[] = $labelId;
+            DB::table('oj_problem_labels')->where('id', $id)->update([
+                'labels' => json_encode($label)
+            ]);
+        }
+        return '';
+    }
+
+    public function getProblem($id)
+    {
+        $admin_pro = $this->getAdminProblem($id);
         $pro = DB::table('problems')->where('id', $id)->first();
         $md = DB::table('problem_md')->where('id', $id)->first();
         $pro->md = $md->content;
