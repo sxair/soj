@@ -4,6 +4,9 @@
         <div style="margin: 18px">
             <ul class="list-unstyled">
                 <li>
+                    <router-link :to="'/changeProblem/' + id">修改题目内容</router-link>
+                </li>
+                <li>
                     <router-link :to="'/problemData/' + id">修改测试数据</router-link>
                 </li>
                 <li>

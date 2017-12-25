@@ -17,24 +17,33 @@ class ProblemController extends Controller
     {
         $type = $request->input('type');
         $search = $request->input('search');
+        $label = (int) $request->input('label');
         $page = getCurrentPage($request->input('page'));
         $perPage = 50;
+        $sql = DB::table('oj_problems');
+        if($label != 0) {
+            if($label % 1000 == 0) {
+                $sql = DB::table('oj_label_problems')
+                    ->where('oj_label_problems.id', '>=', $label)
+                    ->where('oj_label_problems.id', '<', $label+1000);
+            } else {
+                $sql = DB::table('oj_label_problems')
+                    ->where('oj_label_problems.id', '=', $label);
+            }
+            $sql = $sql->join('oj_problems', 'oj_label_problems.problem_id','=', 'oj_problems.id');
+        }
         if (!is_null($search)) {
             if ($type == 'author' || $type == 'source') {
-                $sql = DB::table('oj_problems')
-                    ->join('problems', 'problems.id', '=', 'oj_problems.problem_id')
+                $sql = $sql->join('problems', 'problems.id', '=', 'oj_problems.problem_id')
                     ->where('problems.' . $type, 'like', '%' . $search . '%');
                 return response()->json(getPaginate($sql, ['oj_problems.id', 'oj_problems.title',
                     'oj_problems.accepted', 'oj_problems.submitted',
                     'problems.author', 'problems.source'], $page, $perPage));
             } else {
-                $sql = DB::table('oj_problems')
-                    ->where('title', 'like', '%' . $search . '%');
+                $sql = $sql->where('title', 'like', '%' . $search . '%');
             }
-        } else {
-            $sql = DB::table('oj_problems');
         }
-        return response()->json(getPaginate($sql, ['id', 'title', 'accepted', 'submitted'], $page, $perPage));
+        return response()->json(getPaginate($sql, '', $page, $perPage));
     }
 
     /**

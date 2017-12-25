@@ -16,7 +16,7 @@ class ProblemController extends Controller
     {
         $page = getCurrentPage($request->input('page'));
         $perPage = 50;
-        if($this->isStudent()) {
+        if ($this->isStudent()) {
             $total = DB::table('admin_problems')
                 ->where('user_name', Auth::user()->name)
                 ->orWhere('public', 1)
@@ -24,11 +24,13 @@ class ProblemController extends Controller
             $problems = DB::table('admin_problems')
                 ->where('user_name', Auth::user()->name)
                 ->orWhere('public', 1)
+                ->leftJoin('problem_labels', 'admin_problems.problem_id', '=', 'problem_labels.id')
                 ->offset(($page - 1) * $perPage)->limit($perPage)->get();
         } else {
             $total = DB::table('admin_problems')
                 ->count();
             $problems = DB::table('admin_problems')
+                ->leftJoin('problem_labels', 'admin_problems.problem_id', '=', 'problem_labels.id')
                 ->offset(($page - 1) * $perPage)->limit($perPage)->get();
         }
         return response()->json(array_merge(['problems' => $problems], ['total' => $total]));
@@ -87,12 +89,12 @@ class ProblemController extends Controller
     public function changeProblem(Request $request)
     {
         $this->problemValidator($request);
-        $this->validate($request,[
+        $this->validate($request, [
             'id' => 'required'
         ]);
         $id = $request->input('id');
         $pro = DB::table('admin_problems')->where('problem_id', $id)->first();
-        if($pro == null || (!$pro->public && $this->isStudent())) abort(422);
+        if ($pro == null || (!$pro->public && $this->isStudent())) abort(422);
         DB::table('problems')->where('id', $id)->update([
             'title' => $request->input('title'),
             'time_limit' => $request->input('time'),
@@ -108,7 +110,7 @@ class ProblemController extends Controller
         DB::table('problem_md')->where('id', $id)->update([
             'content' => $request->input('md')
         ]);
-        if($pro->oj_id) {
+        if ($pro->oj_id) {
             DB::table('oj_problems')->where('id', $pro->oj_id)->update([
                 'title' => $request->input('title')
             ]);
@@ -233,6 +235,7 @@ class ProblemController extends Controller
 
     public function getAdminProblem($id)
     {
+        if($id == null) return abort(422, json_encode(['failed' => '题目不存在']));
         $admin_pro = DB::table('admin_problems')->where(['problem_id' => $id])->first();
         if (is_null($admin_pro)) {
             return abort(422, json_encode(['failed' => '题目不存在']));
@@ -247,8 +250,8 @@ class ProblemController extends Controller
 
     public function getProblemLabelJson($id)
     {
-        $label = DB::table('oj_problem_labels')->where('id', $id)->first();
-        if($label == null) $label = '';
+        $label = DB::table('problem_labels')->where('id', $id)->first();
+        if ($label == null) $label = '';
         else $label = $label->labels;
         return $label;
     }
@@ -264,27 +267,54 @@ class ProblemController extends Controller
     {
         $id = $request->input('id');
         $labelId = $request->input('label');
-        /*
-         * use getAdminProblem to ensure can edited
-         */
-        $this->getAdminProblem($id);
+        $admin = $this->getAdminProblem($id);
         $label = $this->getProblemLabelJson($id);
-        if($label == '') {
-            DB::table('oj_problem_labels')->insert([
-                'id' =>$id,
+        if ($label == '') {
+            DB::table('problem_labels')->insert([
+                'id' => $id,
                 'labels' => json_encode([$labelId])
             ]);
         } else {
             $label = json_decode($label, true);
-            if(in_array($labelId, $label)) {
+            if (in_array($labelId, $label)) {
                 return response()->json(['failed' => '标签已存在']);
             }
             $label[] = $labelId;
-            DB::table('oj_problem_labels')->where('id', $id)->update([
+            DB::table('problem_labels')->where('id', $id)->update([
                 'labels' => json_encode($label)
             ]);
         }
+        if($admin->oj_id != 0) {
+            DB::table('oj_label_problems')->insert([
+                'id' => $labelId,
+                'problem_id' => $admin->oj_id
+            ]);
+        }
         return '';
+    }
+
+    public function delProblemLabel(Request $request)
+    {
+        $id = $request->input('id');
+        $labelId = $request->input('label');
+        $admin = $this->getAdminProblem($id);
+        $label = $this->getProblemLabelJson($id);
+        $label = json_decode($label, true);
+        $index = array_search($labelId, $label);
+        if($index !== false) {
+            unset($label[$index]);
+            DB::table('problem_labels')->where('id', $id)->update([
+                'labels' => json_encode($label)
+            ]);
+            if($admin->oj_id != 0) {
+                DB::table('oj_label_problems')->where([
+                    'id' => $labelId,
+                    'problem_id' => $admin->oj_id
+                ])->delete();
+            }
+            return '';
+        }
+        return response()->json(['failed' => '标签不存在']);
     }
 
     public function getProblem($id)
@@ -311,23 +341,23 @@ class ProblemController extends Controller
 
     public function addLabel(Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'index' => 'required',
             'name' => 'required|min:1|max:25'
         ]);
         $label = $this->getLabelArray();
         $index = $request->input('index');
-        if(!array_key_exists($index, $label)) {
+        if (!array_key_exists($index, $label)) {
             abort(422);
         }
         $max = 0;
-        if($index == 0) {
+        if ($index == 0) {
             foreach ($label as $l) {
                 $max = max($max, $l['id']);
             }
             $label[] = ['name' => $request->input('name'), 'id' => $max + 1000];
         } else {
-            if(array_key_exists('son',$label[$index])) {
+            if (array_key_exists('son', $label[$index])) {
                 foreach ($label[$index]['son'] as $s) {
                     $max = max($max, $s['id']);
                 }
@@ -343,7 +373,7 @@ class ProblemController extends Controller
 
     public function changeLabel(Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'index' => 'required',
             'son' => 'required',
             'name' => 'required|min:1|max:25'
@@ -351,11 +381,11 @@ class ProblemController extends Controller
         $label = $this->getLabelArray();
         $son = $request->input('son');
         $index = $request->input('index');
-        if(!array_key_exists($index, $label)) {
+        if (!array_key_exists($index, $label)) {
             abort(422);
         }
-        if($son != -1) {
-            if(array_key_exists($son, $label[$index]['son'])) {
+        if ($son != -1) {
+            if (array_key_exists($son, $label[$index]['son'])) {
                 $label[$index]['son'][$son]['name'] = $request->input('name');
             } else  abort(422);
         } else {

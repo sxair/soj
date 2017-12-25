@@ -38,6 +38,8 @@ Route::middleware('control')->group(function () {
     Route::get('getProblemLabel/{id}', 'ProblemController@getProblemLabel');
 
     Route::post('addProblemLabel', 'ProblemController@addProblemLabel');
+
+    Route::post('delProblemLabel', 'ProblemController@delProblemLabel');
 });
 
 

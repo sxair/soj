@@ -51,7 +51,7 @@
                 <el-card style="margin-top:7px">
                     <div v-for="(i, index) in labels">
                         <div class="label-header">
-                            <a href="javascript:void(0)" @click="onLabelClick(i.id, -1)" class="label-item" :class="[{'label-active': i.id < 0}, {'text-center': i.son === undefined}]">{{ i.name }}</a>
+                            <a href="javascript:void(0)" @click="onLabelClick(index, -1)" class="label-item" :class="[{'label-active': i.id < 0}, {'text-center': i.son === undefined}]">{{ i.name }}</a>
                         </div>
                         <ul class="label-group">
                             <li v-for="(s, sindex) in i.son">
@@ -89,7 +89,7 @@
                 emptySearch: 0,
                 noTitle: false,
                 labels: [],
-                clickLable: {i:-1,s:0}
+                checked: {i:-1,s:-1}
             }
         },
         created() {
@@ -114,30 +114,33 @@
             setLabels() {
                 axios.get("api/label")
                     .then((response) => {
-                        this.labels = eval(response.data.content);
+                        this.labels = JSON.parse(response.data.content);
                     })
                     .catch((error) => {
                         console.log(error);
                     });
             },
-            onLabelClick(i, s) {
-                if(this.clickLable.i != -1) { // if have active
-                    if(this.labels[i].son[s].id >= 0) { //if this no actived
-                        //set pre no active
-                        this.labels[this.clickLable.i].son[this.clickLable.s].id = -this.labels[this.clickLable.i].son[this.clickLable.s].id;
-                        //now active
-                        this.search.label = this.labels[i].son[s].id;
-                        this.labels[i].son[s].id = -this.labels[i].son[s].id;
-                        this.clickLable = {i:i,s:s};//set now active
-                    } else { // if this is active.we need to set no active
-                        this.labels[i].son[s].id = -this.labels[i].son[s].id;
-                        this.clickLable = {i:-1,s:0};
-                        this.search.label = 0;
-                    }
-                } else {
-                    this.clickLable = {i:i,s:s};
-                    this.search.label = this.labels[i].son[s].id;
+            setNegativeLabel(i, s) {
+                if(i == -1) return ;
+                if(s != -1) {
                     this.labels[i].son[s].id = -this.labels[i].son[s].id;
+                } else {
+                    this.labels[i].id = -this.labels[i].id;
+                }
+            },
+            onLabelClick(i, s) {
+                this.setNegativeLabel(i,s);
+                if(this.checked.i == i && this.checked.s == s) {
+                    this.search.label = 0;
+                    this.checked = {i:-1,s:-1};
+                } else {
+                    this.setNegativeLabel(this.checked.i,this.checked.s);
+                    if(s != -1) {
+                        this.search.label = Math.abs(this.labels[i].son[s].id);
+                    } else {
+                        this.search.label = Math.abs(this.labels[i].id);
+                    }
+                    this.checked = {i:i,s:s};
                 }
                 this.search.type = 'title';
                 this.search.content = '';
@@ -188,7 +191,11 @@
                 if (this.search.content === '') {
                     if (this.emptySearch == -1) {
                         this.emptySearch = 0;
-                        this.$router.push({query: {}});
+                        if(this.search.label) {
+                            this.$router.push({query: {label: this.search.label}});
+                        } else {
+                            this.$router.push({});
+                        }
                         return;
                     }
                     this.$message.error('请输入搜索内容');

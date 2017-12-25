@@ -18,16 +18,12 @@
     <navbar title="{{ config('app.name', 'MNNUOJ') }}"></navbar>
     <div id="panel">
         <nav class="s-navbar-media">
-            <div class="container">
-                <a class="s-navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'MNNUOJ') }}
-                </a>
-                <button class="slideout-btn">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
+            <a class="s-navbar-brand" href="{{ url('/') }}">
+                {{ config('app.name', 'MNNUOJ') }}
+            </a>
+            <button class="slideout-btn">
+                <i class="el-icon-menu" style="font-size: 26px;"></i>
+            </button>
         </nav>
         @yield('content')
         <footer class="text-center" style="padding:30px 50px">

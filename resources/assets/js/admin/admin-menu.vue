@@ -6,7 +6,7 @@
     >
         <el-submenu index="1">
             <template slot="title">
-                <i class="el-icon-menu"></i>
+                <i class="el-icon-tickets"></i>
                 <span>题目库管理</span>
             </template>
             <el-menu-item-group>

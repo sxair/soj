@@ -71,7 +71,7 @@
         methods: {
             setLabels() {
                 axios.get('/api/label').then((response) => {
-                    this.labels = eval(response.data.content);
+                    this.labels = JSON.parse(response.data.content);
                 });
             },
             onSubmit() {

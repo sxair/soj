@@ -23,6 +23,7 @@ import {
     RadioGroup,
     RadioButton,
     Icon,
+    Tag,
     Loading,
     Message,
     MessageBox,
@@ -46,6 +47,7 @@ Vue.use(MenuItemGroup);
 Vue.use(Col);
 Vue.use(Card);
 Vue.use(Icon);
+Vue.use(Tag);
 Vue.use(Alert);
 //Vue.use(Message); 不能加
 Vue.use(Loading);
