@@ -61,7 +61,7 @@
                     <div class="form-group">
                         <label for="school" class="col-md-3 control-label">Quote</label>
                         <div class="col-md-8">
-                            <textarea id="motto">{{ $info->motto }}</textarea>
+                            <textarea id="motto" rows="3" class="col-md-8">{{ $info->motto }}</textarea>
                         </div>
                     </div>
                     <div class="form-group">
