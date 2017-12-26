@@ -59,6 +59,7 @@
                         <td><a :href="'problem/' + sta.problem_id">{{ sta.problem_id }}</a></td>
                         <td>
                             <to-html :arg="sta.status" :type=1></to-html>
+                            <i v-if="isJudging(sta.status)" class="el-icon-loading"></i>
                         </td>
                         <td>
                             <to-html :arg="sta.lang" :type=0></to-html>
@@ -98,6 +99,7 @@
                     status: 0,
                     lang: 0,
                 },
+                timeout: 0,
                 total: 0,
                 results: [
                     {value: 0, label: 'All'},
@@ -145,6 +147,32 @@
                 toTop();
                 this.$router.push({query: que});
             },
+            isJudging(s) {
+                return s <= 1 || (s >= 50000 && s < 60000);
+            },
+            cleanJudge() {
+                let l = -1, r = -1,base=0;
+                for (let i = 0; i < this.status.length; i++) {
+                    if (this.isJudging(this.status[i].status)) {
+                        if (r == -1) {
+                            r = this.status[i].id;
+                            base = i;
+                        }
+                        l = this.status[i].id;
+                    }
+                }
+                if (l == -1) {
+                    this.timeout = 0;
+                    return;
+                }
+                axios.get('/api/statusRange/' + l + '/' + r).then((response) => {
+                    for (let i = 0; i < response.data.length; i++) {
+                        this.status[i + base].status = response.data[i].status;
+                    }
+                    this.timeout = setTimeout(() => {this.cleanJudge()}, 1000);
+                });
+
+            },
             setStatus() {
                 const query = this.$route.query;
                 this.search.author = query.author ? query.author : '';
@@ -159,6 +187,7 @@
                     this.loading = false;
                     this.status = response.data.content;
                     this.total = parseInt(response.data.total);
+                    this.timeout = setTimeout(() => {this.cleanJudge()}, 1000);
                 });
             },
             onSearch() {
@@ -169,8 +198,12 @@
         },
         watch: {
             '$route.query'() {
+                if(this.timeout) clearTimeout(this.timeout);
                 this.setStatus();
             },
+        },
+        beforeDestroy() {
+            if(this.timeout) clearTimeout(this.timeout);
         }
     }
 </script>

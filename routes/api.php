@@ -23,6 +23,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('problems', 'ProblemController@problems');
 Route::get('problem/{id}', 'ProblemController@problem');
 Route::get('status', 'ProblemController@status');
+Route::get('statusRange/{l}/{r}', 'ProblemController@statusRange');
 Route::get('label', 'ProblemController@label');
 Route::get('rank', 'ProblemController@rank');
 // !! api can't use session !!

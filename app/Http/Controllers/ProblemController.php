@@ -71,6 +71,22 @@ class ProblemController extends Controller
         return response()->json(getPaginate($sql, [], $page, $perPage));
     }
 
+    public function statusRange($l, $r)
+    {
+        $l = (int)$l;
+        $r = (int)$r;
+        if($r < $l || $r - $l > 15) {
+            return '[]';
+        }
+        $status = DB::table('oj_status')
+            ->where('id', '>=', $l)
+            ->where('id', '<=', $r)
+            ->select(['id', 'status'])
+            ->orderBy('id', 'desc')
+            ->get();
+        return response()->json($status);
+    }
+
     public function problem($id)
     {
         $ojpro = DB::table('oj_problems')->where('id', $id)->first();
