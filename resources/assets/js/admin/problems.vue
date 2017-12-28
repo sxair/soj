@@ -21,9 +21,12 @@
                 <tr v-for="(pro, index) in problems">
                     <td>{{ pro.problem_id }}</td>
                     <td>
-                        <a href="">{{ pro.title }}</a>
+                        <router-link :to="'/problem/' + pro.problem_id">
+                            {{ pro.title }}
+                        </router-link>
                         <div class="label-group" style="float: right">
-                            <el-tag v-for="i in pro.labels" :key="i" style="margin-right: 5px">{{ labelMap[i] }}</el-tag>
+                            <el-tag v-for="i in pro.labels" :key="i" style="margin-right: 5px">{{ labelMap[i] }}
+                            </el-tag>
                         </div>
                     </td>
                     <td>{{ pro.user_name }}</td>
@@ -108,18 +111,19 @@
             addToOj(id, index) {
                 if (confirm("确定添加到oj题目库？")) {
                     const s = this;
-                    axios.get('/admin/addToOj/' + id)
-                        .then((response) => {
-                            if (response.data.success) {
-                                s.problems[index].oj_id = response.data.success;
-                                this.$message({
-                                    message: '成功添加至oj，编号为' + response.data.success,
-                                    type: 'success'
-                                })
-                            } else {
-                                this.$message.error(response.data.failed ? response.data.failed : '添加失败');
-                            }
-                        });
+                    axios.get('/admin/addToOj/' + id).then((response) => {
+                        if (response.data.success) {
+                            s.problems[index].oj_id = response.data.success;
+                            this.$message({
+                                message: '成功添加至oj，编号为' + response.data.success,
+                                type: 'success'
+                            })
+                        } else {
+                            this.$message.error(response.data.failed ? response.data.failed : '添加失败');
+                        }
+                    }).catch((error) => {
+                        this.$message.error('添加失败');
+                    });
                 }
             },
 //            delFormOj(id, index) {

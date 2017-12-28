@@ -134,7 +134,7 @@ EOF;
                 'title' => str_random(10),
                 'user_name' => 'admin',
                 'public' => rand(0, 1),
-                'oj_id' => rand(0, 1) ? 0 : $i + 1000
+                'oj_id' => $i + 1000
             ]);
 
             DB::table('problem_md')->insert([

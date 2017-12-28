@@ -26,7 +26,7 @@ return [
 //        4 => 'python2',
 //        5 => 'python3'
 //    ],
-    'user' =>[
+    'user' => [
         'login' => 1,
         'submit' => 2,
     ],
@@ -45,5 +45,11 @@ return [
         '1' => '管理员',
         '2' => '教师管理员',
         '3' => '学生管理员',
+    ],
+    'judge' => [
+        'CONTEST_BASE' => 0x10000000,
+        'DIY_BASE' => 0x20000000,
+        'OC_BASE' => 3,
+        'ADMIN_BASE' => 4
     ]
 ];

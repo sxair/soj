@@ -20,7 +20,7 @@
                     <div class="form-group">
                         <label for="name" class="col-md-3 control-label"><span style="color: red">*</span>Name</label>
                         <div class="col-md-6">
-                            <input id="name" type="text" class="form-control" value="{{ $user->name }}" required autofocus>
+                            {{ $user->name }}
                         </div>
                     </div>
                     <div class="form-group">

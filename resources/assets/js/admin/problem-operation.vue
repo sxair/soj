@@ -10,7 +10,7 @@
                     <router-link :to="'/problemData/' + id">修改测试数据</router-link>
                 </li>
                 <li>
-                    <router-link :to="'/setSpj/' + id">使用特殊判断</router-link>
+                    <router-link :to="'/useSpj/' + id">使用特殊判断</router-link>
                 </li>
                 <li>
                     <router-link :to="'/setProblemLabel/' + id">添加标签</router-link>

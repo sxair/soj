@@ -68,7 +68,7 @@
                 if (confirm("确认取消" + name + "管理员资格?")) {
                     axios.post('/admin/delAdmin', {'id': id})
                         .then((response) => {
-                            if(response.data.success) {
+                            if (response.data.success) {
                                 this.$message({
                                     message: response.data.success,
                                     type: 'success'
@@ -76,14 +76,14 @@
                             } else {
                                 this.$message.error(response.data.failed);
                             }
-                        }).catch((error) => {this.$message.error('删除失败');});
+                        }).catch((error) => {
+                        this.$message.error('删除失败');
+                    });
                 }
             }
         },
         watch: {
-            '$route.query.page': function () {
-                this.setAdmins();
-            }
+            '$route.query.page': 'setAdmins'
         }
     }
 </script>

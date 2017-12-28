@@ -52,7 +52,6 @@
                 default: "0",
             }
         },
-
         data() {
             return {
                 form: {
@@ -72,7 +71,6 @@
                 '### Sample Input\n\n### Sample Output\n\n### Hints\n',
             }
         },
-
         mounted() {
             this.form.author = this.user.name;
             this.$notify({
@@ -82,25 +80,27 @@
                 duration: 3000,
                 type: 'warning'
             });
-            if (this.id && this.id != '0') {
-                const s = this;
-                axios.get('/admin/getProblem/' + s.id).then((response) => {
-                    if (response.data.failed === -1) {
-                        this.$message.error(response.data.failed,);
-                    } else {
-                        this.content = response.data.pro.md;
-                        this.form = response.data.pro;
-                        this.form.public = response.data.pro.public;
-                        this.form.time = this.form.time_limit;
-                        this.form.memory = this.form.memory_limit;
-                    }
-                }).catch((error) => {
-                    this.$message.error('获取题目失败');
-                });
-            }
+            this.setProblem();
         },
 
         methods: {
+            setProblem() {
+                if (this.id && this.id != '0') {
+                    const s = this;
+                    axios.get('/admin/getProblem/' + s.id).then((response) => {
+                        if (response.data.failed === -1) {
+                            this.$message.error(response.data.failed,);
+                        } else {
+                            this.content = response.data.md;
+                            this.form = response.data;
+                            this.form.time = this.form.time_limit;
+                            this.form.memory = this.form.memory_limit;
+                        }
+                    }).catch((error) => {
+                        this.$message.error('获取题目失败');
+                    });
+                }
+            },
             onSubmit() {
                 this.$refs['form'].validate((valid) => {
                     if (!valid) {
@@ -160,7 +160,7 @@
                 this.form.author = this.user.name;
                 this.content = '### Problem Description\n\n### Input\n\n### Output\n\n' +
                     '### Sample Input\n\n### Sample Output\n\n### Hints\n';
-                this.id = '0';
+                this.setProblem();
             }
         }
     }

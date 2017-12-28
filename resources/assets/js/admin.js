@@ -60,6 +60,7 @@ Vue.prototype.$notify = Notification;
 Vue.component('navbar', require('./components/navbar.vue'));
 Vue.component('admin-menu', require('./admin/admin-menu.vue'));
 Vue.component('editor', resolve => require(['./components/editor.vue'], resolve));
+Vue.component('to-html', require('./components/toHtml.vue'));
 
 const router = new VueRouter({
     routes: [
@@ -77,10 +78,17 @@ const router = new VueRouter({
         {path: '/useSpj/:id', component: require('./admin/use-spj.vue'), props: true},
         {path: '/setProblemLabel/:id', component: require('./admin/set-problem-label.vue'), props: true},
         {path: '/testProblem/:id', component: require('./admin/test-problem.vue'), props: true},
+        {path: '/problem/:id', component: require('./components/showProblem.vue'), props: true},
+        {path: '/submit/:id', component: require('./components/submit.vue'), props: true},
     ]
 });
 
 Vue.prototype.user = window.user;
+Vue.prototype.auth = function() {
+    if(window.user.id == 0) {
+        window.location.href='/login?to='+window.location.href;
+    }
+};
 
 window.app = new Vue({
     router,

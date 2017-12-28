@@ -24,7 +24,7 @@ class UserController extends Controller
         $solveds = DB::table('oj_solved_problems')
             ->select(['problem_id', 'submitted', 'accepted'])
             ->where('user_id', $user->id)->get();
-        return view('user.userInfo', ['user' => $user, 'solveds' => $solveds]);
+        return view('user.userinfo', ['user' => $user, 'solveds' => $solveds]);
     }
 
     public function changeUserInfoPage()

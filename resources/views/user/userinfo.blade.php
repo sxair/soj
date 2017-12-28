@@ -21,7 +21,7 @@
     </table>
     <hr>
     @foreach($solveds as $solved)
-        <a href="#">{{ $solved->problem_id }}</a>
+        <a href="{{ url('problem',$solved->problem_id) }}">{{ $solved->problem_id }}</a>
         <small>{{ $solved->accepted }}/{{ $solved->submitted }}</small>
     @endforeach
 </div>

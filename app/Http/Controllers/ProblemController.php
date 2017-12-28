@@ -148,17 +148,17 @@ class ProblemController extends Controller
             return response()->json(['failed' => '请登录']);
         }
         $lang = (int)$request->input('lang');
-        if($lang <= 0 || $lang > 4) return response()->json(['failed' => '请选择正确语言']);
         $this->validate($request, [
+            'lang' => 'Integer|min:1|max:4',
             'code' => 'min:50|max:65535',
-            'problem_id' => 'numeric|exists:oj_problems,id'
+            'problem_id' => 'Integer'
         ]);
         DB::statement('CALL `oj_submit`(?,?,?,?,?,?)', [
             $request->input('problem_id'),
             $request->input('lang'),
             $request->input('code'), $user->name, $user->id,
             strlen($request->input('code'))]);
-        return response()->json(['success' => true]);
+        return response()->json(['success' => 1]);
     }
 
     public function getCode($id)

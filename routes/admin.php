@@ -40,6 +40,14 @@ Route::middleware('control')->group(function () {
     Route::post('addProblemLabel', 'ProblemController@addProblemLabel');
 
     Route::post('delProblemLabel', 'ProblemController@delProblemLabel');
+
+    Route::post('submit', 'ProblemController@submit');
+
+    Route::get('getStatus/{id}', 'ProblemController@getStatus');
+
+    Route::post('closeSpj', 'ProblemController@closeSpj');
+
+    Route::post('compile', 'ProblemController@compile');
 });
 
 

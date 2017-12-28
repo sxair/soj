@@ -238,12 +238,12 @@ class ProblemController extends Controller
         if($id == null) return abort(422, json_encode(['failed' => '题目不存在']));
         $admin_pro = DB::table('admin_problems')->where(['problem_id' => $id])->first();
         if (is_null($admin_pro)) {
-            return abort(422, json_encode(['failed' => '题目不存在']));
+            return abort(422, json_encode('题目不存在'));
         }
         if ($admin_pro->user_name != Auth::user()->name && !$admin_pro->public
             && (Auth::user()->conrtol & config('soj.admin.student'))
         ) {
-            return abort(422, json_encode(['failed' => '您没有获取权限']));
+            return abort(422, json_encode('您没有获取权限'));
         }
         return $admin_pro;
     }
@@ -324,7 +324,7 @@ class ProblemController extends Controller
         $md = DB::table('problem_md')->where('id', $id)->first();
         $pro->md = $md->content;
         $pro->public = $admin_pro->public;
-        return response()->json(['pro' => $pro]);
+        return response()->json($pro);
     }
 
     public function getLabelArray()
@@ -393,5 +393,64 @@ class ProblemController extends Controller
         }
         $this->saveLabel($label);
         return response()->json('success');
+    }
+
+    public function submit(Request $request) {
+        $id = $request->input('problem_id');
+        $this->getAdminProblem($id);
+        $this->validate($request, [
+            'lang' => 'Integer|min:1|max:4',
+            'code' => 'min:50|max:65535',
+            'problem_id' => 'Integer'
+        ]);
+        $status_id = DB::table('admin_status')->insertGetId([
+            'problem_id' => $id,
+            'lang' => (int)$request->input('lang'),
+            'user_name' => Auth::user()->name,
+            'code_len' => strlen($request->input('code')),
+            'code' => $request->input('code'),
+            'ce' => ''
+        ]);
+        DB::table('judges')->insert([
+            'status_id' => $id,
+            'judge_for' => config('soj.judge.ADMIN_BASE'),
+        ]);
+        return response()->json(['success' => $status_id]);
+    }
+
+    public function getStatus($id) {
+        $status = DB::table('admin_status')->where('id', $id)->first();
+        return response()->json($status);
+    }
+
+    public function closeSpj(Request $request) {
+        $id = (int) $request->input('id');
+        $this->getAdminProblem($id);
+        DB::table('problems')->where('id', $id)->update([
+            'spj' => 0
+        ]);
+        return '1';
+    }
+
+    public function compile(Request $request) {
+        $id = $request->input('id');
+        $this->getAdminProblem($id);
+        $this->validate($request, [
+            'code' => 'min:50|max:65535',
+            'id' => 'Integer'
+        ]);
+        $status_id = DB::table('admin_status')->insertGetId([
+            'problem_id' => $id,
+            'lang' => 2,
+            'user_name' => Auth::user()->name,
+            'code_len' => strlen($request->input('code')),
+            'code' => $request->input('code'),
+            'ce' => ''
+        ]);
+        DB::table('judges')->insert([
+            'status_id' => $id,
+            'judge_for' => config('soj.judge.OC_BASE'),
+        ]);
+        return response()->json(['success' => $status_id]);
     }
 }

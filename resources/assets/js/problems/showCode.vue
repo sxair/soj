@@ -15,12 +15,22 @@
             }
         },
         mounted() {
-            this.auth();
-            const s = this;
-            axios.get('/code/' + s.id).then((response) => {
-                this.code = response.data.code;
-                this.status = response.data.status
-            });
+            this.setCode();
+        },
+        methods: {
+            setCode() {
+                this.auth();
+                const s = this;
+                axios.get('/code/' + s.id).then((response) => {
+                    this.code = response.data.code;
+                    this.status = response.data.status
+                }).catch((error) => {
+                    this.$message.error('代码查看失败');
+                });
+            }
+        },
+        watch: {
+            '$route.query': 'setCode'
         }
     }
 </script>

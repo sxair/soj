@@ -27,7 +27,7 @@ Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
-Route::get('userinfo/{username}', 'UserController@userinfo');
+Route::get('userinfo/{username}', 'UserController@userInfo');
 Route::view('registerSuccess', 'auth.registerSuccess');
 Route::get('confirmEmail/{token}/{email}', 'UserController@confirmEmail');
 

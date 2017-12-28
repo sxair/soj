@@ -100,6 +100,10 @@
                     this.title = response.data.title;
                     if(response.data.labels != '')
                     this.proLabels = JSON.parse(response.data.labels);
+                }).catch((error) => {
+                    this.$message.error('获取题目失败');
+                    this.title = '';
+                    this.proLabels = {};
                 });
             },
             setProblemLabel(id, son) {
@@ -150,6 +154,9 @@
                     });
                 }
             }
+        },
+        watch: {
+            '$route.query': 'getProblem'
         }
     }
 </script>

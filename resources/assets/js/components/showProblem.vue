@@ -1,5 +1,5 @@
 <template>
-<div class="container">
+<div :class="{container: type != 'admin'}">
     <div v-if="problem.title" style="position: relative">
         <div class="col-md-9">
             <el-card>
@@ -15,7 +15,19 @@
         </div>
         <div class="col-md-3 media-hidden">
             <el-card>
-                <router-link :to="'/submit/'+id" class="btn btn-primary" style="width:100%">提交</router-link>
+                <router-link :to="suburl + id" class="btn btn-primary" style="width:100%">提交</router-link>
+            </el-card>
+            <el-card style="margin-top: 8px">
+                <div slot="header" class="clearfix">
+                    <h4>author</h4>
+                </div>
+                <a :href="'/problems?type=author&search='+problem.author" target="view_window">{{ problem.author }}</a>
+            </el-card>
+            <el-card style="margin-top: 8px">
+                <div slot="header" class="clearfix">
+                    <h4>source</h4>
+                </div>
+                <a :href="'/problems?type=source&search='+problem.source" target="view_window">{{ problem.source }}</a>
             </el-card>
         </div>
         <div class="media-show bottom-right">
@@ -32,7 +44,18 @@
 <script>
 export default {
     props: {
-        id: String,
+        id: [String, Number],
+    },
+    computed: {
+        type() {
+            if(window.location.pathname === '/admin') {
+                return 'admin';
+            }
+            return 'oj';
+        },
+        suburl() {
+            return '/submit/';
+        }
     },
     data() {
         return {
@@ -45,7 +68,12 @@ export default {
     },
     methods: {
         setProblem() {
-            axios.get('/api/problem/' + this.id)
+            let url = '/api/problem/' + this.id;
+            if(this.type == 'admin') {
+                url = '/admin/getProblem/' + this.id;
+
+            }
+            axios.get(url)
                 .then((response) => {
                     this.problem = response.data;
                     this.down = true;
@@ -55,9 +83,16 @@ export default {
                         this.$message.error('访问过快，请稍后刷新');
                     }
                     this.down = true;
-                    console.log(error);
                 });
         }
+    },
+    watch: {
+        '$route.query': 'setProblem'
     }
 }
 </script>
+<style>
+    .el-card__header {
+        padding: 0 17px;
+    }
+</style>
