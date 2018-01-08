@@ -10,4 +10,8 @@ class BaseController extends Controller
     public function isStudent() {
         return Auth::user()->control & config('soj.admin.student');
     }
+
+    public function isTeacher() {
+        return Auth::user()->control & config('soj.admin.teacher');
+    }
 }

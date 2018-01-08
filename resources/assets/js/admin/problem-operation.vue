@@ -16,9 +16,6 @@
                     <router-link :to="'/setProblemLabel/' + id">添加标签</router-link>
                 </li>
                 <li>
-                    <router-link :to="'/testProblem/' + id">测试代码</router-link>
-                </li>
-                <li>
                     <a :href="'/admin/download/test/' + id">下载测试数据</a>
                 </li>
             </ul>
@@ -34,7 +31,7 @@
     }
 </script>
 <style>
-    ul li {
+    .list-unstyled li {
         padding-bottom: 8px;
     }
 </style>

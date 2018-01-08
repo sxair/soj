@@ -45,9 +45,15 @@ Route::get('submit/{id?}', 'ProblemController@submitPage');
 Route::post('submit', 'ProblemController@submit');
 Route::view('showcode/{id}', 'problems');
 Route::get('code/{id}', 'ProblemController@getCode');
-
+Route::view('ceinfo/{id}', 'problems');
 /*
  * contest model
  */
 Route::view('contests', 'contest.contests');
 Route::get('contest/{id}', 'ContestController@contest');
+
+/*
+ * tools model
+ */
+Route::get('help/{title}', 'IndexController@help');
+Route::view('tools', 'tools.index');

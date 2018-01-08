@@ -18,18 +18,20 @@ class ProblemController extends Controller
         $perPage = 50;
         if ($this->isStudent()) {
             $total = DB::table('admin_problems')
-                ->where('user_name', Auth::user()->name)
+                ->where('user_id', Auth::user()->id)
                 ->orWhere('public', 1)
                 ->count();
             $problems = DB::table('admin_problems')
-                ->where('user_name', Auth::user()->name)
+                ->where('user_id', Auth::user()->id)
                 ->orWhere('public', 1)
+                ->join('users', 'users.id', '=', 'admin_problems.user_id')
                 ->leftJoin('problem_labels', 'admin_problems.problem_id', '=', 'problem_labels.id')
                 ->offset(($page - 1) * $perPage)->limit($perPage)->get();
         } else {
             $total = DB::table('admin_problems')
                 ->count();
             $problems = DB::table('admin_problems')
+                ->join('users', 'users.id', '=', 'admin_problems.user_id')
                 ->leftJoin('problem_labels', 'admin_problems.problem_id', '=', 'problem_labels.id')
                 ->offset(($page - 1) * $perPage)->limit($perPage)->get();
         }
@@ -72,7 +74,7 @@ class ProblemController extends Controller
         DB::table('admin_problems')->insert([
             'problem_id' => $id,
             'title' => $request->input('title'),
-            'user_name' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'public' => $request->input('show') ? 1 : 0,
             'oj_id' => 0,
         ]);
@@ -240,7 +242,7 @@ class ProblemController extends Controller
         if (is_null($admin_pro)) {
             return abort(422, json_encode('题目不存在'));
         }
-        if ($admin_pro->user_name != Auth::user()->name && !$admin_pro->public
+        if ($admin_pro->user_id != Auth::user()->id && !$admin_pro->public
             && (Auth::user()->conrtol & config('soj.admin.student'))
         ) {
             return abort(422, json_encode('您没有获取权限'));
@@ -406,13 +408,13 @@ class ProblemController extends Controller
         $status_id = DB::table('admin_status')->insertGetId([
             'problem_id' => $id,
             'lang' => (int)$request->input('lang'),
-            'user_name' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'code_len' => strlen($request->input('code')),
             'code' => $request->input('code'),
             'ce' => ''
         ]);
         DB::table('judges')->insert([
-            'status_id' => $id,
+            'status_id' => $status_id,
             'judge_for' => config('soj.judge.ADMIN_BASE'),
         ]);
         return response()->json(['success' => $status_id]);
@@ -442,14 +444,17 @@ class ProblemController extends Controller
         $status_id = DB::table('admin_status')->insertGetId([
             'problem_id' => $id,
             'lang' => 2,
-            'user_name' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'code_len' => strlen($request->input('code')),
             'code' => $request->input('code'),
             'ce' => ''
         ]);
         DB::table('judges')->insert([
-            'status_id' => $id,
+            'status_id' => $status_id,
             'judge_for' => config('soj.judge.OC_BASE'),
+        ]);
+        DB::table('problems')->where('id', $id)->update([
+            'spj' => 1
         ]);
         return response()->json(['success' => $status_id]);
     }

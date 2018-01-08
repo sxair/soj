@@ -19,8 +19,32 @@ class TestSeeder extends Seeder
             'name' => 'sair',
             'email' => '80976512@qq.com',
             'password' => bcrypt('123123'),
-            'locked' => 1,
+            'locked' => 0,
             'control' => config('soj.admin.all') | 1,
+        ]);
+
+        DB::table('users')->insert([
+            'name' => 'student',
+            'email' => '80976513@qq.com',
+            'password' => bcrypt('123123'),
+            'locked' => 0,
+            'control' => config('soj.admin.student') | 1,
+        ]);
+
+        DB::table('users')->insert([
+            'name' => 'teacher',
+            'email' => '80976514@qq.com',
+            'password' => bcrypt('123123'),
+            'locked' => 0,
+            'control' => config('soj.admin.teacher') | 1,
+        ]);
+
+        DB::table('users')->insert([
+            'name' => 'user',
+            'email' => '80976515@qq.com',
+            'password' => bcrypt('123123'),
+            'locked' => 0,
+            'control' => 0,
         ]);
 
         DB::table('user_infos')->insert([
@@ -29,6 +53,20 @@ class TestSeeder extends Seeder
 
         DB::table('admins')->insert([
             'id' => 1,
+            'password' => bcrypt('admin'),
+            'presenter_name' => 'admin',
+            'remark' => 'admin'
+        ]);
+
+        DB::table('admins')->insert([
+            'id' => 2,
+            'password' => bcrypt('admin'),
+            'presenter_name' => 'admin',
+            'remark' => 'admin'
+        ]);
+
+        DB::table('admins')->insert([
+            'id' => 3,
             'password' => bcrypt('admin'),
             'presenter_name' => 'admin',
             'remark' => 'admin'
@@ -122,7 +160,7 @@ EOF;
             DB::table('oj_status')->insert([
                 'problem_id' => 1000,
                 'lang' => rand(1, 4),
-                'user_name' => $user_name,
+                'user_id' => 1,
                 'status' => $randstatus,
                 'time' => rand(0, 1000),
                 'memory' => rand(1000, 100000),
@@ -132,7 +170,7 @@ EOF;
             DB::table('admin_problems')->insert([
                 'problem_id' => $i + 1,
                 'title' => str_random(10),
-                'user_name' => 'admin',
+                'user_id' => 1,
                 'public' => rand(0, 1),
                 'oj_id' => $i + 1000
             ]);
@@ -157,7 +195,7 @@ asdasdasdasd'
             DB::table('problems')->insert([
                 'title' => str_random(10),
                 'time_limit' => 1000,
-                'memory_limit' => 123123,
+                'memory_limit' => 32768,
                 'judge_cnt' => 1,
                 'spj' => 0,
                 'content' => $content,

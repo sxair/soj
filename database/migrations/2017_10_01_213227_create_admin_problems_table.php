@@ -17,7 +17,7 @@ class CreateAdminProblemsTable extends Migration
             $table->engine = 'MyISAM';
             $table->unsignedInteger('problem_id');
             $table->string('title', 50)->index();
-            $table->string('user_name',20)->index();
+            $table->unsignedInteger('user_id');
             $table->boolean('public');
             $table->unsignedInteger('oj_id');
 

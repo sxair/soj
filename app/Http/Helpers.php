@@ -13,8 +13,8 @@ function getPaginate($sql, $select, $page, $perPage)
     if (!empty($select)) {
         $sql = $sql->select($select);
     }
-    $problems = $sql->offset(($page - 1) * $perPage)->limit($perPage)->get();
-    return array_merge(['content' => $problems], ['total' => $total]);
+    $content = $sql->offset(($page - 1) * $perPage)->limit($perPage)->get();
+    return array_merge(['content' => $content], ['total' => $total]);
 }
 
 function getCurrentPage($page) {

@@ -29,7 +29,7 @@
                             </el-tag>
                         </div>
                     </td>
-                    <td>{{ pro.user_name }}</td>
+                    <td>{{ pro.name }}</td>
                     <td>{{ pro.public ? 'yes' : 'no' }}</td>
                     <td>
                         <el-button size="mini" v-if="!pro.oj_id" type="primary" @click="addToOj(pro.problem_id,index)">

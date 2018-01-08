@@ -8,6 +8,7 @@
             </div>
             输出样例 {{ i.id }} : <input type="file" :id="'out' + i.id" style="display: inline-block">
         </div>
+        <div><i>注：spj输出最多为8MB</i></div>
         <el-button type="primary" @click="addTest">新增测试样例</el-button>
         <el-button v-if="!subing" @click="onSubmit">提交</el-button>
         <el-button v-else>提交中。。。</el-button>

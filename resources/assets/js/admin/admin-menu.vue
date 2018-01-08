@@ -20,16 +20,16 @@
             <i class="el-icon-star-on"></i>
             <span slot="title">标签设置</span>
         </el-menu-item>
-        <el-submenu index="3">
-            <template slot="title">
-                <i class="el-icon-menu"></i>
-                <span>比赛管理</span>
-            </template>
-            <el-menu-item-group>
-                <el-menu-item index="3-1">查看比赛</el-menu-item>
-                <el-menu-item index="3-2">新增比赛</el-menu-item>
-            </el-menu-item-group>
-        </el-submenu>
+        <!--<el-submenu index="3">-->
+            <!--<template slot="title">-->
+                <!--<i class="el-icon-menu"></i>-->
+                <!--<span>比赛管理</span>-->
+            <!--</template>-->
+            <!--<el-menu-item-group>-->
+                <!--<el-menu-item index="3-1">查看比赛</el-menu-item>-->
+                <!--<el-menu-item index="3-2">新增比赛</el-menu-item>-->
+            <!--</el-menu-item-group>-->
+        <!--</el-submenu>-->
         <el-submenu index="4">
             <template slot="title">
                 <i class="el-icon-star-off"></i>
@@ -41,17 +41,21 @@
                 <el-menu-item index="/addAdmin">新增管理员</el-menu-item>
             </el-menu-item-group>
         </el-submenu>
-        <el-menu-item index="4">
-            <i class="el-icon-document"></i>
-            <span slot="title">学生管理</span>
-        </el-menu-item>
-        <el-menu-item index="5">
-            <i class="el-icon-refresh"></i>
-            <span slot="title">重判题目</span>
-        </el-menu-item>
-        <el-menu-item index="6">
-            <i class="el-icon-setting"></i>
-            <span slot="title">模块开关</span>
+        <!--<el-menu-item index="4">-->
+            <!--<i class="el-icon-document"></i>-->
+            <!--<span slot="title">学生管理</span>-->
+        <!--</el-menu-item>-->
+        <!--<el-menu-item index="5">-->
+            <!--<i class="el-icon-refresh"></i>-->
+            <!--<span slot="title">重判题目</span>-->
+        <!--</el-menu-item>-->
+        <!--<el-menu-item index="6">-->
+            <!--<i class="el-icon-setting"></i>-->
+            <!--<span slot="title">模块开关</span>-->
+        <!--</el-menu-item>-->
+        <el-menu-item index="/testOut">
+            <i class="el-icon-edit-outline"></i>
+            <span slot="title">程序测试</span>
         </el-menu-item>
         <el-menu-item index="logout">
             <i class="el-icon-news"></i>

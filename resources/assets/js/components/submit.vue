@@ -20,17 +20,19 @@
                     </el-form-item>
                 </el-form>
                 <div style="margin: auto;width: 95%;">
-                    <textarea v-model="code" style="min-height: 300px;width: 100%"></textarea>
+                    <codemirror :value="code" ref="editor"></codemirror>
                 </div>
-                <div style="text-align:left;float:left">
-                    状态： <to-html v-if="status != -1" :arg="status" :type=1></to-html> <i v-if="status < 0">{{ statusLang[status] }}</i>
+                <div style="text-align:left;float:left" v-if="type == 'admin'">
+                    状态(请勿刷新)： <to-html v-if="status != -1" :arg="status" :type=1></to-html> <i v-if="status < 0">{{ statusLang[status] }}</i>
+                    &nbsp;&nbsp;time: {{ statusData.time }}MS
+                    &nbsp;&nbsp;memory: {{ statusData.memory }}KB
                 </div>
                 <div style="text-align:right;">
                     <button class="btn btn-primary" @click="onSubmit">提交</button>
                 </div>
             </el-card>
             <el-card v-if="status == 2" style="margin-top:10px">
-                {{ ce }}
+                <pre>{{ statusData.ce }}</pre>
             </el-card>
         </div>
     </div>
@@ -57,7 +59,7 @@
                 status: -1,
                 statusLang: {'-1': '待提交', '-2': '待评测'},
                 timeout: 0,
-                ce: ''
+                statusData: {},
             }
         },
         mounted() {
@@ -83,23 +85,18 @@
             setStatus(id) {
                 axios.get('/admin/getStatus/' + id).then((response) => {
                     this.status = response.data.status;
-                    if(this.status === 2) {
-                        this.ce = response.data.ce;
-                    }
+                    this.statusData = response.data;
                     if(this.status <= 1 || (this.status >= 50000 && this.status < 60000)) {
                         this.timeout = setTimeout(()=>{this.setStatus(id)}, 1000);
                     }
                 });
             },
             submit() {
+                if(this.timeout) clearTimeout(this.timeout);
                 let t = {};
                 t.problem_id = this.search.proId;
                 t.lang = this.search.lang;
-                t.code = this.tmpCode = this.code;
-                if(this.code.length >= 65535) {
-                    this.$message.error('代码过长');
-                    return ;
-                }
+                t.code = this.code;
                 let url = '/submit';
                 if(this.type == 'admin') {
                     url = '/admin/submit';
@@ -127,15 +124,22 @@
                 });
             },
             onSubmit() {
+                this.code = this.$refs.editor.getValue();
                 if (this.code.length < 50) {
                     this.$message.error('代码过短~');
                     return;
+                }
+                if(this.code.length >= 65535) {
+                    this.$message.error('代码过长');
+                    return ;
                 }
                 if (this.tmpCode == this.code) {
                     this.$message.error('请勿重复提交');
                     return;
                 }
+                this.tmpCode = this.code;
                 this.submit();
+                //setInterval(()=>{this.submit()}, 100);
             }
         },
         watch: {

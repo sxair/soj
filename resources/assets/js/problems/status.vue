@@ -55,16 +55,17 @@
                     <tbody>
                     <tr v-for="sta in status">
                         <td>{{ sta.id }}</td>
-                        <td><a href="#">{{ sta.user_name }}</a></td>
-                        <td><a :href="'problem/' + sta.problem_id">{{ sta.problem_id }}</a></td>
+                        <td><a :href="'userinfo/' + sta.name">{{ sta.name }}</a></td>
+                        <td><router-link :to="'problem/' + sta.problem_id">{{ sta.problem_id }}</router-link></td>
                         <td>
-                            <to-html :arg="sta.status" :type=1></to-html>
+                            <router-link v-if="sta.status === 2" :to="'ceinfo/' + sta.id"><to-html :arg="sta.status" :type=1></to-html></router-link>
+                            <to-html v-if="sta.status !== 2" :arg="sta.status" :type=1></to-html>
                             <i v-if="isJudging(sta.status)" class="el-icon-loading"></i>
                         </td>
                         <td>
                             <to-html :arg="sta.lang" :type=0></to-html>
                         </td>
-                        <td v-if="this.user.name != sta.user_name">{{ sta.code_len }}B</td>
+                        <td v-if="this.user.id != sta.user_id">{{ sta.code_len }}B</td>
                         <td v-else><a :href="'showcode/' + sta.id">{{ sta.code_len }}B</a></td>
                         <td>{{ sta.time }} MS</td>
                         <td>{{ sta.memory }} KB</td>
@@ -168,6 +169,8 @@
                 axios.get('/api/statusRange/' + l + '/' + r).then((response) => {
                     for (let i = 0; i < response.data.length; i++) {
                         this.status[i + base].status = response.data[i].status;
+                        this.status[i + base].time = response.data[i].time;
+                        this.status[i + base].memory = response.data[i].memory;
                     }
                     this.timeout = setTimeout(() => {this.cleanJudge()}, 1000);
                 });

@@ -52,7 +52,7 @@ Vue.prototype.$message = Message;
 /****************global****************/
 Vue.component('navbar', require('./components/navbar.vue'));
 Vue.component('to-html', require('./components/toHtml.vue'));
-Vue.component('show-code', require('./components/showCode.vue'));
+Vue.component('codemirror', require('./components/codemirror.vue'));
 // Vue.component('show-code', resolve => require(['./components/showCode.vue'], resolve));
 Vue.component('problems-table', require('./components/problemsTable.vue'));
 Vue.component('problems-model', require('./problems/problemsModel.vue'));

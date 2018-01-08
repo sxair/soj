@@ -57,6 +57,7 @@ Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$notify = Notification;
 
+Vue.component('codemirror', resolve => require(['./components/codemirror.vue'], resolve));
 Vue.component('navbar', require('./components/navbar.vue'));
 Vue.component('admin-menu', require('./admin/admin-menu.vue'));
 Vue.component('editor', resolve => require(['./components/editor.vue'], resolve));
@@ -77,7 +78,6 @@ const router = new VueRouter({
         {path: '/addAdmin', component: require('./admin/add-admin.vue')},
         {path: '/useSpj/:id', component: require('./admin/use-spj.vue'), props: true},
         {path: '/setProblemLabel/:id', component: require('./admin/set-problem-label.vue'), props: true},
-        {path: '/testProblem/:id', component: require('./admin/test-problem.vue'), props: true},
         {path: '/problem/:id', component: require('./components/showProblem.vue'), props: true},
         {path: '/submit/:id', component: require('./components/submit.vue'), props: true},
     ]

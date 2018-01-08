@@ -1,6 +1,6 @@
 <template>
-    <div style="width: 500px;margin:auto">
-        <show-code :code="code" :status="status"></show-code>
+    <div style="width: 500px;margin:auto" class="cm-auto">
+        <codemirror :readOnly=true :value="code" :lang="status.lang"></codemirror>
     </div>
 </template>
 <script>

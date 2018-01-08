@@ -26,6 +26,7 @@ Route::get('status', 'ProblemController@status');
 Route::get('statusRange/{l}/{r}', 'ProblemController@statusRange');
 Route::get('label', 'ProblemController@label');
 Route::get('rank', 'ProblemController@rank');
+Route::get('ceinfo/{id}', 'ProblemController@ceinfo');
 // !! api can't use session !!
 //Route::post('submit', 'ProblemController@submit');
 

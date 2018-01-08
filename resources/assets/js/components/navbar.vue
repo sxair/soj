@@ -8,6 +8,7 @@
                 <ul class="s-nav">
                     <li><a href="/problems">Problems</a></li>
                     <li><a href="/contests">Contests</a></li>
+                    <li><a href="/tools">Tools</a></li>
                 </ul>
                 <ul class="s-nav s-nav-right">
                     <li v-if="!user.id"><a href="/login">Login</a></li>

@@ -21,6 +21,7 @@ class ProblemController extends Controller
         $page = getCurrentPage($request->input('page'));
         $perPage = 50;
         $sql = DB::table('oj_problems');
+        $select = [];
         if($label != 0) {
             if($label % 1000 == 0) {
                 $sql = DB::table('oj_label_problems')
@@ -30,7 +31,9 @@ class ProblemController extends Controller
                 $sql = DB::table('oj_label_problems')
                     ->where('oj_label_problems.id', '=', $label);
             }
-            $sql = $sql->join('oj_problems', 'oj_label_problems.problem_id','=', 'oj_problems.id');
+            $select = ['oj_problems.*'];
+            $sql = $sql->join('oj_problems', 'oj_label_problems.problem_id','=', 'oj_problems.id')
+                ->distinct();
         }
         if (!is_null($search)) {
             if ($type == 'author' || $type == 'source') {
@@ -43,7 +46,7 @@ class ProblemController extends Controller
                 $sql = $sql->where('title', 'like', '%' . $search . '%');
             }
         }
-        return response()->json(getPaginate($sql, '', $page, $perPage));
+        return response()->json(getPaginate($sql, $select, $page, $perPage));
     }
 
     /**
@@ -52,23 +55,27 @@ class ProblemController extends Controller
      */
     public function status(Request $request)
     {
-        $search['user_name'] = $request->input('author');
-        $search['problem_id'] = $request->input('proId');
-        $search['lang'] = $request->input('lang');
+        $author = $request->input('author');
+        $search['oj_status.problem_id'] = $request->input('proId');
+        $search['oj_status.lang'] = $request->input('lang');
         $search = array_filter($search);
         $page = getCurrentPage($request->input('page'));
         $perPage = 15;
         $status = (integer)$request->input('status');
         $sql = DB::table('oj_status')->where($search)->orderBy('id', 'desc');
+        if($author) {
+            $sql->where('users.name', $author);
+        }
         if ($status > 0 && $status <= 11 && $status != 1 && $status != 4 && $status != 5) {
             if ($status < 4) {
-                $sql = $sql->where('status', $status);
+                $sql = $sql->where('oj_status.status', $status);
             } else {
-                $sql = $sql->where('status', '>', $status * 10000)
-                    ->where('status', '<', ($status + 1) * 10000);
+                $sql = $sql->where('oj_status.status', '>', $status * 10000)
+                    ->where('oj_status.status', '<', ($status + 1) * 10000);
             }
         }
-        return response()->json(getPaginate($sql, [], $page, $perPage));
+        $sql->join('users', 'oj_status.user_id', '=', 'users.id');
+        return response()->json(getPaginate($sql, ['users.name','oj_status.*'], $page, $perPage));
     }
 
     public function statusRange($l, $r)
@@ -81,7 +88,7 @@ class ProblemController extends Controller
         $status = DB::table('oj_status')
             ->where('id', '>=', $l)
             ->where('id', '<=', $r)
-            ->select(['id', 'status'])
+            ->select(['id', 'status', 'time', 'memory'])
             ->orderBy('id', 'desc')
             ->get();
         return response()->json($status);
@@ -153,10 +160,10 @@ class ProblemController extends Controller
             'code' => 'min:50|max:65535',
             'problem_id' => 'Integer'
         ]);
-        DB::statement('CALL `oj_submit`(?,?,?,?,?,?)', [
+        DB::statement('CALL `oj_submit`(?,?,?,?,?)', [
             $request->input('problem_id'),
             $request->input('lang'),
-            $request->input('code'), $user->name, $user->id,
+            $request->input('code'), $user->id,
             strlen($request->input('code'))]);
         return response()->json(['success' => 1]);
     }
@@ -164,11 +171,20 @@ class ProblemController extends Controller
     public function getCode($id)
     {
         $status = DB::table('oj_status')->where(['id' => $id])->get();
-        if ($status->isEmpty() || Auth::guest() || $status[0]->user_name != Auth::user()->name) {
+        if ($status->isEmpty() || Auth::guest() || $status[0]->user_id != Auth::user()->id) {
             return response()->json(['code' => '']);
         }
         $code = DB::table('oj_codes')->where(['status_id' => $id])->get();
         if($code->isEmpty()) return response()->json(['code' => '']);
         return response()->json(['code' => $code[0]->code, 'status' => $status[0]]);
+    }
+
+    public function ceinfo($id)
+    {
+        $ce = DB::table('oj_ces')->select(['content'])->where(['status_id' => $id])->first();
+        if($ce != null) {
+            return response()->json($ce->content);
+        }
+        return response()->json('');
     }
 }

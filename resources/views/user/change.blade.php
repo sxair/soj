@@ -20,7 +20,7 @@
                     <div class="form-group">
                         <label for="name" class="col-md-3 control-label"><span style="color: red">*</span>Name</label>
                         <div class="col-md-6">
-                            {{ $user->name }}
+                            <input id="name" type="text" class="form-control" value="{{ $user->name }}">
                         </div>
                     </div>
                     <div class="form-group">
@@ -54,8 +54,7 @@
                         <label for="school" class="col-md-3 control-label">School</label>
 
                         <div class="col-md-6">
-                            <input id="school" type="text" class="form-control"
-                                   name="school" value="{{ $info->school }}">
+                            <input id="school" type="text" class="form-control" value="{{ $info->school }}">
                         </div>
                     </div>
                     <div class="form-group">

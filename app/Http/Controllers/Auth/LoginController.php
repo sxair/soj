@@ -45,13 +45,10 @@ class LoginController extends Controller
         }
         if ($this->attemptLogin($request)) {
             $user = $this->guard()->user();
-//            if($user->locked == 1) {
-//                $this->guard()->logout();
-//                return redirect()->back();
-//            } else if($user->locked){
-//                $this->guard()->logout();
-//                return redirect()->back();
-//            }
+            if($user->locked == 1) {
+                $this->guard()->logout();
+                return redirect()->back();
+            }
             return $this->sendLoginResponse($request);
         }
         $this->incrementLoginAttempts($request);

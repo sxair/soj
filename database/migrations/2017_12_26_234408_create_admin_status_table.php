@@ -17,7 +17,7 @@ class CreateAdminStatusTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('problem_id')->index();
             $table->tinyInteger('lang');
-            $table->string('user_name', 20)->index();
+            $table->unsignedInteger('user_id')->index();
             $table->unsignedInteger('status')->default(0)->index();
             $table->integer('time')->default(0);
             $table->integer('memory')->default(0);

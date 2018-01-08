@@ -14,8 +14,8 @@
                 <el-form-item label="类型">
                     <el-radio-group v-model="form.type">
                         <el-radio :label="3">学生管理员</el-radio>
-                        <el-radio :label="2">教师</el-radio>
-                        <el-radio :label="1">管理员</el-radio>
+                        <el-radio :label="2" v-if="user.control == 3">教师</el-radio>
+                        <el-radio :label="1" v-if="user.control == 3">管理员</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="备注">

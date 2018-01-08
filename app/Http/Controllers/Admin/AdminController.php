@@ -13,8 +13,8 @@ use Mail;
 class AdminController extends Controller
 {
     public function help($title) {
-        $content = DB::table('soj_helps')->where('name', 'admin.'.$title)->first();
-        return view('admin.help', ['content' => $content]);
+        $content = DB::table('soj_helps')->where('name', $title)->first();
+        return view('help', ['content' => $content]);
     }
 
     public function admins(Request $request) {
@@ -34,7 +34,13 @@ class AdminController extends Controller
         $name = $request->input('name');
         $email = $request->input('email');
         $type = (int)$request->input('type');
+        if($this->isStudent()) {
+            return response()->json(['failed' => '你没有权限']);
+        }
         if($name && $email && $type >= 1 && $type <= 3) {
+            if($this->isTeacher() && $type != config('soj.admin.student')) {
+                return response()->json(['failed' => '教师只能添加学生管理员']);
+            }
             $new = DB::table('users')->where(['name' => $name, 'email' => $email])->first();
             if($new == null) {
                 return response()->json(['failed' => '用户不存在']);
