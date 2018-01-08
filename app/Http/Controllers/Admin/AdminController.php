@@ -13,8 +13,10 @@ use Mail;
 class AdminController extends Controller
 {
     public function help($title) {
-        $content = DB::table('soj_helps')->where('name', $title)->first();
-        return view('help', ['content' => $content]);
+        if(view()->exists('admin.help.'.$title)) {
+            return view('admin.help.'.$title);
+        }
+        return '';
     }
 
     public function admins(Request $request) {
