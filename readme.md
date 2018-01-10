@@ -2,8 +2,15 @@
 
 ### 安装
 
-依赖laravel框架，具体配置要求请看https://d.laravel-china.org/docs/5.5/installation
-需php-zip拓展
+本系统使用laravel框架，需要如下php软件
+* PHP >= 7.0.0
+* PHP OpenSSL 扩展
+* PHP PDO 扩展
+* PHP Mbstring 扩展
+* PHP Tokenizer 扩展
+* PHP XML 扩展
+* PHP ZIP拓展
+
 安装composer和nodejs后运行
 ```
 composer install
@@ -27,6 +34,17 @@ php artisan db:seed
 ```
 php artisan db:seed --class=TestSeeder
 ```
+
+队列安装
+```
+sudo apt-get install supervisor
+cp laravel_worker.conf /etc/supervisor/conf.d
+```
+使用
+```
+sudo supervisorctl start laravel-worker:*
+```
+来启动队列
 
 判题端请看https://github.com/sxair/online-judge
 
