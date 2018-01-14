@@ -78,14 +78,15 @@ class TestSeeder extends Seeder
     {"name": "全部问题", "id": 0},
     {"name": "图论", "id": 1000, "son": [
            {"name": "最短路", "id": 1001},
-           {"name": "最长路", "id": 1002},
+           {"name": "拓扑排序", "id": 1002},
            {"name": "网络流", "id": 1003}
         ]
     },
      {"name": "数论", "id": 2000, "son": [
-           {"name": "最短路", "id": 2001},
-           {"name": "最长路", "id": 2002},
-           {"name": "网络流", "id": 2003}
+           {"name": "高斯消元", "id": 2001},
+           {"name": "欧拉函数", "id": 2002},
+           {"name": "快速矩阵幂", "id": 2003},
+           {"name": "傅里叶快速变换", "id": 2003}
         ]
     }
 ]']);
@@ -98,11 +99,11 @@ class TestSeeder extends Seeder
 <h3 id="output">Output</h3>
 <p>For each pair of input integers a and b you should output the sum of a and b in one line,and with one line of output for each line in input.</p>
 <h3 id="sample-input">Sample Input</h3>
-<p>1 5
-2 3</p>
+<p>1 5</p>
+<p>2 3</p>
 <h3 id="sample-output">Sample Output</h3>
-<p>6
-5</p>
+<p>6</p>
+<p>5</p>
 <h3 id="hints">Hints</h3>
 <p>C++ code for a+b:</p>
 <pre><code class="hljs"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span>

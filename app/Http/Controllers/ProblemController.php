@@ -156,8 +156,8 @@ class ProblemController extends Controller
         }
         $lang = (int)$request->input('lang');
         $this->validate($request, [
-            'lang' => 'Integer|min:1|max:4',
-            'code' => 'min:50|max:65535',
+            'lang' => 'Integer|min:1|max:5',
+            'code' => 'min:30|max:65535',
             'problem_id' => 'Integer'
         ]);
         DB::statement('CALL `oj_submit`(?,?,?,?,?)', [

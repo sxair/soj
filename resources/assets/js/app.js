@@ -9,6 +9,9 @@ window.Vue = require('vue');
 import problemsRouter from './problemsRouter'
 import contestsRouter from './contestsRouter'
 import VueRouter from 'vue-router'
+import VueI18n from 'vue-i18n'
+import I18nMessage from './i18n'
+Vue.use(VueI18n);
 Vue.use(VueRouter);
 
 import 'element-ui/lib/theme-chalk/pagination.css'
@@ -51,6 +54,7 @@ Vue.prototype.$message = Message;
 
 /****************global****************/
 Vue.component('navbar', require('./components/navbar.vue'));
+Vue.component('soj-footer', require('./components/footer.vue'));
 Vue.component('to-html', require('./components/toHtml.vue'));
 Vue.component('codemirror', require('./components/codemirror.vue'));
 // Vue.component('show-code', resolve => require(['./components/showCode.vue'], resolve));
@@ -71,7 +75,10 @@ Vue.prototype.auth = function() {
         window.location.href='/login?to='+window.location.href;
     }
 };
+
+const i18n = new VueI18n(I18nMessage);
 window.app = new Vue({
     router,
+    i18n,
     data: window.VueData,
 }).$mount('#app');

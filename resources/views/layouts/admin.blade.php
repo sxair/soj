@@ -26,11 +26,7 @@
             </button>
         </nav>
         @yield('content')
-        <footer class="text-center" style="padding:30px 50px">
-            <div>
-                Copyright © 2017 sair. All rights reserved.
-            </div>
-        </footer>
+        <soj-footer></soj-footer>
     </div>
 </div>
 <script>

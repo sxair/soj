@@ -12,12 +12,12 @@
                            :class="{'label-active': s.id < 0}">{{ s.name }}</a>
                     </li>
                     <li v-if="i.id != 0">
-                        <a href="javascript:void(0)" @click="addLabel(index)"><i
+                        <a href="javascript:void(0)" @click="addLabel(index)" title="添加小标题"><i
                                 class="el-icon-circle-plus-outline"></i></a>
                     </li>
                 </ul>
             </div>
-            <a class="btn btn-default col-md-12" href="javascript:void(0)" @click="addLabel(0)"><i
+            <a class="btn btn-default col-md-12" href="javascript:void(0)" @click="addLabel(0)" title="添加大标题"><i
                     class="el-icon-circle-plus-outline"></i></a>
         </div>
         <div class="col-md-5">

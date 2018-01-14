@@ -401,8 +401,8 @@ class ProblemController extends Controller
         $id = $request->input('problem_id');
         $this->getAdminProblem($id);
         $this->validate($request, [
-            'lang' => 'Integer|min:1|max:4',
-            'code' => 'min:50|max:65535',
+            'lang' => 'Integer|min:1|max:5',
+            'code' => 'min:30|max:65535',
             'problem_id' => 'Integer'
         ]);
         $status_id = DB::table('admin_status')->insertGetId([
@@ -438,7 +438,7 @@ class ProblemController extends Controller
         $id = $request->input('id');
         $this->getAdminProblem($id);
         $this->validate($request, [
-            'code' => 'min:50|max:65535',
+            'code' => 'min:30|max:65535',
             'id' => 'Integer'
         ]);
         $status_id = DB::table('admin_status')->insertGetId([

@@ -9,8 +9,8 @@
         </button>
     </nav>
     <div class="container">
-        <el-card>
-            welcome
+        <el-card class="text-center">
+            <h3>welcome to soj</h3>
         </el-card>
     </div>
 @endsection

@@ -7,6 +7,7 @@
                         <h3 class="text-center">{{ problem.title }}</h3>
                         <i>Time/Memory Limit: {{ problem.time_limit }} MS / {{ problem.memory_limit }} KB</i>
                         <i>Submitted: {{ problem.submitted }}&nbsp;&nbsp;&nbsp;Accepted: {{ problem.accepted }}</i>
+                        <i v-if="problem.spj" style="color: red">Special Judge</i>
                     </div>
                     <div class="pro-body" v-html="problem.content">
                         {{ problem.content }}

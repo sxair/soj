@@ -6,13 +6,13 @@
             </a>
             <div class="s-navfix">
                 <ul class="s-nav">
-                    <li><a href="/problems">Problems</a></li>
-                    <li><a href="/contests">Contests</a></li>
-                    <li><a href="/tools">Tools</a></li>
+                    <li><a href="/problems">{{ $t('Problems') }}</a></li>
+                    <li><a href="/contests">{{ $t('Contests') }}</a></li>
+                    <li><a href="/tools">{{ $t('Tools') }}</a></li>
                 </ul>
                 <ul class="s-nav s-nav-right">
-                    <li v-if="!user.id"><a href="/login">Login</a></li>
-                    <li v-if="!user.id"><a href="/register">Register</a></li>
+                    <li v-if="!user.id"><a href="/login">{{ $t('Login') }}</a></li>
+                    <li v-if="!user.id"><a href="/register">{{ $t('Register') }}</a></li>
                     <li v-if="user.id"
                         @mouseenter="openMenu"
                         @mouseleave="closeMenu"

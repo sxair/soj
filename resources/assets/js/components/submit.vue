@@ -52,7 +52,8 @@
                     {value: 1, label: 'c'},
                     {value: 2, label: 'c++'},
                     {value: 3, label: 'java'},
-                    {value: 4, label: 'python3'}
+                    {value: 4, label: 'python2'},
+                    {value: 5, label: 'python3'}
                 ],
                 code: '',
                 tmpCode: '',
@@ -125,7 +126,7 @@
             },
             onSubmit() {
                 this.code = this.$refs.editor.getValue();
-                if (this.code.length < 50) {
+                if (this.code.length < 30) {
                     this.$message.error('代码过短~');
                     return;
                 }

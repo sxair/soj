@@ -54,6 +54,7 @@
                     'c',
                     'c++',
                     'java',
+                    'python2',
                     'python3',
                 ]
             }
@@ -71,7 +72,7 @@
                     if(arg > 10000) arg = parseInt(arg / 10000);
                     return this.status[arg];
                 }
-                if (this.arg <= 0 || this.arg > 4) this.arg = 1;
+                if (this.arg <= 0 || this.arg > 5) this.arg = 1;
                 return this.lang[this.arg - 1];
             }
         },
