@@ -13,15 +13,15 @@ document.querySelector('.slideout-btn').addEventListener('click', function () {
     slideout.toggle();
 });
 function close(eve) {
-    eve.preventDefault();
+    //eve.preventDefault();
     slideout.close();
 }
 slideout.on('beforeopen', function () {
     this.panel.classList.add('panel-open');
 }).on('open', function () {
-    this.panel.addEventListener('click', close, true);
+    this.panel.addEventListener('click', close);
 }).on('beforeclose', function () {
-    window.event.stopPropagation();
+ //   window.event.stopPropagation();
     this.panel.classList.remove('panel-open');
     this.panel.removeEventListener('click', close);
 });

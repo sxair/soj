@@ -13,9 +13,7 @@
                 <tbody>
                 <tr>
                     <th width="7%">id</th>
-                    <th width="50%">title</th>
-                    <th>author</th>
-                    <th>public</th>
+                    <th width="60%">title</th>
                     <th>operation</th>
                 </tr>
                 <tr v-for="(pro, index) in problems">
@@ -29,13 +27,8 @@
                             </el-tag>
                         </div>
                     </td>
-                    <td>{{ pro.name }}</td>
-                    <td>{{ pro.public ? 'yes' : 'no' }}</td>
                     <td>
-                        <el-button size="mini" v-if="!pro.oj_id" type="primary" @click="addToOj(pro.problem_id,index)">
-                            添加到oj库
-                        </el-button>
-                        <el-button size="mini" v-else type="info" @click="delFormOj(pro.oj_id, index)">移除oj{{ pro.oj_id }}</el-button>
+                        <el-button size="mini" type="info" @click="delFormOj(pro.id, index)">移除oj{{ pro.id }}</el-button>
                         <el-button size="mini" type="danger" @click="toOperation(pro.problem_id)">修改</el-button>
                         <a :href="'/admin/download/test/' + pro.problem_id" style="margin-left:8px"><el-button size="mini">下载测试数据</el-button></a>
                     </td>
@@ -94,7 +87,7 @@
             setProblems() {
                 let cp = this.curPage;
                 toTop();
-                axios.get('/admin/problems?page=' + cp)
+                axios.get('/admin/ojProblems?page=' + cp)
                     .then((response) => {
                         this.problems = response.data.problems;
                         this.total = parseInt(response.data.total);
@@ -109,24 +102,6 @@
                     this.$router.push({query: {page: cp}});
                 }
             },
-            addToOj(id, index) {
-                if (confirm("确定添加到oj题目库？")) {
-                    const s = this;
-                    axios.get('/admin/addToOj/' + id).then((response) => {
-                        if (response.data.success) {
-                            s.problems[index].oj_id = response.data.success;
-                            this.$message({
-                                message: '成功添加至oj，编号为' + response.data.success,
-                                type: 'success'
-                            })
-                        } else {
-                            this.$message.error(response.data.failed ? response.data.failed : '添加失败');
-                        }
-                    }).catch((error) => {
-                        this.$message.error('添加失败');
-                    });
-                }
-            },
             delFormOj(id, index) {
                 if(confirm("确定从oj题目库移除？")) {
                     const s = this;
@@ -138,6 +113,7 @@
                                     message: '删除成功',
                                     type: 'success'
                                 })
+                                this.setProblems();
                             } else {
                                 this.$message.error(response.data.failed ? response.data.failed : '删除失败');
                             }

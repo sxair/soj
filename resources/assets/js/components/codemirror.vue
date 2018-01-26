@@ -4,7 +4,7 @@
 <script>
     window.CodeMirror = require('codemirror');
     require('codemirror/lib/codemirror.css');
-    require('codemirror/theme/monokai.css');
+    //require('codemirror/theme/monokai.css');
     require('codemirror/mode/clike/clike');
     /**
      * 括号匹配
@@ -34,7 +34,6 @@
             this.editor = CodeMirror.fromTextArea(this.$el, {
                 mode: "text/x-c++src",
                 lineNumbers: true,
-                value: this.value,
                 readOnly: this.readOnly,
                 matchBrackets: true,
                 indentUnit: 4,
@@ -42,6 +41,7 @@
                 theme: "monokai"
             });
             this.setLang();
+            this.editor.setValue(this.value);
         },
         methods: {
             getValue() {
@@ -80,3 +80,15 @@
         }
     }
 </script>
+<style>
+    .CodeMirror {
+        border: 1px solid #eee;
+        height: auto;
+        min-height: 300px;
+    }
+    .CodeMirror-scroll {
+        /* Set scrolling behaviour here */
+        overflow: auto;
+        min-height: 300px;
+    }
+</style>

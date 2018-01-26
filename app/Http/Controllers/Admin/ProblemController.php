@@ -16,25 +16,37 @@ class ProblemController extends Controller
     {
         $page = getCurrentPage($request->input('page'));
         $perPage = 50;
-        if ($this->isStudent()) {
-            $total = DB::table('admin_problems')
-                ->where('user_id', Auth::user()->id)
-                ->orWhere('public', 1)
-                ->count();
-            $problems = DB::table('admin_problems')
-                ->where('user_id', Auth::user()->id)
-                ->orWhere('public', 1)
-                ->join('users', 'users.id', '=', 'admin_problems.user_id')
-                ->leftJoin('problem_labels', 'admin_problems.problem_id', '=', 'problem_labels.id')
-                ->offset(($page - 1) * $perPage)->limit($perPage)->get();
-        } else {
-            $total = DB::table('admin_problems')
-                ->count();
-            $problems = DB::table('admin_problems')
-                ->join('users', 'users.id', '=', 'admin_problems.user_id')
-                ->leftJoin('problem_labels', 'admin_problems.problem_id', '=', 'problem_labels.id')
-                ->offset(($page - 1) * $perPage)->limit($perPage)->get();
-        }
+        // if ($this->isStudent()) {
+        $total = DB::table('admin_problems')
+            ->where('user_id', Auth::user()->id)
+            ->orWhere('public', 1)
+            ->count();
+        $problems = DB::table('admin_problems')
+            ->where('user_id', Auth::user()->id)
+            ->orWhere('public', 1)
+            ->join('users', 'users.id', '=', 'admin_problems.user_id')
+            ->leftJoin('problem_labels', 'admin_problems.problem_id', '=', 'problem_labels.id')
+            ->offset(($page - 1) * $perPage)->limit($perPage)->get();
+//        } else {
+//            $total = DB::table('admin_problems')
+//                ->count();
+//            $problems = DB::table('admin_problems')
+//                ->join('users', 'users.id', '=', 'admin_problems.user_id')
+//                ->leftJoin('problem_labels', 'admin_problems.problem_id', '=', 'problem_labels.id')
+//                ->offset(($page - 1) * $perPage)->limit($perPage)->get();
+//        }
+        return response()->json(array_merge(['problems' => $problems], ['total' => $total]));
+    }
+
+    public function ojProblems(Request $request)
+    {
+        $page = getCurrentPage($request->input('page'));
+        $perPage = 50;
+        $total = DB::table('oj_problems')->count();
+        $problems = DB::table('oj_problems')
+            ->leftJoin('problem_labels', 'oj_problems.problem_id', '=', 'problem_labels.id')
+            ->select(['oj_problems.*', 'problem_labels.labels'])
+            ->offset(($page - 1) * $perPage)->limit($perPage)->get();
         return response()->json(array_merge(['problems' => $problems], ['total' => $total]));
     }
 
@@ -126,32 +138,47 @@ class ProblemController extends Controller
          * 验证题目是否存在
          */
         $pro = DB::table('problems')->where('id', $proId)->first();
-        $ad_pro = DB::table('admin_problems')->where('problem_id', $proId)->first();
+        $ad_pro = $this->getAdminProblem($proId);
         if (is_null($pro) || is_null($ad_pro)) {
             return response()->json(['failed' => '题目不存在']);
+        }
+        if (!$ad_pro->public) {
+            return response()->json(['failed' => '题目未公开，不能加入oj库中']);
         }
         /*
          * 验证是否已经在oj库中
          */
-        if ($ad_pro->show) {
+        if ($ad_pro->oj_id) {
             return response()->json(['failed' => '题目已经在oj库中']);
         }
-        $id = DB::table('oj_problems')->insertGetId([
+        $id = DB::table('oj_problems')->select('id')
+                ->orderBy('id', 'desc')
+                ->limit(1)->first()->id + 1;
+        DB::table('oj_problems')->insert([
+            'id' => $id,
             'problem_id' => $pro->id,
             'title' => $pro->title,
         ]);
         /*
          * 增加oj_problem_infos内
-         * 使用ignore避免重复插入
+         * 使用ignore避免重复插入(本来实现了删除功能，后来又没实现.但是后来老师又说要实现。。)
          */
         DB::insert("INSERT IGNORE INTO `oj_problem_infos`(`id`) VALUES (?)", [$id]);
-        DB::table('admin_problems')->where('problem_id')->update(['show' => 1]);
+        DB::table('admin_problems')->where('problem_id')->update(['oj_id' => $id]);
         return response()->json(['success' => $id]);
     }
 
     public function delFromOj($proId)
     {
-
+        $pro = DB::table('oj_problems')->where("id", $proId)->first();
+        if ($pro === null) {
+            return response()->json(['failed' => "题目不存在"]);
+        }
+        if ($pro->submitted) {
+            return response()->json(['failed' => "题目已经有提交，不可删除"]);
+        }
+        DB::table('oj_problems')->where("id", $proId)->delete();
+        return response()->json(['success' => 1]);
     }
 
     /**
@@ -237,7 +264,7 @@ class ProblemController extends Controller
 
     public function getAdminProblem($id)
     {
-        if($id == null) return abort(422, json_encode(['failed' => '题目不存在']));
+        if ($id == null) return abort(422, json_encode(['failed' => '题目不存在']));
         $admin_pro = DB::table('admin_problems')->where(['problem_id' => $id])->first();
         if (is_null($admin_pro)) {
             return abort(422, json_encode('题目不存在'));
@@ -286,7 +313,7 @@ class ProblemController extends Controller
                 'labels' => json_encode($label)
             ]);
         }
-        if($admin->oj_id != 0) {
+        if ($admin->oj_id != 0) {
             DB::table('oj_label_problems')->insert([
                 'id' => $labelId,
                 'problem_id' => $admin->oj_id
@@ -303,12 +330,12 @@ class ProblemController extends Controller
         $label = $this->getProblemLabelJson($id);
         $label = json_decode($label, true);
         $index = array_search($labelId, $label);
-        if($index !== false) {
+        if ($index !== false) {
             unset($label[$index]);
             DB::table('problem_labels')->where('id', $id)->update([
                 'labels' => json_encode($label)
             ]);
-            if($admin->oj_id != 0) {
+            if ($admin->oj_id != 0) {
                 DB::table('oj_label_problems')->where([
                     'id' => $labelId,
                     'problem_id' => $admin->oj_id
@@ -397,7 +424,8 @@ class ProblemController extends Controller
         return response()->json('success');
     }
 
-    public function submit(Request $request) {
+    public function submit(Request $request)
+    {
         $id = $request->input('problem_id');
         $this->getAdminProblem($id);
         $this->validate($request, [
@@ -420,13 +448,15 @@ class ProblemController extends Controller
         return response()->json(['success' => $status_id]);
     }
 
-    public function getStatus($id) {
+    public function getStatus($id)
+    {
         $status = DB::table('admin_status')->where('id', $id)->first();
         return response()->json($status);
     }
 
-    public function closeSpj(Request $request) {
-        $id = (int) $request->input('id');
+    public function closeSpj(Request $request)
+    {
+        $id = (int)$request->input('id');
         $this->getAdminProblem($id);
         DB::table('problems')->where('id', $id)->update([
             'spj' => 0
@@ -434,7 +464,8 @@ class ProblemController extends Controller
         return '1';
     }
 
-    public function compile(Request $request) {
+    public function compile(Request $request)
+    {
         $id = $request->input('id');
         $this->getAdminProblem($id);
         $this->validate($request, [
@@ -457,5 +488,11 @@ class ProblemController extends Controller
             'spj' => 1
         ]);
         return response()->json(['success' => $status_id]);
+    }
+
+    public function getCodeModel($id) {
+        $this->getAdminProblem($id);
+        $model = DB::table('code_model')->where('id', $id)->first();
+        return response()->json($model == null ? '' : $model->model);
     }
 }

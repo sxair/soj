@@ -34,7 +34,7 @@
                     <a href="#randln">randln</a>&nbsp;&nbsp;&nbsp;
                     <a href="#char">char</a>&nbsp;&nbsp;&nbsp;
                     <p>打印数组/字符串:</p>
-                    <a href="#line">line</a>&nbsp;&nbsp;&nbsp;
+                    <a href="#list">list</a>&nbsp;&nbsp;&nbsp;
                     <a href="#string">string</a>&nbsp;&nbsp;&nbsp;
                     <p>打印图：</p>
                     <a href="#graph">graph</a>&nbsp;&nbsp;&nbsp;
@@ -67,9 +67,9 @@
                 <h3 id="char">char</h3>
                 <p>打印'a' + l到 'a' + r间的字符,b为是否大写</p>
                 function char(l = 1, r = 26, b = false) ;
-                <h3 id="line">line</h3>
+                <h3 id="list">list</h3>
                 <p>打印n个l~r间的随机数和空格，f为保留几位小数</p>
-                function line(n, l = 1, r = 10000000, f = 0) ;
+                function list(n, l = 1, r = 10000000, f = 0) ;
                 <h3 id="string">string</h3>
                 <p>打印长度为n的字符串,l和r为字符范围</p>
                 function string(n, l = 1, r = 26) ;

@@ -10,14 +10,28 @@
     </nav>
     <div class="container">
         <div class="col-md-6">
-            <h3>测试代码(<a href="{{ url('help', 'createTest') }}" target="view_window">api文档</a>)</h3>
+            <div>
+                <h4 style="display: inline-block">随机序列长度：</h4>
+                <input type="text" id="list" style="width: 50px">
+                最小值
+                <input type="text" id="list_min" style="width: 50px">
+                最大值
+                <input type="text" id="list_max" style="width: 50px">
+                <el-button size="mini" type="primary" onclick="runList()">生成</el-button>
+            </div>
+            <div>
+                <h4 style="display: inline-block">随机字符串长度：</h4>
+                <input type="text" id="string" style="width: 100px">
+                <el-button size="mini" type="primary" onclick="runString()">生成</el-button>
+            </div>
+            <h3>编写生成测试数据js代码(<a href="{{ url('help', 'createTest') }}" target="view_window">api文档</a>)</h3>
             <codemirror ref="editor" :lang=10 :value="code"></codemirror>
             <div class="text-right">
-                <button class="btn btn-primary" style="margin-top: 10px;width: 30%" onclick="run()">运行</button>
+                <button class="btn btn-primary" style="margin-top: 10px;width: 30%" onclick="run()">生成</button>
             </div>
         </div>
         <div class="col-md-6">
-            <h3>测试数据</h3>
+            <h3>测试数据：</h3>
             <codemirror ref="test" :value="test"></codemirror>
         </div>
     </div>
@@ -25,7 +39,7 @@
 @push('setData')
     window.VueData = {code: 'var n = 10;\n\
 pln(n);\n\
-line(n);\n', test: ''}
+list(n);\n', test: ''}
 @endpush
 @push('js')
 <style>

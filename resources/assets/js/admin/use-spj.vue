@@ -9,7 +9,7 @@
                     C++
                 </el-form-item>
                 <el-form-item class="pull-right">
-                    <button type="button" @click="close_spj" class="btn btn-danger">关闭spj</button>
+                    <button type="button" @click="close_spj" class="btn btn-danger">关闭特殊判断</button>
                 </el-form-item>
             </el-form>
             <div style="margin: auto;width: 95%;">
@@ -21,7 +21,7 @@
                 <i v-if="status < 0">{{ statusLang[status] }}</i>
             </div>
             <div style="text-align:right;">
-                <button class="btn btn-primary" @click="onSubmit">提交（使用spj）</button>
+                <button class="btn btn-primary" @click="onSubmit">使用特殊判断</button>
             </div>
         </el-card>
         <el-card v-if="status == 2" style="margin-top:10px">
@@ -46,6 +46,13 @@
         },
         mounted() {
             this.check();
+            this.$notify({
+                title: '提示',
+                dangerouslyUseHTMLString: true,
+                message: '<a href="/admin/help/addProblem" target="_blank">点击查看修改判断方式帮助</a>',
+                duration: 3000,
+                type: 'warning'
+            });
         },
         methods: {
             check() {

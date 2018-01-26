@@ -7,6 +7,8 @@ Route::middleware('control')->group(function () {
 
     Route::get('problems', 'ProblemController@problems');
 
+    Route::get('ojProblems', 'ProblemController@ojProblems');
+
     Route::post('addProblem', 'ProblemController@addProblem');
 
     Route::post('changeProblem', 'ProblemController@changeProblem');
@@ -27,7 +29,7 @@ Route::middleware('control')->group(function () {
 
     Route::get('addToOj/{id}', 'ProblemController@addToOj');
 
-    //Route::get('delFromOj/{id}', 'ProblemController@delFromOj');
+    Route::get('delFromOj/{id}', 'ProblemController@delFromOj');
 
     Route::get('getProblem/{id}', 'ProblemController@getProblem');
 
@@ -48,6 +50,8 @@ Route::middleware('control')->group(function () {
     Route::post('closeSpj', 'ProblemController@closeSpj');
 
     Route::post('compile', 'ProblemController@compile');
+
+    Route::get('getCodeModel/{id}', 'ProblemController@getCodeModel');
 });
 
 

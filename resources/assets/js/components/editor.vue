@@ -61,5 +61,4 @@
 <style>
     @import '~simplemde/dist/simplemde.min.css';
     @import "~font-awesome/css/font-awesome.min.css";
-    @import '~highlight.js/styles/monokai-sublime.css';
 </style>

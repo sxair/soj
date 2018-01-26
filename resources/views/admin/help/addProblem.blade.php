@@ -8,6 +8,7 @@
             <div>
                 <h3><a href="#1">题目规范</a></h3>
                 <h3><a href="#2">出题后注意事项</a></h3>
+                <h3><a href="#spj">修改判断方式</a></h3>
             </div>
             <hr/>
             <h3 id="1">题目规范</h3>
@@ -39,7 +40,7 @@
                 <p>对于修改测试数据：可以上传多组测试数据，但请注意 <strong>即使是空的测试数据也要上传对应的空文件！</strong></p>
                 <p>制造测试数据您可以采用本系统自带的测试数据制造功能或者使用代码自己制造</p>
                 c/c++模板：
-                <pre><code class="hljs"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+                <pre style="font-size: 13px"><code class="hljs"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span><span class="hljs-meta-string">&lt;stdlib.h&gt;</span></span>
 <span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;time.h&gt;</span></span>
 <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">maind</span><span class="hljs-params">()</span> </span>{
@@ -49,21 +50,35 @@
     <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
 </code></pre>
-                <p>特殊判断：</p>
-                <p>特殊判断统一使用c/c++进行编写。提交代码后如果显示accept则代表编译成功，否则请检查代码</p>
-                <p>用户代码运行时会读取测试输入</p>
-                <p>特殊数据判断程序的运行为：./spj pro_out_path user_out_path</p>
-                <p>详情看例子</p>
-                <div>
-                    <pre><code class="hljs"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
-<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc,<span class="hljs-keyword">char</span> *args[])</span> </span>{
-    FILE * pro_out=fopen(args[<span class="hljs-number">1</span>],“r”);<span class="hljs-comment">//测试输出</span>
-    FILE * user_out=fopen(args[<span class="hljs-number">2</span>],“r”);<span class="hljs-comment">//用户输出</span>
+                <p id="spj">特殊判断：</p>
+                <p>特殊判断统一使用c/c++进行编写。需先提交代码进行检测，后如果显示accept则代表编译成功，否则请检查代码正确性</p>
+                <p>特殊数据判断程序的运行为：./spj pro_out_path user_out_path pro_in_path</p>
+                <p>特殊判断主要用于测试用户的输入是否符合要求，如判断输出是否组成图，或者输出精度是否符合</p>
+                <p>详情看例子（判断用户输出与测试输出精度）</p>
+                <div style="font-size: 13px">
+                  <pre><code class="hljs"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;math.h&gt;</span></span>
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">int</span> argc, <span class="hljs-keyword">char</span> *args[])</span> </span>{
+    FILE * pro_out = fopen(args[<span class="hljs-number">1</span>], <span class="hljs-string">"r"</span>); <span class="hljs-comment">// 测试输出</span>
+    FILE * user_out = fopen(args[<span class="hljs-number">2</span>], <span class="hljs-string">"r"</span>); <span class="hljs-comment">// 用户输出</span>
+    FILE * pro_in = fopen(args[<span class="hljs-number">3</span>], <span class="hljs-string">"r"</span>); <span class="hljs-comment">// 测试输入</span>
     <span class="hljs-keyword">int</span> ans = <span class="hljs-number">0</span>; <span class="hljs-comment">//返回 0 为 ac，其他数为wa</span>
-    <span class="hljs-keyword">int</span> a;
-    <span class="hljs-built_in">fscanf</span>(user_out,“%d”,&amp;a);
+    <span class="hljs-keyword">double</span> a, b;
+    <span class="hljs-keyword">while</span>(<span class="hljs-number">1</span>) {
+        <span class="hljs-keyword">int</span> t = <span class="hljs-built_in">fscanf</span>(pro_out, <span class="hljs-string">"%lf"</span>, &amp;a);
+        <span class="hljs-keyword">if</span>(t != <span class="hljs-built_in">fscanf</span>(user_out, <span class="hljs-string">"%lf"</span>, &amp;b)) {
+            ans = <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">break</span>;
+        }
+        <span class="hljs-keyword">if</span>(t == <span class="hljs-number">-1</span>) <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">if</span>(<span class="hljs-built_in">fabs</span>(a - b) &gt; <span class="hljs-number">1e-6</span>) {
+            ans = <span class="hljs-number">1</span>;
+            <span class="hljs-keyword">break</span>;
+        }
+    }
     fclose(pro_out);
     fclose(user_out);
+    fclose(pro_in);
     <span class="hljs-keyword">return</span> ans; <span class="hljs-comment">// 等同于exit(ans)</span>
 }
 </code></pre>

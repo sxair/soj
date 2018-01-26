@@ -10,7 +10,8 @@
                 <span>题目库管理</span>
             </template>
             <el-menu-item-group>
-                <el-menu-item index="/problems">查看题目库</el-menu-item>
+                <el-menu-item index="/problems">修改管理员题目库</el-menu-item>
+                <el-menu-item index="/ojProblems">修改oj题目库</el-menu-item>
                 <el-menu-item index="/addProblem">新增题目</el-menu-item>
                 <!--<el-menu-item index="1-3">查看选择题</el-menu-item>-->
                 <!--<el-menu-item index="1-4">新增选择题</el-menu-item>-->
@@ -37,7 +38,7 @@
             </template>
             <el-menu-item-group>
                 <el-menu-item index="/changePassword">修改管理密码</el-menu-item>
-                <el-menu-item index="/showAdmins">查看管理员</el-menu-item>
+                <el-menu-item index="/showAdmins">修改管理员</el-menu-item>
                 <el-menu-item index="/addAdmin">新增管理员</el-menu-item>
             </el-menu-item-group>
         </el-submenu>
@@ -53,10 +54,6 @@
             <!--<i class="el-icon-setting"></i>-->
             <!--<span slot="title">模块开关</span>-->
         <!--</el-menu-item>-->
-        <el-menu-item index="/testOut">
-            <i class="el-icon-edit-outline"></i>
-            <span slot="title">程序测试</span>
-        </el-menu-item>
         <el-menu-item index="logout">
             <i class="el-icon-news"></i>
             <span slot="title">退出管理</span>

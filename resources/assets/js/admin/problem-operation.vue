@@ -1,6 +1,6 @@
 <template>
     <div style="width: 500px;margin: auto">
-        <h3>问题 {{ id }}，您有以下选择:</h3>
+        <h3>题目 {{ id }}，您有以下选择:</h3>
         <div style="margin: 18px">
             <ul class="list-unstyled">
                 <li>
@@ -10,13 +10,13 @@
                     <router-link :to="'/problemData/' + id">修改测试数据</router-link>
                 </li>
                 <li>
-                    <router-link :to="'/useSpj/' + id">使用特殊判断</router-link>
+                    <router-link :to="'/useSpj/' + id">修改答案判断方式</router-link>
                 </li>
                 <li>
-                    <router-link :to="'/setProblemLabel/' + id">添加标签</router-link>
+                    <router-link :to="'/codeModel/' + id">程序填空</router-link>
                 </li>
                 <li>
-                    <a :href="'/admin/download/test/' + id">下载测试数据</a>
+                    <router-link :to="'/setProblemLabel/' + id">修改标签</router-link>
                 </li>
             </ul>
         </div>

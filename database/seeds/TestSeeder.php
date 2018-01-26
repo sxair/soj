@@ -133,6 +133,7 @@ class TestSeeder extends Seeder
 </code></pre>
 EOF;
 
+        $oj_id = 1000;
         for ($i = 0; $i < 200; $i++) {
             $sub = rand(0, 1000);
             $ac = rand(0, 1000);
@@ -141,18 +142,19 @@ EOF;
                 $sub = $ac;
                 $ac = $t;
             }
-            DB::table('oj_problems')->insert([
-                'problem_id' => $i + 1,
-                'title' => str_random(10),
-                'accepted' => $ac,
-                'submitted' => $sub,
-            ]);
-
-            $randstatus = rand(1, 11);
-            if ($randstatus >= 5) {
-                $randstatus *= 10000;
-                $randstatus += rand(1, 10);
+            $add = rand(0, 1);
+            $title = str_random(10);
+            if ($add) {
+                DB::table('oj_problems')->insert([
+                    'problem_id' => $oj_id - 999,
+                    'title' => $title,
+                    'accepted' => $ac,
+                    'submitted' => $sub,
+                ]);
             }
+            $randstatus = rand(5, 11);
+            $randstatus *= 10000;
+            $randstatus += rand(1, 10);
             if (rand(0, 1)) {
                 $user_name = str_random(8);
             } else {
@@ -170,12 +172,12 @@ EOF;
 
             DB::table('admin_problems')->insert([
                 'problem_id' => $i + 1,
-                'title' => str_random(10),
+                'title' => $title,
                 'user_id' => 1,
-                'public' => rand(0, 1),
-                'oj_id' => $i + 1000
+                'public' => $add ? 1 : rand(0, 1),
+                'oj_id' => $add ? $oj_id : 0
             ]);
-
+            $oj_id++;
             DB::table('problem_md')->insert([
                 'id' => $i + 1,
                 'content' => '### Problem Description

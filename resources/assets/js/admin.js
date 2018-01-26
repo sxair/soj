@@ -75,6 +75,7 @@ const router = new VueRouter({
         {path: '/changePassword', component: require('./admin/change-password.vue')},
         {path: '/label', component:require('./admin/label.vue')},
         {path: '/problems', component: require('./admin/problems.vue')},
+        {path: '/ojProblems', component: require('./admin/oj-problems.vue')},
         {path: '/problemData/:id', component: require('./admin/problem-data.vue'), props: true},
         {path: '/problemOperation/:id', component: require('./admin/problem-operation.vue'), props: true},
         {path: '/changePassword', component: require('./admin/change-password.vue')},
@@ -84,6 +85,7 @@ const router = new VueRouter({
         {path: '/setProblemLabel/:id', component: require('./admin/set-problem-label.vue'), props: true},
         {path: '/problem/:id', component: require('./components/showProblem.vue'), props: true},
         {path: '/submit/:id', component: require('./components/submit.vue'), props: true},
+        {path: '/codeModel/:id', component: require('./admin/code-model.vue'), props: true},
     ]
 });
 

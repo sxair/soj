@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateJudgesTable extends Migration
+class CreateCodeModelTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateJudgesTable extends Migration
      */
     public function up()
     {
-        Schema::create('judges', function (Blueprint $table) {
-            $table->unsignedInteger('status_id');
-            $table->unsignedInteger('judge_for');
-            $table->unsignedInteger('running')->default('0')->index();
+        Schema::create('code_model', function (Blueprint $table) {
+            $table->unsignedInteger('id');
+            $table->text('model');
+
+            $table->primary('id');
         });
     }
 
@@ -27,6 +28,6 @@ class CreateJudgesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('judges');
+        Schema::dropIfExists('code_model');
     }
 }

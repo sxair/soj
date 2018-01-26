@@ -1,5 +1,5 @@
 <template>
-    <span :style="{color: scolor}">{{ content }}</span>
+    <span :style="{color: scolor}" v-html="content">{{ content }}</span>
 </template>
 <script>
     export default {
@@ -46,9 +46,9 @@
                     'Time Limit Exceeded',
                     'Presentation Error',
                     'Runtime Error',
-                    'Runtime Error</br>(Segmentation fault)',
-                    'Runtime Error</br>(Floating Point Exception)',
-                    'Runtime Error</br>(NOT ALLOWED SYSTEM CALL)',
+                    'Runtime Error<br/>(Segmentation fault)',
+                    'Runtime Error<br/>(Floating Point Exception)',
+                    'Runtime Error<br/>(NOT ALLOWED SYSTEM CALL)',
                 ],
                 lang: [
                     'c',
